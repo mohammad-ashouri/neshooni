@@ -1,8 +1,113 @@
 @import 'tailwindcss';
+@import 'vazirmatn/Vazirmatn-font-face.css';
 
 @source '../views';
+@source '../../app';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
+/* حالت تیره با کلاس dark روی <html> (دکمه ماه/خورشید در هدر) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: Vazirmatn, ui-sans-serif, system-ui, sans-serif;
+    --color-surface: #ffffff;
+    --color-page: #f8fafc;
+    --color-series-1: #2a78d6;
+    --color-series-2: #eb6834;
+}
+
+/*
+ * حالت تیره: به‌جای نوشتن dark: روی همه عناصر، رنگ‌های خاکستری برعکس می‌شوند
+ * و رنگ‌های روشن (۵۰ تا ۲۰۰) نیمه‌شفاف می‌شوند.
+ */
+.dark {
+    color-scheme: dark;
+    --color-surface: #0f172a;
+    --color-page: #020617;
+    --color-series-1: #3987e5;
+    --color-series-2: #d95926;
+    --color-slate-50: #172033;
+    --color-slate-100: #1e293b;
+    --color-slate-200: #273449;
+    --color-slate-300: #334155;
+    --color-slate-400: #64748b;
+    --color-slate-500: #94a3b8;
+    --color-slate-600: #cbd5e1;
+    --color-slate-700: #e2e8f0;
+    --color-slate-800: #f1f5f9;
+    --color-slate-900: #f8fafc;
+    --color-violet-50: rgb(139 92 246 / 0.12);
+    --color-violet-100: rgb(139 92 246 / 0.2);
+    --color-violet-200: rgb(139 92 246 / 0.32);
+    --color-violet-700: #c4b5fd;
+    --color-violet-800: #ddd6fe;
+    --color-emerald-50: rgb(16 185 129 / 0.12);
+    --color-emerald-200: rgb(16 185 129 / 0.3);
+    --color-emerald-700: #6ee7b7;
+    --color-emerald-800: #a7f3d0;
+    --color-amber-50: rgb(245 158 11 / 0.12);
+    --color-amber-200: rgb(245 158 11 / 0.3);
+    --color-amber-600: #fbbf24;
+    --color-amber-700: #fcd34d;
+    --color-amber-800: #fde68a;
+    --color-rose-50: rgb(244 63 94 / 0.12);
+    --color-rose-100: rgb(244 63 94 / 0.2);
+    --color-rose-200: rgb(244 63 94 / 0.3);
+    --color-rose-700: #fda4af;
+    --color-rose-800: #fecdd3;
+    --color-sky-50: rgb(14 165 233 / 0.12);
+    --color-sky-200: rgb(14 165 233 / 0.3);
+    --color-sky-700: #7dd3fc;
+}
+
+/* کلاس‌های پرتکرار فرم و دکمه */
+@layer components {
+    .input { @apply w-full rounded-xl border border-slate-300 bg-surface px-3.5 py-2.5 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-100 disabled:bg-slate-50 disabled:text-slate-400; }
+    .label { @apply mb-1.5 block text-sm font-medium text-slate-700; }
+    .error { @apply mt-1.5 text-xs text-rose-600; }
+    .card { @apply rounded-2xl border border-slate-200 bg-surface; }
+    .chip { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium; }
+    .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:opacity-50 cursor-pointer active:scale-[0.97]; }
+    .btn-primary { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:opacity-50 cursor-pointer active:scale-[0.97] bg-violet-600 text-white shadow-sm shadow-violet-200 hover:bg-violet-700 dark:shadow-none dark:hover:bg-violet-500; }
+    .btn-light { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:opacity-50 cursor-pointer active:scale-[0.97] border border-slate-200 bg-surface text-slate-700 hover:bg-slate-50; }
+    .btn-danger { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:opacity-50 cursor-pointer active:scale-[0.97] bg-rose-50 text-rose-700 hover:bg-rose-100; }
+    .btn-success { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:opacity-50 cursor-pointer active:scale-[0.97] bg-emerald-600 text-white hover:bg-emerald-700 dark:hover:bg-emerald-500; }
+    .side-link { @apply flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900; }
+    .side-link-active { @apply bg-violet-50 font-semibold text-violet-700 hover:bg-violet-50 hover:text-violet-700; }
+    .th { @apply px-4 py-3 text-right text-xs font-semibold whitespace-nowrap text-slate-500; }
+    .td { @apply px-4 py-3 align-middle whitespace-nowrap; }
+    .filter-chip { @apply rounded-full border border-slate-200 bg-surface px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50; }
+    .filter-chip-active { @apply border-violet-600 bg-violet-600 text-white hover:bg-violet-600; }
+}
+
+/* انیمیشن ورود صفحه و کارت‌ها */
+@keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+/* backwards: بعد از پایان انیمیشن transform باقی نمی‌ماند تا مودال‌های fixed درست وسط صفحه بیایند */
+main > * { animation: fade-up .35s ease-out backwards; }
+.stagger > * { animation: fade-up .45s ease-out backwards; }
+.stagger > :nth-child(2) { animation-delay: .04s; }
+.stagger > :nth-child(3) { animation-delay: .08s; }
+.stagger > :nth-child(4) { animation-delay: .12s; }
+.stagger > :nth-child(5) { animation-delay: .16s; }
+.stagger > :nth-child(n+6) { animation-delay: .2s; }
+
+[x-cloak] { display: none !important; }
+
+/* متن راهنما (Markdown تبدیل‌شده) */
+.guide { line-height: 2; color: var(--color-slate-700); }
+.guide h1 { font-size: 1.75rem; font-weight: 900; color: var(--color-slate-900); margin-bottom: 1rem; }
+.guide h2 { font-size: 1.3rem; font-weight: 800; color: var(--color-slate-900); margin: 2.5rem 0 .75rem; padding-top: 1.5rem; border-top: 1px solid var(--color-slate-100); }
+.guide h3 { font-size: 1.05rem; font-weight: 700; color: var(--color-slate-800); margin: 1.5rem 0 .5rem; }
+.guide p, .guide ul, .guide ol, .guide table, .guide blockquote { margin-bottom: 1rem; }
+.guide ul { list-style: disc; padding-inline-start: 1.5rem; }
+.guide ol { list-style: decimal; padding-inline-start: 1.5rem; }
+.guide a { color: var(--color-violet-600); text-decoration: underline; }
+.guide code { background: var(--color-slate-100); border-radius: .375rem; padding: .1rem .4rem; font-size: .85em; direction: ltr; unicode-bidi: embed; }
+.guide blockquote { border-inline-start: 4px solid var(--color-violet-400); background: var(--color-violet-50); padding: .75rem 1rem; border-radius: .75rem; }
+.guide table { width: 100%; font-size: .9rem; border-collapse: collapse; }
+.guide th, .guide td { border: 1px solid var(--color-slate-200); padding: .5rem .75rem; text-align: right; }
+.guide th { background: var(--color-slate-50); }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }

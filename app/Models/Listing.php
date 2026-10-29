@@ -100,6 +100,14 @@ class Listing extends Model
         $query->where('featured_until', '>', now());
     }
 
+    /** هرچه کارت پیج لازم دارد، یک‌جا (برای جلوگیری از کوئری‌های تکراری) */
+    public function scopeForCards(Builder $query): void
+    {
+        $query->with(['platform', 'category', 'user'])
+            ->withAvg('approvedReviews as rating', 'rating')
+            ->withCount(['approvedReviews as reviews_count', 'approvedPhotos as photos_count']);
+    }
+
     /** پیج‌های یک دسته و همه زیردسته‌هایش */
     public function scopeInCategory(Builder $query, Category $category): void
     {

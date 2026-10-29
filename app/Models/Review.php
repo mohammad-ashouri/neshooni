@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ModerationStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -27,6 +28,11 @@ class Review extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function scopeApproved(Builder $query): void
+    {
+        $query->where('status', ModerationStatus::Approved);
     }
 
     public function reports(): MorphMany
