@@ -1,14 +1,14 @@
 {{-- هدر سایت. منوهای کشویی با Alpine (فقط باز و بسته شدن) --}}
 <header class="sticky top-0 z-40 border-b border-slate-200 bg-surface/90 backdrop-blur" x-data="{ mobile: false }">
     <div class="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4">
-        <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-2">
+        <a href="{{ route('home') }}" wire:navigate class="flex shrink-0 items-center gap-2">
             <span class="grid size-9 place-items-center rounded-xl bg-linear-to-br from-violet-600 to-fuchsia-500 text-lg font-black text-white">ن</span>
             <span class="text-lg font-extrabold text-slate-800">{{ config('site.name') }}</span>
         </a>
 
         <nav class="ms-4 hidden items-center gap-1 text-sm md:flex">
             @foreach (['home' => 'خانه', 'explore' => 'همه پیج‌ها', 'about' => 'درباره ما', 'contact' => 'تماس با ما'] as $route => $label)
-                <a href="{{ route($route) }}" @class(['rounded-lg px-3 py-2', 'bg-violet-50 font-semibold text-violet-700' => request()->routeIs($route), 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' => ! request()->routeIs($route)])>{{ $label }}</a>
+                <a href="{{ route($route) }}" wire:navigate @class(['rounded-lg px-3 py-2', 'bg-violet-50 font-semibold text-violet-700' => request()->routeIs($route), 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' => ! request()->routeIs($route)])>{{ $label }}</a>
             @endforeach
         </nav>
 
@@ -16,13 +16,13 @@
 
         @guest
             <div class="hidden items-center gap-2 sm:flex">
-                <a href="{{ route('login') }}" class="btn text-slate-600 hover:bg-slate-100">ورود</a>
-                <a href="{{ route('register') }}" class="btn-primary">+ ثبت رایگان پیج</a>
+                <a href="{{ route('login') }}" wire:navigate class="btn text-slate-600 hover:bg-slate-100">ورود</a>
+                <a href="{{ route('register') }}" wire:navigate class="btn-primary">+ ثبت رایگان پیج</a>
             </div>
         @endguest
 
         @auth
-            <a href="{{ route('dashboard.listings.create') }}" class="btn-primary hidden sm:inline-flex">+ ثبت پیج</a>
+            <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="btn-primary hidden sm:inline-flex">+ ثبت پیج</a>
             <livewire:notification-bell />
 
             <div class="relative" x-data="{ open: false }" @click.outside="open = false">
@@ -36,12 +36,12 @@
                         <div class="text-xs text-slate-500" dir="ltr" style="text-align:right">{{ auth()->user()->mobile }}</div>
                     </div>
                     @can('access-panel')
-                        <a href="{{ route('admin.dashboard') }}" class="side-link">🛡️ پنل {{ auth()->user()->isAdmin() ? 'مدیریت' : auth()->user()->roleLabel() }}</a>
+                        <a href="{{ route('admin.dashboard') }}" wire:navigate class="side-link">🛡️ پنل {{ auth()->user()->isAdmin() ? 'مدیریت' : auth()->user()->roleLabel() }}</a>
                     @endcan
-                    <a href="{{ route('dashboard') }}" class="side-link">📋 پیج‌های من</a>
-                    <a href="{{ route('dashboard.payments') }}" class="side-link">💳 پرداخت‌های من</a>
-                    <a href="{{ route('dashboard.profile') }}" class="side-link">👤 ویرایش پروفایل</a>
-                    <a href="{{ route('business.show', auth()->user()) }}" class="side-link">🏪 صفحه عمومی من</a>
+                    <a href="{{ route('dashboard') }}" wire:navigate class="side-link">📋 پیج‌های من</a>
+                    <a href="{{ route('dashboard.payments') }}" wire:navigate class="side-link">💳 پرداخت‌های من</a>
+                    <a href="{{ route('dashboard.profile') }}" wire:navigate class="side-link">👤 ویرایش پروفایل</a>
+                    <a href="{{ route('business.show', auth()->user()) }}" wire:navigate class="side-link">🏪 صفحه عمومی من</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button class="side-link w-full text-rose-600 hover:bg-rose-50 hover:text-rose-700">↩️ خروج</button>
@@ -61,18 +61,18 @@
 
     {{-- منوی موبایل --}}
     <div x-show="mobile" x-transition x-cloak class="border-t border-slate-100 bg-surface px-4 py-3 md:hidden">
-        <a href="{{ route('home') }}" class="side-link">خانه</a>
-        <a href="{{ route('explore') }}" class="side-link">همه پیج‌ها</a>
-        <a href="{{ route('about') }}" class="side-link">درباره ما</a>
-        <a href="{{ route('contact') }}" class="side-link">تماس با ما</a>
+        <a href="{{ route('home') }}" wire:navigate class="side-link">خانه</a>
+        <a href="{{ route('explore') }}" wire:navigate class="side-link">همه پیج‌ها</a>
+        <a href="{{ route('about') }}" wire:navigate class="side-link">درباره ما</a>
+        <a href="{{ route('contact') }}" wire:navigate class="side-link">تماس با ما</a>
         @guest
             <div class="mt-2 grid grid-cols-2 gap-2">
-                <a href="{{ route('login') }}" class="btn-light">ورود</a>
-                <a href="{{ route('register') }}" class="btn-primary">ثبت‌نام</a>
+                <a href="{{ route('login') }}" wire:navigate class="btn-light">ورود</a>
+                <a href="{{ route('register') }}" wire:navigate class="btn-primary">ثبت‌نام</a>
             </div>
         @else
-            <a href="{{ route('dashboard.listings.create') }}" class="side-link">➕ ثبت پیج جدید</a>
-            <a href="{{ route('dashboard') }}" class="side-link">📋 داشبورد</a>
+            <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="side-link">➕ ثبت پیج جدید</a>
+            <a href="{{ route('dashboard') }}" wire:navigate class="side-link">📋 داشبورد</a>
         @endguest
     </div>
 </header>

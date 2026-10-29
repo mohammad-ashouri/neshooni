@@ -65,7 +65,7 @@
             </div>
             <div class="divide-y divide-slate-100">
                 @forelse ($notifications as $notification)
-                    <a href="{{ $notification->data['url'] }}" class="flex gap-2 py-3 text-sm">
+                    <a href="{{ $notification->data['url'] }}" wire:navigate class="flex gap-2 py-3 text-sm">
                         <span @class(['mt-2 size-2 shrink-0 rounded-full', 'bg-violet-500' => ! $notification->read_at, 'bg-slate-200' => $notification->read_at])></span>
                         <span>
                             <span class="block leading-7">{{ $notification->data['text'] }}</span>

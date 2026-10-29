@@ -14,6 +14,16 @@ window.toggleTheme = () => {
     } catch (e) {}
 };
 
+// با wire:navigate کلاس‌های <html> از صفحه جدید می‌آید؛ حالت تیره دوباره اعمال می‌شود
+document.addEventListener('livewire:navigated', () => {
+    let theme = null;
+    try {
+        theme = localStorage.getItem('neshooni-theme');
+    } catch (e) {}
+    const dark = theme === 'dark' || (!theme && matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.classList.toggle('dark', dark);
+});
+
 document.addEventListener('alpine:init', () => {
     // نمونه استفاده در PHP:  $this->dispatch('toast', message: 'ذخیره شد', type: 'success');
     window.Alpine.data('toasts', () => ({

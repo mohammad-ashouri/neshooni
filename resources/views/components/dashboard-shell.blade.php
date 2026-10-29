@@ -34,7 +34,7 @@
                     <span>{{ $icon }}</span> {{ $label }}
                 </a>
             @endforeach
-            <a href="{{ route('help') }}" class="side-link shrink-0"><span>❓</span> راهنما</a>
+            <a href="{{ route('help') }}" wire:navigate class="side-link shrink-0"><span>❓</span> راهنما</a>
         </nav>
     </aside>
 

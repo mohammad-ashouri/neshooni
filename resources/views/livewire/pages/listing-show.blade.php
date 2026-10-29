@@ -61,8 +61,8 @@
                     @endunless
                     <button wire:click="$set('showShare', true)" class="btn-light">🔗 اشتراک‌گذاری</button>
                     @if ($this->isOwner)
-                        <a href="{{ route('dashboard.listings.edit', $listing) }}" class="btn-light">✏️ ویرایش</a>
-                        <a href="{{ route('dashboard.banner', $listing) }}" class="btn-light">🖼️ بنر «ما در نشونی هستیم»</a>
+                        <a href="{{ route('dashboard.listings.edit', $listing) }}" wire:navigate class="btn-light">✏️ ویرایش</a>
+                        <a href="{{ route('dashboard.banner', $listing) }}" wire:navigate class="btn-light">🖼️ بنر «ما در نشونی هستیم»</a>
                     @else
                         <button wire:click="openReport('listing')" class="btn text-slate-500 hover:bg-slate-100">🚩 گزارش</button>
                     @endif
@@ -128,7 +128,7 @@
                                 <button class="btn-primary">{{ $this->myReview ? 'ویرایش نظر' : 'ثبت نظر' }}</button>
                             </form>
                         @else
-                            <p class="text-sm text-slate-600">برای ثبت نظر <a href="{{ route('login') }}" class="font-semibold text-violet-700 hover:underline">وارد شوید</a>.</p>
+                            <p class="text-sm text-slate-600">برای ثبت نظر <a href="{{ route('login') }}" wire:navigate class="font-semibold text-violet-700 hover:underline">وارد شوید</a>.</p>
                         @endauth
                     </div>
                 @endif

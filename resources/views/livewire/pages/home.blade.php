@@ -37,7 +37,7 @@
             <section>
                 <div class="mb-5 flex items-end justify-between">
                     <h2 class="text-xl font-extrabold">⭐ پیج‌های ویژه</h2>
-                    <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" class="text-sm text-violet-700 hover:underline">پیج شما هم اینجا باشد؟</a>
+                    <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" wire:navigate class="text-sm text-violet-700 hover:underline">پیج شما هم اینجا باشد؟</a>
                 </div>
                 <div class="stagger grid gap-4 pt-2 sm:grid-cols-2 lg:grid-cols-4">
                     @foreach ($featured as $listing)
@@ -115,7 +115,7 @@
         <section class="relative overflow-hidden rounded-3xl bg-linear-to-l from-violet-600 to-fuchsia-500 px-6 py-12 text-center text-white">
             <h2 class="text-2xl font-black">کسب‌وکار آنلاین دارید؟</h2>
             <p class="mt-2 text-white/80">{{ fa_number($totals['businesses']) }} کسب‌وکار در {{ fa_number($totals['platforms']) }} پلتفرم به نشونی اعتماد کرده‌اند.</p>
-            <a href="{{ auth()->check() ? route('dashboard.listings.create') : route('register') }}" class="btn mt-6 bg-white text-violet-600 hover:bg-violet-50">ثبت رایگان پیج</a>
+            <a href="{{ auth()->check() ? route('dashboard.listings.create') : route('register') }}" wire:navigate class="btn mt-6 bg-white text-violet-600 hover:bg-violet-50">ثبت رایگان پیج</a>
         </section>
     </div>
 </div>
