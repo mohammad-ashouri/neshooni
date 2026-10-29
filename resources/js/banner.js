@@ -174,6 +174,8 @@ function drawAll() {
 }
 
 document.addEventListener('DOMContentLoaded', drawAll);
+// جابه‌جایی بین صفحه‌ها با wire:navigate صفحه را دوباره بارگذاری نمی‌کند
+document.addEventListener('livewire:navigated', drawAll);
 document.addEventListener('livewire:init', () => {
     // بعد از هر درخواست موفق Livewire (مثلاً تغییر قالب یا رنگ)
     window.Livewire.hook('commit', ({ succeed }) => succeed(() => setTimeout(drawAll)));
