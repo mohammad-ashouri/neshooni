@@ -43,6 +43,7 @@ return [
     'image' => ':attribute باید تصویر باشد.',
     'mimes' => ':attribute باید از نوع :values باشد.',
     'current_password' => 'رمز عبور اشتباه است.',
+    'captcha' => 'کد امنیتی اشتباه است.',
     'password' => [
         'letters' => ':attribute باید حداقل یک حرف داشته باشد.',
         'mixed' => ':attribute باید حروف بزرگ و کوچک داشته باشد.',
@@ -69,5 +70,6 @@ return [
         'base_url' => 'آدرس پایه',
         'logo' => 'لوگو',
         'business_type' => 'نوع کسب‌وکار',
+        'captcha' => 'کد امنیتی',
     ],
 ];

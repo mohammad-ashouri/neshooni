@@ -16,13 +16,38 @@ class Login extends Component
 
     public bool $remember = true;
 
+    /** کد امنیتی (کپچا) که کاربر از روی تصویر می‌خواند */
+    public string $captcha = '';
+
+    /**
+     * با هر تغییر این عدد، آدرس تصویر کپچا عوض می‌شود و مرورگر تصویر و کد تازه می‌گیرد.
+     * کد کپچا در session است و بعد از هر بار بررسی موفق مصرف می‌شود؛ پس بعد از هر تلاش ورود باید عوض شود.
+     */
+    public int $captchaKey = 0;
+
+    public function refreshCaptcha(): void
+    {
+        $this->captcha = '';
+        $this->captchaKey++;
+    }
+
     public function login()
     {
         $this->mobile = en_digits($this->mobile);
-        $this->validate([
+        $this->captcha = en_digits(trim($this->captcha));
+        $input = $this->only(['mobile', 'password', 'captcha']);
+
+        // تصویر از همین حالا عوض می‌شود؛ چه ورود موفق باشد چه خطا بدهد
+        $this->refreshCaptcha();
+
+        validator($input, [
             'mobile' => ['required', 'regex:/^09\d{9}$/'],
             'password' => ['required'],
-        ], ['mobile.regex' => 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.']);
+            'captcha' => ['required', 'captcha'],
+        ], [
+            'mobile.regex' => 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.',
+            'captcha.captcha' => 'کد امنیتی اشتباه است؛ کد تصویر جدید را وارد کنید.',
+        ])->validate();
 
         // جلوگیری از حدس زدن رمز: حداکثر ۵ تلاش در دقیقه برای هر شماره
         $key = 'login:'.$this->mobile.'|'.request()->ip();
