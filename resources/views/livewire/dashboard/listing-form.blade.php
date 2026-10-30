@@ -169,10 +169,10 @@
 
             @if ($hours['enabled'])
                 <div class="flex flex-wrap gap-2">
-                    <button type="button" wire:click="preset('workdays')" class="filter-chip">شنبه تا پنجشنبه ۹ تا ۲۱</button>
-                    <button type="button" wire:click="preset('everyday')" class="filter-chip">همه روزها ۹ تا ۲۱</button>
-                    <button type="button" wire:click="preset('24h')" class="filter-chip">شبانه‌روزی</button>
-                    <button type="button" wire:click="copyFirstDay" class="filter-chip">ساعت شنبه برای همه روزها</button>
+                    <button type="button" wire:click="preset('workdays')" class="cursor-pointer filter-chip">شنبه تا پنجشنبه ۹ تا ۲۱</button>
+                    <button type="button" wire:click="preset('everyday')" class="cursor-pointer filter-chip">همه روزها ۹ تا ۲۱</button>
+                    <button type="button" wire:click="preset('24h')" class="cursor-pointer filter-chip">شبانه‌روزی</button>
+                    <button type="button" wire:click="copyFirstDay" class="cursor-pointer filter-chip">ساعت شنبه برای همه روزها</button>
                 </div>
                 <div class="divide-y divide-slate-100">
                     @foreach ($hours['days'] as $i => $day)
@@ -212,10 +212,10 @@
                             <x-status-badge :status="App\Enums\ModerationStatus::from($photo['status'])" class="absolute top-1.5 right-1.5 text-[10px]" />
                             <div class="absolute inset-x-1.5 bottom-1.5 flex justify-between">
                                 <span class="flex gap-1">
-                                    <button type="button" wire:click="movePhoto({{ $i }}, -1)" class="rounded-lg bg-black/50 px-2 text-white" title="قبلی">→</button>
-                                    <button type="button" wire:click="movePhoto({{ $i }}, 1)" class="rounded-lg bg-black/50 px-2 text-white" title="بعدی">←</button>
+                                    <button type="button" wire:click="movePhoto({{ $i }}, -1)" class="cursor-pointer rounded-lg bg-black/50 px-2 text-white" title="قبلی">→</button>
+                                    <button type="button" wire:click="movePhoto({{ $i }}, 1)" class="cursor-pointer rounded-lg bg-black/50 px-2 text-white" title="بعدی">←</button>
                                 </span>
-                                <button type="button" wire:click="deletePhoto({{ $photo['id'] }})" wire:confirm="این تصویر حذف شود؟" class="rounded-lg bg-rose-600/90 px-2 text-xs text-white">حذف</button>
+                                <button type="button" wire:click="deletePhoto({{ $photo['id'] }})" wire:confirm="این تصویر حذف شود؟" class="cursor-pointer rounded-lg bg-rose-600/90 px-2 text-xs text-white">حذف</button>
                             </div>
                         </div>
                         <input wire:model="photos.{{ $i }}.caption" class="input py-1.5 text-xs" placeholder="توضیح کوتاه">
@@ -227,7 +227,7 @@
                         <div class="relative aspect-square overflow-hidden rounded-xl bg-slate-100 ring-2 ring-violet-300">
                             <img src="{{ $file->temporaryUrl() }}" class="size-full object-cover">
                             <span class="chip absolute top-1.5 right-1.5 bg-violet-600 text-[10px] text-white">جدید</span>
-                            <button type="button" wire:click="removeNewPhoto({{ $i }})" class="absolute bottom-1.5 left-1.5 rounded-lg bg-rose-600/90 px-2 text-xs text-white">حذف</button>
+                            <button type="button" wire:click="removeNewPhoto({{ $i }})" class="cursor-pointer absolute bottom-1.5 left-1.5 rounded-lg bg-rose-600/90 px-2 text-xs text-white">حذف</button>
                         </div>
                         <input wire:model="newCaptions.{{ $i }}" class="input py-1.5 text-xs" placeholder="توضیح کوتاه">
                     </div>
@@ -245,8 +245,8 @@
         </section>
 
         <div class="flex gap-2">
-            <button class="btn-primary px-8" wire:loading.attr="disabled" wire:target="save">{{ $listing ? 'ذخیره تغییرات' : 'ثبت پیج' }}</button>
-            <a href="{{ route('dashboard') }}" wire:navigate class="btn-light">انصراف</a>
+            <button class="cursor-pointer btn-primary px-8" wire:loading.attr="disabled" wire:target="save">{{ $listing ? 'ذخیره تغییرات' : 'ثبت پیج' }}</button>
+            <a href="{{ route('dashboard') }}" wire:navigate class="cursor-pointer btn-light">انصراف</a>
         </div>
         @if ($errors->any())
             <p class="error">لطفاً خطاهای فرم را برطرف کنید.</p>

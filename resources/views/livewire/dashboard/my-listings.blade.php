@@ -1,12 +1,12 @@
 <x-dashboard-shell title="پیج‌های من">
     <x-slot:actions>
-        <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="btn-primary">+ ثبت پیج جدید</a>
+        <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="cursor-pointer btn-primary">+ ثبت پیج جدید</a>
     </x-slot:actions>
 
     @if ($listings->isEmpty())
         <x-empty icon="🚀" title="هنوز پیجی ثبت نکرده‌اید">
             <p>اولین پیج یا کانال خود را ثبت کنید تا بعد از تأیید در نشونی نمایش داده شود.</p>
-            <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="btn-primary mt-4">ثبت اولین پیج</a>
+            <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="cursor-pointer btn-primary mt-4">ثبت اولین پیج</a>
         </x-empty>
     @else
         <div class="stagger space-y-3">
@@ -20,7 +20,7 @@
                             </div>
                             <div class="min-w-0">
                                 <div class="flex flex-wrap items-center gap-2">
-                                    <a href="{{ route('listings.show', $listing) }}" wire:navigate class="truncate font-bold hover:text-violet-700">{{ $listing->title }}</a>
+                                    <a href="{{ route('listings.show', $listing) }}" wire:navigate class="cursor-pointer truncate font-bold hover:text-violet-700">{{ $listing->title }}</a>
                                     <x-status-badge :status="$listing->status" />
                                     @if ($listing->isFeatured())
                                         <span class="chip bg-amber-100 text-amber-700" title="تا {{ fa_date($listing->featured_until) }}">⭐ ویژه تا {{ fa_date($listing->featured_until, 'd MMMM') }}</span>
@@ -34,16 +34,16 @@
                         </div>
 
                         <div class="flex flex-wrap gap-2">
-                            <a href="{{ route('dashboard.listings.edit', $listing) }}" wire:navigate class="btn-light py-2">✏️ ویرایش</a>
+                            <a href="{{ route('dashboard.listings.edit', $listing) }}" wire:navigate class="cursor-pointer btn-light py-2">✏️ ویرایش</a>
                             @php($grade = App\Services\ListingSeoAudit::grade($seoScores[$listing->id]))
-                            <a href="{{ route('dashboard.seo', $listing) }}" wire:navigate class="btn-light py-2" title="امتیاز سئو و راه‌های بهبود">
+                            <a href="{{ route('dashboard.seo', $listing) }}" wire:navigate class="cursor-pointer btn-light py-2" title="امتیاز سئو و راه‌های بهبود">
                                 🔎 سئو <span class="chip {{ $grade['class'] }} px-2 py-0.5">{{ fa_number($seoScores[$listing->id]) }}</span>
                             </a>
                             @if ($listing->status === App\Enums\ModerationStatus::Approved)
-                                <a href="{{ route('dashboard.feature', $listing) }}" wire:navigate class="btn py-2 bg-amber-50 text-amber-700 hover:bg-amber-100">⭐ {{ $listing->isFeatured() ? 'تمدید ویژه' : 'ویژه کردن' }}</a>
-                                <a href="{{ route('dashboard.banner', $listing) }}" wire:navigate class="btn-light py-2">🖼️ بنر</a>
+                                <a href="{{ route('dashboard.feature', $listing) }}" wire:navigate class="cursor-pointer btn py-2 bg-amber-50 text-amber-700 hover:bg-amber-100">⭐ {{ $listing->isFeatured() ? 'تمدید ویژه' : 'ویژه کردن' }}</a>
+                                <a href="{{ route('dashboard.banner', $listing) }}" wire:navigate class="cursor-pointer btn-light py-2">🖼️ بنر</a>
                             @endif
-                            <button wire:click="delete({{ $listing->id }})" wire:confirm="«{{ $listing->title }}» برای همیشه حذف شود؟" class="btn-danger py-2">حذف</button>
+                            <button wire:click="delete({{ $listing->id }})" wire:confirm="«{{ $listing->title }}» برای همیشه حذف شود؟" class="cursor-pointer btn-danger py-2">حذف</button>
                         </div>
                     </div>
 

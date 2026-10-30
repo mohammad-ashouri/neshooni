@@ -61,7 +61,7 @@
                 @error('bio') <p class="error">{{ $message }}</p> @enderror
             </div>
 
-            <button class="btn-primary">ذخیره پروفایل</button>
+            <button class="cursor-pointer btn-primary">ذخیره پروفایل</button>
         </form>
 
         <form wire:submit="changePassword" class="card h-fit space-y-4 p-6">
@@ -80,7 +80,7 @@
                 <label class="label">تکرار رمز جدید</label>
                 <input wire:model="password_confirmation" type="password" class="input text-left" dir="ltr">
             </div>
-            <button class="btn-light w-full">تغییر رمز</button>
+            <button class="cursor-pointer btn-light w-full">تغییر رمز</button>
         </form>
     </div>
 </x-dashboard-shell>

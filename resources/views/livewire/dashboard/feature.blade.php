@@ -22,7 +22,7 @@
                 <h2 class="text-lg font-bold">{{ $plan['label'] }}</h2>
                 <div class="mt-3 text-3xl font-black">{{ fa_number($plan['price']) }}</div>
                 <div class="text-sm text-slate-500">تومان · {{ fa_number($plan['days']) }} روز</div>
-                <button wire:click="buy({{ $plan['days'] }})" class="btn-primary mt-6">انتخاب و پرداخت</button>
+                <button wire:click="buy({{ $plan['days'] }})" class="cursor-pointer btn-primary mt-6">انتخاب و پرداخت</button>
             </div>
         @endforeach
     </div>

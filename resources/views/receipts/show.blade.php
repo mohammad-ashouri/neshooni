@@ -59,8 +59,8 @@
 <body>
     <div class="toolbar">
         <span style="flex: 1; color: #475569; font-family: Vazirmatn; font-size: 14px">پیش‌نمایش چاپ · A5</span>
-        <button onclick="print()" class="btn-primary">🖨️ چاپ / ذخیره PDF</button>
-        <button onclick="history.length > 1 ? history.back() : close()" class="btn-light">بازگشت</button>
+        <button onclick="print()" class="cursor-pointer btn-primary">🖨️ چاپ / ذخیره PDF</button>
+        <button onclick="history.length > 1 ? history.back() : close()" class="cursor-pointer btn-light">بازگشت</button>
     </div>
 
     <article class="rc">

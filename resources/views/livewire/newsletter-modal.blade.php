@@ -14,7 +14,7 @@
                 <div class="p-6">
                     @if ($done)
                         <p class="text-center leading-7 text-slate-600">✅ عضو خبرنامه شدید. پیج‌های جدید را به شما خبر می‌دهیم.</p>
-                        <button wire:click="dismiss" class="btn-primary mt-5 w-full">باشه</button>
+                        <button wire:click="dismiss" class="cursor-pointer btn-primary mt-5 w-full">باشه</button>
                     @else
                         <p class="text-center text-sm leading-7 text-slate-600">
                             @if ($category)
@@ -31,8 +31,8 @@
                                     @error('contact') <p class="error text-center">{{ $message }}</p> @enderror
                                 </div>
                             @endguest
-                            <button class="btn-primary w-full">عضویت در خبرنامه</button>
-                            <button type="button" wire:click="dismiss" class="w-full py-1 text-sm text-slate-500 hover:text-slate-700">نه، ممنون</button>
+                            <button class="cursor-pointer btn-primary w-full">عضویت در خبرنامه</button>
+                            <button type="button" wire:click="dismiss" class="cursor-pointer w-full py-1 text-sm text-slate-500 hover:text-slate-700">نه، ممنون</button>
                         </form>
                     @endif
                 </div>

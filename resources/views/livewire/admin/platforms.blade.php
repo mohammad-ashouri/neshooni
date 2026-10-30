@@ -1,7 +1,7 @@
 <div>
     <div class="mb-5 flex items-center justify-between">
         <h1 class="text-2xl font-extrabold">پلتفرم‌ها</h1>
-        <button wire:click="create" class="btn-primary">+ پلتفرم جدید</button>
+        <button wire:click="create" class="cursor-pointer btn-primary">+ پلتفرم جدید</button>
     </div>
 
     <div class="card overflow-x-auto">
@@ -17,9 +17,9 @@
                         <td class="td">{{ $platform->usesPhone() ? 'شماره تلفن' : 'نام کاربری' }}</td>
                         <td class="td">{{ fa_number($platform->listings_count) }}</td>
                         <td class="td">
-                            <button wire:click="toggle({{ $platform->id }})" @class(['chip', 'bg-emerald-50 text-emerald-700' => $platform->is_active, 'bg-slate-100 text-slate-500' => ! $platform->is_active])>{{ $platform->is_active ? 'فعال' : 'غیرفعال' }}</button>
+                            <button wire:click="toggle({{ $platform->id }})" @class(['cursor-pointer chip', 'bg-emerald-50 text-emerald-700' => $platform->is_active, 'bg-slate-100 text-slate-500' => ! $platform->is_active])>{{ $platform->is_active ? 'فعال' : 'غیرفعال' }}</button>
                         </td>
-                        <td class="td text-left"><button wire:click="edit({{ $platform->id }})" class="rounded-lg px-2 py-1 text-xs text-violet-700 hover:bg-violet-50">ویرایش</button></td>
+                        <td class="td text-left"><button wire:click="edit({{ $platform->id }})" class="cursor-pointer rounded-lg px-2 py-1 text-xs text-violet-700 hover:bg-violet-50">ویرایش</button></td>
                     </tr>
                 @endforeach
             </tbody>
@@ -71,7 +71,7 @@
                         <img src="{{ $logo->temporaryUrl() }}" class="size-12 rounded-lg object-cover">
                     @elseif ($editing?->logoUrl())
                         <img src="{{ $editing->logoUrl() }}" class="size-12 rounded-lg object-cover">
-                        <button type="button" wire:click="removeLogo" class="text-xs text-rose-600 hover:underline">حذف لوگو</button>
+                        <button type="button" wire:click="removeLogo" class="cursor-pointer text-xs text-rose-600 hover:underline">حذف لوگو</button>
                     @else
                         <span class="grid size-12 place-items-center rounded-lg text-lg font-black text-white" style="background: {{ $color }}">{{ $letter }}</span>
                     @endif
@@ -85,7 +85,7 @@
                     <label class="flex items-center gap-2 text-sm"><input type="checkbox" wire:model="is_active" class="accent-violet-600"> فعال</label>
                     <label class="flex items-center gap-2 text-sm">ترتیب <input wire:model="sort" type="number" class="input w-20 py-1.5"></label>
                 </div>
-                <button class="btn-primary w-full">ذخیره</button>
+                <button class="cursor-pointer btn-primary w-full">ذخیره</button>
             </form>
         </x-modal>
     @endif

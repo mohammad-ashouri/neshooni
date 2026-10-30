@@ -21,9 +21,9 @@
                 <input wire:model="password_confirmation" id="password_confirmation" type="password" class="input text-left" dir="ltr">
             </div>
         </div>
-        <button class="btn-primary w-full" wire:loading.attr="disabled">ساخت حساب</button>
+        <button class="cursor-pointer btn-primary w-full" wire:loading.attr="disabled">ساخت حساب</button>
     </form>
     <p class="mt-6 text-center text-sm text-slate-500">
-        قبلاً ثبت‌نام کرده‌اید؟ <a href="{{ route('login') }}" wire:navigate class="font-semibold text-violet-700 hover:underline">وارد شوید</a>
+        قبلاً ثبت‌نام کرده‌اید؟ <a href="{{ route('login') }}" wire:navigate class="cursor-pointer font-semibold text-violet-700 hover:underline">وارد شوید</a>
     </p>
 </x-auth-card>

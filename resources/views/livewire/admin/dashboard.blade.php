@@ -3,7 +3,7 @@
         <h1 class="text-2xl font-extrabold">داشبورد</h1>
         <div class="flex rounded-xl border border-slate-200 bg-surface p-1">
             @foreach ([7 => '۷ روز', 30 => '۳۰ روز', 90 => '۹۰ روز'] as $value => $label)
-                <button wire:click="$set('days', {{ $value }})" @class(['rounded-lg px-3 py-1.5 text-sm', 'bg-violet-600 text-white' => $days === $value, 'text-slate-600' => $days !== $value])>{{ $label }}</button>
+                <button wire:click="$set('days', {{ $value }})" @class(['cursor-pointer rounded-lg px-3 py-1.5 text-sm', 'bg-violet-600 text-white' => $days === $value, 'text-slate-600' => $days !== $value])>{{ $label }}</button>
             @endforeach
         </div>
     </div>
@@ -36,7 +36,7 @@
             <div class="card divide-y divide-slate-100">
                 @foreach ($pending as [$label, $count, $route, $permission])
                     @can($permission)
-                        <a href="{{ route($route) }}" wire:navigate class="flex items-center justify-between px-5 py-3 text-sm hover:bg-slate-50">
+                        <a href="{{ route($route) }}" wire:navigate class="cursor-pointer flex items-center justify-between px-5 py-3 text-sm hover:bg-slate-50">
                             <span>{{ $label }}</span>
                             <span @class(['chip', 'bg-rose-50 text-rose-700' => $count, 'bg-slate-100 text-slate-500' => ! $count])>{{ fa_number($count) }}</span>
                         </a>

@@ -2,8 +2,8 @@
     <h1 class="mb-5 text-2xl font-extrabold">گزارش‌های تخلف</h1>
 
     <div class="mb-4 flex gap-2">
-        <button wire:click="$set('status', 'open')" @class(['filter-chip', 'filter-chip-active' => $status === 'open'])>باز ({{ fa_number($openCount) }})</button>
-        <button wire:click="$set('status', 'closed')" @class(['filter-chip', 'filter-chip-active' => $status !== 'open'])>بسته‌شده</button>
+        <button wire:click="$set('status', 'open')" @class(['cursor-pointer filter-chip', 'filter-chip-active' => $status === 'open'])>باز ({{ fa_number($openCount) }})</button>
+        <button wire:click="$set('status', 'closed')" @class(['cursor-pointer filter-chip', 'filter-chip-active' => $status !== 'open'])>بسته‌شده</button>
     </div>
 
     @if ($reports->isEmpty())
@@ -31,10 +31,10 @@
                         @if (! $target)
                             <span class="text-slate-400">این مورد حذف شده است.</span>
                         @elseif ($report->isAboutListing())
-                            <a href="{{ route('listings.show', $target) }}" wire:navigate class="font-semibold text-violet-700 hover:underline">{{ $target->title }}</a>
+                            <a href="{{ route('listings.show', $target) }}" wire:navigate class="cursor-pointer font-semibold text-violet-700 hover:underline">{{ $target->title }}</a>
                             <x-status-badge :status="$target->status" class="ms-1" />
                         @else
-                            <div class="text-xs text-slate-500">نظر {{ $target->user->name }} درباره <a href="{{ route('listings.show', $target->listing_id) }}" wire:navigate class="text-violet-700 hover:underline">{{ $target->listing->title }}</a> <x-status-badge :status="$target->status" class="ms-1" /></div>
+                            <div class="text-xs text-slate-500">نظر {{ $target->user->name }} درباره <a href="{{ route('listings.show', $target->listing_id) }}" wire:navigate class="cursor-pointer text-violet-700 hover:underline">{{ $target->listing->title }}</a> <x-status-badge :status="$target->status" class="ms-1" /></div>
                             <p class="mt-1">{{ $target->body }}</p>
                         @endif
                     </div>
@@ -43,10 +43,10 @@
                         <div class="mt-3 flex flex-col gap-2 sm:flex-row">
                             <input wire:model="notes.{{ $report->id }}" class="input flex-1 py-2 text-sm" placeholder="یادداشت مدیر (اختیاری)">
                             @if ($target)
-                                <button wire:click="disableTarget({{ $report->id }})" wire:confirm="مورد گزارش‌شده غیرفعال شود؟" class="btn-danger py-2">غیرفعال کردن</button>
+                                <button wire:click="disableTarget({{ $report->id }})" wire:confirm="مورد گزارش‌شده غیرفعال شود؟" class="cursor-pointer btn-danger py-2">غیرفعال کردن</button>
                             @endif
-                            <button wire:click="close({{ $report->id }}, 'resolved')" class="btn-light py-2">بستن</button>
-                            <button wire:click="close({{ $report->id }}, 'dismissed')" class="btn-light py-2">گزارش بی‌مورد</button>
+                            <button wire:click="close({{ $report->id }}, 'resolved')" class="cursor-pointer btn-light py-2">بستن</button>
+                            <button wire:click="close({{ $report->id }}, 'dismissed')" class="cursor-pointer btn-light py-2">گزارش بی‌مورد</button>
                         </div>
                     @elseif ($report->note)
                         <p class="mt-2 text-xs text-slate-500">یادداشت: {{ $report->note }}</p>

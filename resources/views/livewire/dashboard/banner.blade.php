@@ -32,7 +32,7 @@
                         <label class="label">قالب</label>
                         <div class="grid grid-cols-3 gap-2">
                             @foreach (['story' => 'استوری', 'post' => 'پست', 'badge' => 'نشان سایت'] as $value => $label)
-                                <button wire:click="$set('format', '{{ $value }}')" @class(['filter-chip py-2', 'filter-chip-active' => $format === $value])>{{ $label }}</button>
+                                <button wire:click="$set('format', '{{ $value }}')" @class(['cursor-pointer filter-chip py-2', 'filter-chip-active' => $format === $value])>{{ $label }}</button>
                             @endforeach
                         </div>
                     </div>
@@ -40,23 +40,23 @@
                         <label class="label">رنگ</label>
                         <div class="grid grid-cols-3 gap-2">
                             @foreach (['violet' => 'بنفش', 'dark' => 'تیره', 'light' => 'روشن'] as $value => $label)
-                                <button wire:click="$set('theme', '{{ $value }}')" @class(['filter-chip py-2', 'filter-chip-active' => $theme === $value])>{{ $label }}</button>
+                                <button wire:click="$set('theme', '{{ $value }}')" @class(['cursor-pointer filter-chip py-2', 'filter-chip-active' => $theme === $value])>{{ $label }}</button>
                             @endforeach
                         </div>
                     </div>
-                    <button onclick="downloadBanner(document.querySelector('canvas[data-banner]'), 'neshooni-{{ $format }}.png')" class="btn-primary w-full">⬇️ دانلود تصویر PNG</button>
+                    <button onclick="downloadBanner(document.querySelector('canvas[data-banner]'), 'neshooni-{{ $format }}.png')" class="cursor-pointer btn-primary w-full">⬇️ دانلود تصویر PNG</button>
                 </div>
 
                 <div class="card space-y-2 p-5">
                     <h2 class="text-sm font-bold">متن پیشنهادی بیو یا کپشن</h2>
                     <textarea readonly rows="3" class="input text-sm">{{ $bioText }}</textarea>
-                    <button x-on:click="navigator.clipboard.writeText(@js($bioText)); $dispatch('toast', { message: 'متن کپی شد' })" class="btn-light w-full py-2 text-xs">📋 کپی متن</button>
+                    <button x-on:click="navigator.clipboard.writeText(@js($bioText)); $dispatch('toast', { message: 'متن کپی شد' })" class="cursor-pointer btn-light w-full py-2 text-xs">📋 کپی متن</button>
                 </div>
 
                 <div class="card space-y-2 p-5">
                     <h2 class="text-sm font-bold">کد لینک برای سایت شما</h2>
                     <textarea readonly rows="3" class="input text-left text-xs" dir="ltr">{{ $embed }}</textarea>
-                    <button x-on:click="navigator.clipboard.writeText(@js($embed)); $dispatch('toast', { message: 'کد کپی شد' })" class="btn-light w-full py-2 text-xs">📋 کپی کد</button>
+                    <button x-on:click="navigator.clipboard.writeText(@js($embed)); $dispatch('toast', { message: 'کد کپی شد' })" class="cursor-pointer btn-light w-full py-2 text-xs">📋 کپی کد</button>
                 </div>
             </div>
         </div>

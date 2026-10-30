@@ -10,7 +10,7 @@
 
 <a href="{{ route('listings.show', $listing) }}" wire:navigate
    {{ $attributes->class([
-       'group relative flex h-full flex-col rounded-2xl border p-4 transition duration-300 hover:-translate-y-1 hover:shadow-xl',
+       'group relative flex h-full cursor-pointer flex-col rounded-2xl border p-4 transition duration-300 hover:-translate-y-1 hover:shadow-xl',
        'border-amber-300 bg-linear-to-b from-amber-50 to-surface ring-1 ring-amber-200 hover:shadow-amber-500/15' => $featured,
        'border-slate-200 bg-surface hover:border-violet-200 hover:shadow-violet-500/10' => ! $featured,
    ]) }}>

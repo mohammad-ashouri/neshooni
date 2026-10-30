@@ -20,7 +20,7 @@
                 @foreach ($users as $user)
                     <tr wire:key="user-{{ $user->id }}">
                         <td class="td">
-                            <a href="{{ route('business.show', $user) }}" wire:navigate class="flex items-center gap-2 hover:text-violet-700">
+                            <a href="{{ route('business.show', $user) }}" wire:navigate class="cursor-pointer flex items-center gap-2 hover:text-violet-700">
                                 <x-avatar :src="$user->avatarUrl()" :name="$user->name" :seed="$user->id" class="size-8 text-sm" rounded="rounded-full" />
                                 <span class="font-semibold">{{ $user->name }}</span>
                             </a>
@@ -29,7 +29,7 @@
                         <td class="td">{{ fa_number($user->listings_count) }}</td>
                         <td class="td text-slate-500">{{ fa_date($user->created_at) }}</td>
                         <td class="td">
-                            <button wire:click="toggleVerified({{ $user->id }})" title="{{ $user->isVerified() ? 'برداشتن نشان' : 'دادن نشان' }}" @class(['rounded-lg px-2 py-1', 'text-sky-500' => $user->isVerified(), 'text-slate-300 hover:text-sky-400' => ! $user->isVerified()])>
+                            <button wire:click="toggleVerified({{ $user->id }})" title="{{ $user->isVerified() ? 'برداشتن نشان' : 'دادن نشان' }}" @class(['cursor-pointer rounded-lg px-2 py-1', 'text-sky-500' => $user->isVerified(), 'text-slate-300 hover:text-sky-400' => ! $user->isVerified()])>
                                 <x-verified-badge class="size-5 text-current" />
                             </button>
                         </td>

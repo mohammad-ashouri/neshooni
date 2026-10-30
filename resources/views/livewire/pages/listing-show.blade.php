@@ -7,10 +7,10 @@
 <div class="mx-auto max-w-6xl px-4 py-8">
     {{-- مسیر --}}
     <nav class="mb-5 flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
-        <a href="{{ route('home') }}" wire:navigate class="hover:text-violet-700">خانه</a>
+        <a href="{{ route('home') }}" wire:navigate class="cursor-pointer hover:text-violet-700">خانه</a>
         @foreach ($listing->category?->path() ?? [] as $node)
             <span>›</span>
-            <a href="{{ $node->url() }}" wire:navigate class="hover:text-violet-700">{{ $node->name }}</a>
+            <a href="{{ $node->url() }}" wire:navigate class="cursor-pointer hover:text-violet-700">{{ $node->name }}</a>
         @endforeach
         <span>›</span>
         <span class="font-semibold text-slate-800">{{ $listing->title }}</span>
@@ -53,18 +53,18 @@
                 <p class="mt-5 leading-8 whitespace-pre-line text-slate-700">{{ $listing->description }}</p>
 
                 <div class="mt-6 flex flex-wrap gap-2">
-                    <button wire:click="visit" class="btn-primary">مشاهده در {{ $listing->platform->label }} ↗</button>
+                    <button wire:click="visit" class="cursor-pointer btn-primary">مشاهده در {{ $listing->platform->label }} ↗</button>
                     @unless ($this->isOwner)
-                        <button wire:click="toggleFollow" @class(['btn', 'bg-rose-50 text-rose-700 hover:bg-rose-100' => $this->isFollowing, 'btn-light' => ! $this->isFollowing])>
+                        <button wire:click="toggleFollow" @class(['cursor-pointer btn', 'bg-rose-50 text-rose-700 hover:bg-rose-100' => $this->isFollowing, 'btn-light' => ! $this->isFollowing])>
                             {{ $this->isFollowing ? '💔 لغو دنبال کردن' : '❤️ دنبال کردن' }}
                         </button>
                     @endunless
-                    <button wire:click="$set('showShare', true)" class="btn-light">🔗 اشتراک‌گذاری</button>
+                    <button wire:click="$set('showShare', true)" class="cursor-pointer btn-light">🔗 اشتراک‌گذاری</button>
                     @if ($this->isOwner)
-                        <a href="{{ route('dashboard.listings.edit', $listing) }}" wire:navigate class="btn-light">✏️ ویرایش</a>
-                        <a href="{{ route('dashboard.banner', $listing) }}" wire:navigate class="btn-light">🖼️ بنر «ما در نشونی هستیم»</a>
+                        <a href="{{ route('dashboard.listings.edit', $listing) }}" wire:navigate class="cursor-pointer btn-light">✏️ ویرایش</a>
+                        <a href="{{ route('dashboard.banner', $listing) }}" wire:navigate class="cursor-pointer btn-light">🖼️ بنر «ما در نشونی هستیم»</a>
                     @else
-                        <button wire:click="openReport('listing')" class="btn text-slate-500 hover:bg-slate-100">🚩 گزارش</button>
+                        <button wire:click="openReport('listing')" class="cursor-pointer btn text-slate-500 hover:bg-slate-100">🚩 گزارش</button>
                     @endif
                 </div>
             </section>
@@ -75,7 +75,7 @@
                     <h2 class="mb-4 font-bold">🖼️ نمونه کارها و محصولات</h2>
                     <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
                         @foreach ($this->photos as $i => $item)
-                            <button wire:click="showPhoto({{ $i }})" class="group relative aspect-square overflow-hidden rounded-xl bg-slate-100">
+                            <button wire:click="showPhoto({{ $i }})" class="cursor-pointer group relative aspect-square overflow-hidden rounded-xl bg-slate-100">
                                 <img src="{{ $item->url() }}" alt="{{ $item->caption ?: $listing->title }}" class="size-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
                                 @if ($item->caption)
                                     <span class="absolute inset-x-0 bottom-0 truncate bg-linear-to-t from-black/70 px-2 pt-6 pb-1.5 text-xs text-white">{{ $item->caption }}</span>
@@ -119,16 +119,16 @@
                             <form wire:submit="submitReview" class="space-y-3">
                                 <div class="flex items-center gap-1 text-2xl">
                                     @for ($i = 1; $i <= 5; $i++)
-                                        <button type="button" wire:click="$set('rating', {{ $i }})" @class(['transition hover:scale-110', 'text-amber-400' => $rating >= $i, 'text-slate-300' => $rating < $i]) aria-label="{{ fa_number($i) }} ستاره">★</button>
+                                        <button type="button" wire:click="$set('rating', {{ $i }})" @class(['cursor-pointer transition hover:scale-110', 'text-amber-400' => $rating >= $i, 'text-slate-300' => $rating < $i]) aria-label="{{ fa_number($i) }} ستاره">★</button>
                                     @endfor
                                 </div>
                                 @error('rating') <p class="error">{{ $message }}</p> @enderror
                                 <textarea wire:model="body" rows="3" class="input" placeholder="تجربه خود از خرید یا خدمات این کسب‌وکار را بنویسید..."></textarea>
                                 @error('body') <p class="error">{{ $message }}</p> @enderror
-                                <button class="btn-primary">{{ $this->myReview ? 'ویرایش نظر' : 'ثبت نظر' }}</button>
+                                <button class="cursor-pointer btn-primary">{{ $this->myReview ? 'ویرایش نظر' : 'ثبت نظر' }}</button>
                             </form>
                         @else
-                            <p class="text-sm text-slate-600">برای ثبت نظر <a href="{{ route('login') }}" wire:navigate class="font-semibold text-violet-700 hover:underline">وارد شوید</a>.</p>
+                            <p class="text-sm text-slate-600">برای ثبت نظر <a href="{{ route('login') }}" wire:navigate class="cursor-pointer font-semibold text-violet-700 hover:underline">وارد شوید</a>.</p>
                         @endauth
                     </div>
                 @endif
@@ -152,7 +152,7 @@
                                 </div>
                             @endif
                             @if (! $this->isOwner && $review->user_id !== auth()->id())
-                                <button wire:click="openReport('{{ $review->id }}')" class="mt-2 text-xs text-slate-400 hover:text-rose-600">🚩 گزارش این نظر</button>
+                                <button wire:click="openReport('{{ $review->id }}')" class="cursor-pointer mt-2 text-xs text-slate-400 hover:text-rose-600">🚩 گزارش این نظر</button>
                             @endif
                         </article>
                     @empty
@@ -193,19 +193,19 @@
                 @if ($listing->address)
                     <p class="leading-7 text-slate-600">{{ $listing->address }}</p>
                     <div class="flex gap-2">
-                        <a href="https://www.google.com/maps/search/?api=1&query={{ $mapQuery }}" target="_blank" rel="noopener" class="btn-light flex-1 py-2 text-xs">🗺️ نقشه</a>
-                        <button x-on:click="navigator.clipboard.writeText(@js($listing->address)); $dispatch('toast', { message: 'آدرس کپی شد' })" class="btn-light flex-1 py-2 text-xs">📋 کپی آدرس</button>
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ $mapQuery }}" target="_blank" rel="noopener" class="cursor-pointer btn-light flex-1 py-2 text-xs">🗺️ نقشه</a>
+                        <button x-on:click="navigator.clipboard.writeText(@js($listing->address)); $dispatch('toast', { message: 'آدرس کپی شد' })" class="cursor-pointer btn-light flex-1 py-2 text-xs">📋 کپی آدرس</button>
                     </div>
                 @endif
                 @if ($listing->phone)
-                    <a href="tel:{{ $listing->phone }}" class="btn-light w-full" dir="ltr">📞 {{ $listing->phone }}</a>
+                    <a href="tel:{{ $listing->phone }}" class="cursor-pointer btn-light w-full" dir="ltr">📞 {{ $listing->phone }}</a>
                 @endif
                 @if (! $listing->online_only && ! $listing->address && ! $listing->phone && ! $listing->placeLabel())
                     <p class="text-slate-400">اطلاعاتی ثبت نشده است.</p>
                 @endif
             </section>
 
-            <a href="{{ route('business.show', $listing->user) }}" wire:navigate class="card flex items-center gap-3 p-5 transition hover:border-violet-200">
+            <a href="{{ route('business.show', $listing->user) }}" wire:navigate class="cursor-pointer card flex items-center gap-3 p-5 transition hover:border-violet-200">
                 <x-avatar :src="$listing->user->avatarUrl()" :name="$listing->user->name" :seed="$listing->user_id" class="size-12 text-lg" rounded="rounded-full" />
                 <div class="min-w-0 flex-1">
                     <div class="flex items-center gap-1 font-bold">{{ $listing->user->name }} @if ($listing->user->isVerified()) <x-verified-badge /> @endif</div>
@@ -232,17 +232,17 @@
         @php($current = $this->photos[$photo])
         <div class="fixed inset-0 z-[85] grid place-items-center bg-black/90 p-4" wire:click.self="$set('photo', null)"
              @keydown.escape.window="$wire.set('photo', null)" @keydown.arrow-left.window="$wire.nextPhoto(1)" @keydown.arrow-right.window="$wire.nextPhoto(-1)">
-            <button wire:click="$set('photo', null)" class="absolute top-4 left-4 rounded-full bg-white/10 px-3 py-1.5 text-white hover:bg-white/20">✕</button>
+            <button wire:click="$set('photo', null)" class="cursor-pointer absolute top-4 left-4 rounded-full bg-white/10 px-3 py-1.5 text-white hover:bg-white/20">✕</button>
             <figure class="max-w-4xl text-center">
                 <img src="{{ $current->url() }}" alt="{{ $current->caption ?: $listing->title }}" class="max-h-[80vh] rounded-xl object-contain">
                 <figcaption class="mt-3 text-sm text-white/80">{{ $current->caption }} <span class="text-white/50">({{ fa_number($photo + 1) }} از {{ fa_number($this->photos->count()) }})</span></figcaption>
             </figure>
             @if ($this->photos->count() > 1)
                 {{-- فلش‌ها SVG هستند چون کاراکترهای ‹ › در متن راست‌به‌چپ خودکار برعکس نمایش داده می‌شوند --}}
-                <button wire:click="nextPhoto(-1)" class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20" aria-label="عکس قبلی">
+                <button wire:click="nextPhoto(-1)" class="cursor-pointer absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20" aria-label="عکس قبلی">
                     <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
                 </button>
-                <button wire:click="nextPhoto(1)" class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20" aria-label="عکس بعدی">
+                <button wire:click="nextPhoto(1)" class="cursor-pointer absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20" aria-label="عکس بعدی">
                     <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
                 </button>
             @endif
@@ -253,12 +253,12 @@
     @if ($showShare)
         <x-modal title="اشتراک‌گذاری پیج" close="$set('showShare', false)">
             <div class="grid grid-cols-3 gap-2 text-sm">
-                <a href="https://t.me/share/url?url={{ urlencode($url) }}&text={{ urlencode($shareText) }}" target="_blank" rel="noopener" class="btn-light flex-col py-4">✈️<span>تلگرام</span></a>
-                <a href="https://wa.me/?text={{ urlencode($shareText.' '.$url) }}" target="_blank" rel="noopener" class="btn-light flex-col py-4">💬<span>واتساپ</span></a>
-                <a href="https://twitter.com/intent/tweet?url={{ urlencode($url) }}&text={{ urlencode($shareText) }}" target="_blank" rel="noopener" class="btn-light flex-col py-4">𝕏<span>ایکس</span></a>
-                <a href="mailto:?subject={{ rawurlencode($shareText) }}&body={{ rawurlencode($url) }}" class="btn-light flex-col py-4">✉️<span>ایمیل</span></a>
-                <button x-on:click="navigator.clipboard.writeText(@js($url)); $dispatch('toast', { message: 'لینک کپی شد' })" class="btn-light flex-col py-4">📋<span>کپی لینک</span></button>
-                <button x-show="navigator.share" x-on:click="navigator.share({ title: @js($shareText), url: @js($url) })" class="btn-light flex-col py-4">📤<span>سایر</span></button>
+                <a href="https://t.me/share/url?url={{ urlencode($url) }}&text={{ urlencode($shareText) }}" target="_blank" rel="noopener" class="cursor-pointer btn-light flex-col py-4">✈️<span>تلگرام</span></a>
+                <a href="https://wa.me/?text={{ urlencode($shareText.' '.$url) }}" target="_blank" rel="noopener" class="cursor-pointer btn-light flex-col py-4">💬<span>واتساپ</span></a>
+                <a href="https://twitter.com/intent/tweet?url={{ urlencode($url) }}&text={{ urlencode($shareText) }}" target="_blank" rel="noopener" class="cursor-pointer btn-light flex-col py-4">𝕏<span>ایکس</span></a>
+                <a href="mailto:?subject={{ rawurlencode($shareText) }}&body={{ rawurlencode($url) }}" class="cursor-pointer btn-light flex-col py-4">✉️<span>ایمیل</span></a>
+                <button x-on:click="navigator.clipboard.writeText(@js($url)); $dispatch('toast', { message: 'لینک کپی شد' })" class="cursor-pointer btn-light flex-col py-4">📋<span>کپی لینک</span></button>
+                <button x-show="navigator.share" x-on:click="navigator.share({ title: @js($shareText), url: @js($url) })" class="cursor-pointer btn-light flex-col py-4">📤<span>سایر</span></button>
             </div>
             <input value="{{ $url }}" readonly class="input mt-4 text-left text-sm" dir="ltr" onclick="this.select()">
         </x-modal>
@@ -275,7 +275,7 @@
                 @endforeach
                 @error('reportReason') <p class="error">{{ $message }}</p> @enderror
                 <textarea wire:model="reportBody" rows="3" class="input" placeholder="توضیحات بیشتر (اختیاری)"></textarea>
-                <button class="btn-danger w-full">ارسال گزارش</button>
+                <button class="cursor-pointer btn-danger w-full">ارسال گزارش</button>
             </form>
         </x-modal>
     @endif

@@ -23,7 +23,7 @@
                     <div class="text-5xl">✅</div>
                     <h2 class="mt-4 text-lg font-bold">پیام شما رسید</h2>
                     <p class="mt-1 text-sm text-slate-500">در اولین فرصت پاسخ می‌دهیم.</p>
-                    <button wire:click="$set('sent', false)" class="btn-light mt-6">ارسال پیام دیگر</button>
+                    <button wire:click="$set('sent', false)" class="cursor-pointer btn-light mt-6">ارسال پیام دیگر</button>
                 </div>
             @else
                 <form wire:submit="send" class="space-y-4">
@@ -52,7 +52,7 @@
                         <textarea wire:model="body" rows="6" class="input"></textarea>
                         @error('body') <p class="error">{{ $message }}</p> @enderror
                     </div>
-                    <button class="btn-primary" wire:loading.attr="disabled">ارسال پیام</button>
+                    <button class="cursor-pointer btn-primary" wire:loading.attr="disabled">ارسال پیام</button>
                 </form>
             @endif
         </div>

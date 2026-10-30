@@ -11,7 +11,7 @@
         @if ($title)
             <div class="mb-4 flex items-center justify-between gap-3">
                 <h2 class="text-lg font-bold">{{ $title }}</h2>
-                <button type="button" wire:click="{{ $close }}" class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100" aria-label="بستن">✕</button>
+                <button type="button" wire:click="{{ $close }}" class="cursor-pointer rounded-lg p-1.5 text-slate-400 hover:bg-slate-100" aria-label="بستن">✕</button>
             </div>
         @endif
         {{ $slot }}

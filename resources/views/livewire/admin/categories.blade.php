@@ -1,7 +1,7 @@
 <div>
     <div class="mb-5 flex items-center justify-between">
         <h1 class="text-2xl font-extrabold">دسته‌بندی‌ها</h1>
-        <button wire:click="create" class="btn-primary">+ دسته اصلی</button>
+        <button wire:click="create" class="cursor-pointer btn-primary">+ دسته اصلی</button>
     </div>
 
     <div class="card overflow-x-auto">
@@ -22,10 +22,10 @@
                         <td class="td">{{ fa_number($category->sort) }}</td>
                         <td class="td text-left">
                             @if ($depth < App\Models\Category::MAX_DEPTH)
-                                <button wire:click="create({{ $category->id }})" class="rounded-lg px-2 py-1 text-xs text-violet-700 hover:bg-violet-50">+ زیردسته</button>
+                                <button wire:click="create({{ $category->id }})" class="cursor-pointer rounded-lg px-2 py-1 text-xs text-violet-700 hover:bg-violet-50">+ زیردسته</button>
                             @endif
-                            <button wire:click="edit({{ $category->id }})" class="rounded-lg px-2 py-1 text-xs text-slate-600 hover:bg-slate-100">ویرایش</button>
-                            <button wire:click="delete({{ $category->id }})" wire:confirm="«{{ $category->name }}» حذف شود؟" class="rounded-lg px-2 py-1 text-xs text-rose-600 hover:bg-rose-50">حذف</button>
+                            <button wire:click="edit({{ $category->id }})" class="cursor-pointer rounded-lg px-2 py-1 text-xs text-slate-600 hover:bg-slate-100">ویرایش</button>
+                            <button wire:click="delete({{ $category->id }})" wire:confirm="«{{ $category->name }}» حذف شود؟" class="cursor-pointer rounded-lg px-2 py-1 text-xs text-rose-600 hover:bg-rose-50">حذف</button>
                         </td>
                     </tr>
                 @endforeach
@@ -90,7 +90,7 @@
                         </div>
                     </div>
                 </details>
-                <button class="btn-primary w-full">ذخیره</button>
+                <button class="cursor-pointer btn-primary w-full">ذخیره</button>
             </form>
         </x-modal>
     @endif

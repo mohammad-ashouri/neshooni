@@ -1,7 +1,7 @@
 <x-dashboard-shell title="سئوی پیج">
     @if (! $this->listing)
         <x-empty icon="🔎" title="هنوز پیجی ثبت نکرده‌اید">
-            <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="btn-primary mt-4">ثبت اولین پیج</a>
+            <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="cursor-pointer btn-primary mt-4">ثبت اولین پیج</a>
         </x-empty>
     @else
         @php
@@ -52,9 +52,9 @@
                             @error('seoDescription') <p class="error">{{ $message }}</p> @enderror
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <button class="btn-primary">ذخیره</button>
+                            <button class="cursor-pointer btn-primary">ذخیره</button>
                             @if ($this->listing->seo->title || $this->listing->seo->description)
-                                <button type="button" wire:click="useAuto" class="btn-light">برگشت به حالت خودکار</button>
+                                <button type="button" wire:click="useAuto" class="cursor-pointer btn-light">برگشت به حالت خودکار</button>
                             @endif
                         </div>
                     </form>
@@ -80,8 +80,8 @@
                         @endforeach
                     </ul>
                     <div class="mt-3 flex flex-wrap gap-2">
-                        <a href="{{ route('dashboard.listings.edit', $this->listing) }}" wire:navigate class="btn-light py-2 text-xs">✏️ ویرایش پیج</a>
-                        <a href="{{ route('dashboard.reviews') }}" wire:navigate class="btn-light py-2 text-xs">💬 پاسخ به نظرها</a>
+                        <a href="{{ route('dashboard.listings.edit', $this->listing) }}" wire:navigate class="cursor-pointer btn-light py-2 text-xs">✏️ ویرایش پیج</a>
+                        <a href="{{ route('dashboard.reviews') }}" wire:navigate class="cursor-pointer btn-light py-2 text-xs">💬 پاسخ به نظرها</a>
                     </div>
                 </section>
             </div>
@@ -106,7 +106,7 @@
                     <p class="mt-1 text-xs leading-6 text-slate-500">مشتری‌ها احتمالاً با این عبارت‌ها جستجو می‌کنند. در توضیحات پیج و بیوی اینستاگرام از آن‌ها استفاده کنید.</p>
                     <div class="mt-3 flex flex-wrap gap-1.5">
                         @foreach ($audit['keywords'] as $keyword)
-                            <button x-on:click="navigator.clipboard.writeText(@js($keyword)); $dispatch('toast', { message: 'کپی شد' })" class="filter-chip">{{ $keyword }}</button>
+                            <button x-on:click="navigator.clipboard.writeText(@js($keyword)); $dispatch('toast', { message: 'کپی شد' })" class="cursor-pointer filter-chip">{{ $keyword }}</button>
                         @endforeach
                     </div>
                 </section>
@@ -115,14 +115,14 @@
                 <section class="card space-y-2 p-5 text-sm">
                     <h2 class="font-bold">🧰 ابزارهای بررسی</h2>
                     @if ($approved)
-                        <a href="https://www.google.com/search?q={{ urlencode('site:'.$url) }}" target="_blank" rel="noopener" class="side-link">🔍 آیا گوگل صفحه را ایندکس کرده؟</a>
-                        <a href="https://search.google.com/test/rich-results?url={{ urlencode($url) }}" target="_blank" rel="noopener" class="side-link">⭐ تست نمایش ستاره و اطلاعات در گوگل</a>
-                        <a href="https://pagespeed.web.dev/analysis?url={{ urlencode($url) }}" target="_blank" rel="noopener" class="side-link">⚡ سرعت صفحه (PageSpeed)</a>
+                        <a href="https://www.google.com/search?q={{ urlencode('site:'.$url) }}" target="_blank" rel="noopener" class="cursor-pointer side-link">🔍 آیا گوگل صفحه را ایندکس کرده؟</a>
+                        <a href="https://search.google.com/test/rich-results?url={{ urlencode($url) }}" target="_blank" rel="noopener" class="cursor-pointer side-link">⭐ تست نمایش ستاره و اطلاعات در گوگل</a>
+                        <a href="https://pagespeed.web.dev/analysis?url={{ urlencode($url) }}" target="_blank" rel="noopener" class="cursor-pointer side-link">⚡ سرعت صفحه (PageSpeed)</a>
                     @else
                         <p class="text-xs text-slate-500">بعد از تأیید پیج، ابزارهای بررسی گوگل اینجا فعال می‌شوند.</p>
                     @endif
-                    <button x-on:click="navigator.clipboard.writeText(@js($url)); $dispatch('toast', { message: 'لینک کپی شد' })" class="side-link w-full">📋 کپی لینک صفحه</button>
-                    <a href="{{ route('dashboard.banner', $this->listing) }}" wire:navigate class="side-link">🖼️ بنر و لینک برای بیو و سایت</a>
+                    <button x-on:click="navigator.clipboard.writeText(@js($url)); $dispatch('toast', { message: 'لینک کپی شد' })" class="cursor-pointer side-link w-full">📋 کپی لینک صفحه</button>
+                    <a href="{{ route('dashboard.banner', $this->listing) }}" wire:navigate class="cursor-pointer side-link">🖼️ بنر و لینک برای بیو و سایت</a>
                     <p class="pt-1 text-xs leading-6 text-slate-500">لینک صفحه نشونی را در بیوی اینستاگرام، کانال تلگرام و سایت خودتان بگذارید؛ هر لینک ورودی به دیده شدن صفحه در گوگل کمک می‌کند.</p>
                 </section>
             </aside>

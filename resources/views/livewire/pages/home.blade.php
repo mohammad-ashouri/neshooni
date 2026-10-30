@@ -16,12 +16,12 @@
 
             <form wire:submit="search" class="mx-auto mt-8 flex max-w-xl gap-2 rounded-2xl border border-slate-200 bg-surface p-2 shadow-xl shadow-violet-500/10">
                 <input wire:model="q" class="min-w-0 flex-1 bg-transparent px-3 outline-none" placeholder="نام پیج، آیدی، محصول یا شهر...">
-                <button class="btn-primary">جستجو</button>
+                <button class="cursor-pointer btn-primary">جستجو</button>
             </form>
 
             <div class="mt-6 flex flex-wrap justify-center gap-2">
                 @foreach ($platforms as $platform)
-                    <a href="{{ route('explore', ['platform' => $platform->key]) }}" wire:navigate class="filter-chip flex items-center gap-1.5">
+                    <a href="{{ route('explore', ['platform' => $platform->key]) }}" wire:navigate class="cursor-pointer filter-chip flex items-center gap-1.5">
                         <x-platform-icon :platform="$platform" class="size-5 text-sm" />
                         {{ $platform->label }}
                         <span class="text-slate-400">{{ fa_number($platform->listings_count) }}</span>
@@ -37,7 +37,7 @@
             <section>
                 <div class="mb-5 flex items-end justify-between">
                     <h2 class="text-xl font-extrabold">⭐ پیج‌های ویژه</h2>
-                    <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" wire:navigate class="text-sm text-violet-700 hover:underline">پیج شما هم اینجا باشد؟</a>
+                    <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" wire:navigate class="cursor-pointer text-sm text-violet-700 hover:underline">پیج شما هم اینجا باشد؟</a>
                 </div>
                 <div class="stagger grid gap-4 pt-2 sm:grid-cols-2 lg:grid-cols-4">
                     @foreach ($featured as $listing)
@@ -51,11 +51,11 @@
         <section>
             <div class="mb-5 flex items-end justify-between">
                 <h2 class="text-xl font-extrabold">دسته‌بندی‌ها</h2>
-                <a href="{{ route('explore') }}" wire:navigate class="text-sm text-violet-700 hover:underline">همه پیج‌ها ←</a>
+                <a href="{{ route('explore') }}" wire:navigate class="cursor-pointer text-sm text-violet-700 hover:underline">همه پیج‌ها ←</a>
             </div>
             <div class="stagger grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                 @foreach ($categories as ['category' => $category, 'count' => $count])
-                    <a href="{{ $category->url() }}" wire:navigate class="card group p-4 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-lg hover:shadow-violet-500/10">
+                    <a href="{{ $category->url() }}" wire:navigate class="cursor-pointer card group p-4 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-lg hover:shadow-violet-500/10">
                         <div class="text-3xl transition group-hover:scale-110">{{ $category->icon }}</div>
                         <div class="mt-2 font-bold group-hover:text-violet-700">{{ $category->name }}</div>
                         <div class="mt-0.5 truncate text-xs text-slate-400">{{ $category->subs()->take(3)->pluck('name')->implode('، ') ?: '—' }}</div>
@@ -69,7 +69,7 @@
         <section>
             <div class="mb-5 flex items-end justify-between">
                 <h2 class="text-xl font-extrabold">🆕 تازه‌ترین پیج‌ها</h2>
-                <a href="{{ route('explore') }}" wire:navigate class="text-sm text-violet-700 hover:underline">بیشتر ←</a>
+                <a href="{{ route('explore') }}" wire:navigate class="cursor-pointer text-sm text-violet-700 hover:underline">بیشتر ←</a>
             </div>
             <div class="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 @foreach ($latest as $listing)
@@ -84,7 +84,7 @@
                 <h2 class="mb-5 text-xl font-extrabold">💬 تازه‌ترین نظرات کاربران</h2>
                 <div class="grid gap-4 md:grid-cols-3">
                     @foreach ($reviews as $review)
-                        <a href="{{ route('listings.show', $review->listing) }}" wire:navigate class="card block p-5 transition hover:border-violet-200">
+                        <a href="{{ route('listings.show', $review->listing) }}" wire:navigate class="cursor-pointer card block p-5 transition hover:border-violet-200">
                             <div class="flex items-center justify-between">
                                 <span class="font-semibold">{{ $review->user->name }}</span>
                                 <x-stars :rating="$review->rating" class="text-sm" />
@@ -115,7 +115,7 @@
         <section class="relative overflow-hidden rounded-3xl bg-linear-to-l from-violet-600 to-fuchsia-500 px-6 py-12 text-center text-white">
             <h2 class="text-2xl font-black">کسب‌وکار آنلاین دارید؟</h2>
             <p class="mt-2 text-white/80">{{ fa_number($totals['businesses']) }} کسب‌وکار در {{ fa_number($totals['platforms']) }} پلتفرم به نشونی اعتماد کرده‌اند.</p>
-            <a href="{{ auth()->check() ? route('dashboard.listings.create') : route('register') }}" wire:navigate class="btn mt-6 bg-white text-violet-600 hover:bg-violet-50">ثبت رایگان پیج</a>
+            <a href="{{ auth()->check() ? route('dashboard.listings.create') : route('register') }}" wire:navigate class="cursor-pointer btn mt-6 bg-white text-violet-600 hover:bg-violet-50">ثبت رایگان پیج</a>
         </section>
     </div>
 </div>

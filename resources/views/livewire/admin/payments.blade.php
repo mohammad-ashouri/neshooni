@@ -41,7 +41,7 @@
                         <td class="td font-mono text-xs">{{ $payment->ref_id ?? '—' }}</td>
                         <td class="td">
                             @if ($payment->isPaid())
-                                <a href="{{ route('receipts.show', $payment) }}" target="_blank" class="text-xs text-violet-700 hover:underline">رسید</a>
+                                <a href="{{ route('receipts.show', $payment) }}" target="_blank" class="cursor-pointer text-xs text-violet-700 hover:underline">رسید</a>
                             @endif
                         </td>
                     </tr>

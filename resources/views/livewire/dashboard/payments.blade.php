@@ -28,9 +28,9 @@
                             </td>
                             <td class="td text-left">
                                 @if ($payment->isPaid())
-                                    <a href="{{ route('receipts.show', $payment) }}" target="_blank" class="btn-light py-1.5 text-xs">🧾 رسید</a>
+                                    <a href="{{ route('receipts.show', $payment) }}" target="_blank" class="cursor-pointer btn-light py-1.5 text-xs">🧾 رسید</a>
                                 @elseif ($payment->status === 'pending')
-                                    <a href="{{ route('checkout', $payment) }}" wire:navigate class="btn-primary py-1.5 text-xs">پرداخت</a>
+                                    <a href="{{ route('checkout', $payment) }}" wire:navigate class="cursor-pointer btn-primary py-1.5 text-xs">پرداخت</a>
                                 @endif
                             </td>
                         </tr>

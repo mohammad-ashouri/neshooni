@@ -40,7 +40,7 @@
                 @endforeach
             </div>
 
-            <button class="btn-primary">ذخیره خبرنامه</button>
+            <button class="cursor-pointer btn-primary">ذخیره خبرنامه</button>
 
             @if ($interests)
                 <div class="border-t border-slate-100 pt-4">
@@ -48,7 +48,7 @@
                     <p class="mt-1 text-xs text-slate-500">بر اساس پیج‌هایی که دیده‌اید، دنبال کرده‌اید یا درباره‌شان نظر داده‌اید.</p>
                     <div class="mt-3 flex flex-wrap gap-2">
                         @foreach ($interests as ['category' => $category, 'score' => $score])
-                            <a href="{{ $category->url() }}" wire:navigate class="filter-chip">{{ $category->root()->icon }} {{ $category->name }} <span class="text-slate-400">{{ fa_number($score) }}</span></a>
+                            <a href="{{ $category->url() }}" wire:navigate class="cursor-pointer filter-chip">{{ $category->root()->icon }} {{ $category->name }} <span class="text-slate-400">{{ fa_number($score) }}</span></a>
                         @endforeach
                     </div>
                 </div>
@@ -60,12 +60,12 @@
             <div class="mb-3 flex items-center justify-between">
                 <h2 class="font-bold">🔔 اعلان‌ها</h2>
                 @if ($notifications->whereNull('read_at')->isNotEmpty())
-                    <button wire:click="markAllRead" class="text-xs text-violet-700 hover:underline">همه خوانده شد</button>
+                    <button wire:click="markAllRead" class="cursor-pointer text-xs text-violet-700 hover:underline">همه خوانده شد</button>
                 @endif
             </div>
             <div class="divide-y divide-slate-100">
                 @forelse ($notifications as $notification)
-                    <a href="{{ $notification->data['url'] }}" wire:navigate class="flex gap-2 py-3 text-sm">
+                    <a href="{{ $notification->data['url'] }}" wire:navigate class="cursor-pointer flex gap-2 py-3 text-sm">
                         <span @class(['mt-2 size-2 shrink-0 rounded-full', 'bg-violet-500' => ! $notification->read_at, 'bg-slate-200' => $notification->read_at])></span>
                         <span>
                             <span class="block leading-7">{{ $notification->data['text'] }}</span>

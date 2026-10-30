@@ -1,12 +1,12 @@
 <div class="mx-auto max-w-7xl px-4 py-8">
     {{-- مسیر دسته --}}
     <nav class="mb-4 flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
-        <a href="{{ route('home') }}" wire:navigate class="hover:text-violet-700">خانه</a>
+        <a href="{{ route('home') }}" wire:navigate class="cursor-pointer hover:text-violet-700">خانه</a>
         <span>›</span>
-        <a href="{{ route('explore') }}" wire:navigate @class(['hover:text-violet-700', 'font-semibold text-slate-800' => ! $current])>همه پیج‌ها</a>
+        <a href="{{ route('explore') }}" wire:navigate @class(['cursor-pointer hover:text-violet-700', 'font-semibold text-slate-800' => ! $current])>همه پیج‌ها</a>
         @foreach ($path as $node)
             <span>›</span>
-            <a href="{{ $node->url() }}" wire:navigate @class(['hover:text-violet-700', 'font-semibold text-slate-800' => $loop->last])>{{ $node->name }}</a>
+            <a href="{{ $node->url() }}" wire:navigate @class(['cursor-pointer hover:text-violet-700', 'font-semibold text-slate-800' => $loop->last])>{{ $node->name }}</a>
         @endforeach
     </nav>
 
@@ -22,12 +22,12 @@
         <aside class="card h-fit p-3 lg:sticky lg:top-20">
             <h2 class="px-3 py-2 text-sm font-bold text-slate-500">دسته‌بندی</h2>
             @if ($current)
-                <a href="{{ $current->parent_id ? App\Models\Category::fromCache($current->parent_id)->url() : route('explore') }}" wire:navigate class="side-link">→ {{ $current->parent_id ? App\Models\Category::fromCache($current->parent_id)->name : 'همه دسته‌ها' }}</a>
+                <a href="{{ $current->parent_id ? App\Models\Category::fromCache($current->parent_id)->url() : route('explore') }}" wire:navigate class="cursor-pointer side-link">→ {{ $current->parent_id ? App\Models\Category::fromCache($current->parent_id)->name : 'همه دسته‌ها' }}</a>
             @endif
             {{-- اگر دسته فعلی زیردسته ندارد، هم‌سطح‌هایش نمایش داده می‌شوند --}}
             @php($items = $subs->isEmpty() && $current?->parent_id ? App\Models\Category::fromCache($current->parent_id)->subs() : $subs)
             @foreach ($items as $item)
-                <a href="{{ $item->url() }}" wire:navigate @class(['side-link', 'side-link-active' => $current?->id === $item->id])>
+                <a href="{{ $item->url() }}" wire:navigate @class(['cursor-pointer side-link', 'side-link-active' => $current?->id === $item->id])>
                     @unless ($current) <span>{{ $item->icon }}</span> @endunless
                     <span class="flex-1">{{ $item->name }}</span>
                     @if ($item->subs()->isNotEmpty()) <span class="text-xs text-slate-400">‹</span> @endif
@@ -61,9 +61,9 @@
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
-                    <button wire:click="$set('platform', '')" @class(['filter-chip', 'filter-chip-active' => ! $platform])>همه پلتفرم‌ها</button>
+                    <button wire:click="$set('platform', '')" @class(['cursor-pointer filter-chip', 'filter-chip-active' => ! $platform])>همه پلتفرم‌ها</button>
                     @foreach ($platforms as $item)
-                        <button wire:click="$set('platform', '{{ $item->key }}')" @class(['filter-chip flex items-center gap-1.5', 'filter-chip-active' => $platform === $item->key])>
+                        <button wire:click="$set('platform', '{{ $item->key }}')" @class(['cursor-pointer filter-chip flex items-center gap-1.5', 'filter-chip-active' => $platform === $item->key])>
                             <x-platform-icon :platform="$item" class="size-4 text-xs" /> {{ $item->label }}
                         </button>
                     @endforeach
@@ -80,7 +80,7 @@
 
             @if ($listings->isEmpty())
                 <x-empty icon="🔍" title="پیجی با این مشخصات پیدا نشد">
-                    <button wire:click="resetFilters" class="btn-light mt-3">پاک کردن فیلترها</button>
+                    <button wire:click="resetFilters" class="cursor-pointer btn-light mt-3">پاک کردن فیلترها</button>
                 </x-empty>
             @else
                 <div class="grid gap-4 pt-2 sm:grid-cols-2 xl:grid-cols-3" wire:loading.class="opacity-60">

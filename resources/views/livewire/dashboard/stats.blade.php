@@ -9,7 +9,7 @@
             </select>
             <div class="flex rounded-xl border border-slate-200 bg-surface p-1">
                 @foreach ([7 => '۷ روز', 30 => '۳۰ روز', 90 => '۹۰ روز'] as $value => $label)
-                    <button wire:click="$set('days', {{ $value }})" @class(['rounded-lg px-3 py-1.5 text-sm', 'bg-violet-600 text-white' => $days === $value, 'text-slate-600' => $days !== $value])>{{ $label }}</button>
+                    <button wire:click="$set('days', {{ $value }})" @class(['cursor-pointer rounded-lg px-3 py-1.5 text-sm', 'bg-violet-600 text-white' => $days === $value, 'text-slate-600' => $days !== $value])>{{ $label }}</button>
                 @endforeach
             </div>
         </div>

@@ -1,7 +1,7 @@
 <div>
     <div class="mb-5 flex items-center justify-between">
         <h1 class="text-2xl font-extrabold">نقش‌ها و دسترسی‌ها</h1>
-        <button wire:click="create" class="btn-primary">+ نقش جدید</button>
+        <button wire:click="create" class="cursor-pointer btn-primary">+ نقش جدید</button>
     </div>
 
     <div class="grid gap-4 md:grid-cols-2">
@@ -23,9 +23,9 @@
                 </div>
                 @if ($role->key !== 'admin')
                     <div class="mt-4 flex gap-2">
-                        <button wire:click="edit({{ $role->id }})" class="btn-light py-1.5 text-xs">ویرایش</button>
+                        <button wire:click="edit({{ $role->id }})" class="cursor-pointer btn-light py-1.5 text-xs">ویرایش</button>
                         @unless ($role->is_system)
-                            <button wire:click="delete({{ $role->id }})" wire:confirm="نقش «{{ $role->label }}» حذف شود؟" class="btn-danger py-1.5 text-xs">حذف</button>
+                            <button wire:click="delete({{ $role->id }})" wire:confirm="نقش «{{ $role->label }}» حذف شود؟" class="cursor-pointer btn-danger py-1.5 text-xs">حذف</button>
                         @endunless
                     </div>
                 @endif
@@ -67,7 +67,7 @@
                 </div>
                 @error('permissions.*') <p class="error">دسترسی نامعتبر است.</p> @enderror
                 <p class="text-xs text-slate-400">نقشی که هیچ دسترسی نداشته باشد، به پنل مدیریت راه ندارد.</p>
-                <button class="btn-primary w-full">ذخیره نقش</button>
+                <button class="cursor-pointer btn-primary w-full">ذخیره نقش</button>
             </form>
         </x-modal>
     @endif

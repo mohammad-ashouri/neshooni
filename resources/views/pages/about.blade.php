@@ -33,8 +33,8 @@
             <h2 class="text-xl font-extrabold">برای کسب‌وکارها</h2>
             <p class="mt-2 leading-8 text-slate-600">ثبت پیج رایگان است. برای دیده شدن بیشتر می‌توانید پیج خود را «ویژه» کنید یا نشان تأیید بگیرید.</p>
             <div class="mt-6 flex justify-center gap-2">
-                <a href="{{ route('register') }}" wire:navigate class="btn-primary">ثبت رایگان پیج</a>
-                <a href="{{ route('contact') }}" wire:navigate class="btn-light">تماس با ما</a>
+                <a href="{{ route('register') }}" wire:navigate class="cursor-pointer btn-primary">ثبت رایگان پیج</a>
+                <a href="{{ route('contact') }}" wire:navigate class="cursor-pointer btn-light">تماس با ما</a>
             </div>
         </div>
     </div>

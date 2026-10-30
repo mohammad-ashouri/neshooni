@@ -25,17 +25,17 @@
             <x-avatar :src="auth()->user()->avatarUrl()" :name="auth()->user()->name" :seed="auth()->id()" class="size-11 text-lg" rounded="rounded-full" />
             <div class="min-w-0">
                 <div class="flex items-center gap-1 truncate font-bold">{{ auth()->user()->name }} @if (auth()->user()->isVerified()) <x-verified-badge /> @endif</div>
-                <a href="{{ route('business.show', auth()->user()) }}" wire:navigate class="text-xs text-violet-700 hover:underline">صفحه عمومی من</a>
+                <a href="{{ route('business.show', auth()->user()) }}" wire:navigate class="cursor-pointer text-xs text-violet-700 hover:underline">صفحه عمومی من</a>
             </div>
         </div>
         <nav class="card flex gap-1 overflow-x-auto p-2 lg:flex-col">
             {{-- wire:current لینک صفحه فعلی را در مرورگر رنگی می‌کند (بعد از به‌روزرسانی‌های Livewire هم درست می‌ماند) --}}
             @foreach ($menu as [$route, $icon, $label])
-                <a href="{{ route($route) }}" wire:navigate @if ($route === 'dashboard') wire:current.exact="side-link-active" @else wire:current="side-link-active" @endif class="side-link shrink-0">
+                <a href="{{ route($route) }}" wire:navigate @if ($route === 'dashboard') wire:current.exact="side-link-active" @else wire:current="side-link-active" @endif class="cursor-pointer side-link shrink-0">
                     <span>{{ $icon }}</span> {{ $label }}
                 </a>
             @endforeach
-            <a href="{{ route('help') }}" wire:navigate class="side-link shrink-0"><span>❓</span> راهنما</a>
+            <a href="{{ route('help') }}" wire:navigate class="cursor-pointer side-link shrink-0"><span>❓</span> راهنما</a>
         </nav>
     </aside>
 

@@ -34,7 +34,7 @@
                 @foreach ($menu as [$route, $icon, $label, $permission, $counter])
                     @can($permission)
                         @php($count = $counter ? $counter() : 0)
-                        <a href="{{ route($route) }}" wire:navigate @class(['side-link shrink-0', 'side-link-active' => request()->routeIs($route)])>
+                        <a href="{{ route($route) }}" wire:navigate @class(['cursor-pointer side-link shrink-0', 'side-link-active' => request()->routeIs($route)])>
                             <span>{{ $icon }}</span>
                             <span class="flex-1">{{ $label }}</span>
                             @if ($count)
@@ -43,7 +43,7 @@
                         </a>
                     @endcan
                 @endforeach
-                <a href="{{ route('admin.help') }}" wire:navigate @class(['side-link shrink-0', 'side-link-active' => request()->routeIs('admin.help')])><span>❓</span> راهنمای پنل</a>
+                <a href="{{ route('admin.help') }}" wire:navigate @class(['cursor-pointer side-link shrink-0', 'side-link-active' => request()->routeIs('admin.help')])><span>❓</span> راهنمای پنل</a>
             </nav>
         </aside>
 

@@ -10,7 +10,7 @@
             <div class="text-4xl">💳</div>
             <h2 class="mt-3 font-bold">درخواست شما ثبت شده و منتظر پرداخت است</h2>
             <p class="mt-1 text-sm text-slate-500">بعد از پرداخت {{ fa_price($unpaid->amount) }}، مدارک شما بررسی می‌شود.</p>
-            <a href="{{ route('checkout', $unpaid) }}" wire:navigate class="btn-primary mt-5">ادامه پرداخت</a>
+            <a href="{{ route('checkout', $unpaid) }}" wire:navigate class="cursor-pointer btn-primary mt-5">ادامه پرداخت</a>
         </div>
     @elseif ($latest?->status === App\Enums\ModerationStatus::Pending)
         <div class="card p-8 text-center">
@@ -49,7 +49,7 @@
                     <textarea wire:model="note" rows="3" class="input"></textarea>
                 </div>
 
-                <button class="btn-primary" wire:loading.attr="disabled">ثبت درخواست و پرداخت {{ fa_price(config('site.verification_price')) }}</button>
+                <button class="cursor-pointer btn-primary" wire:loading.attr="disabled">ثبت درخواست و پرداخت {{ fa_price(config('site.verification_price')) }}</button>
             </form>
 
             <div class="card h-fit p-6 text-sm leading-8 text-slate-600">
