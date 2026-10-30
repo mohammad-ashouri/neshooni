@@ -238,8 +238,13 @@
                 <figcaption class="mt-3 text-sm text-white/80">{{ $current->caption }} <span class="text-white/50">({{ fa_number($photo + 1) }} از {{ fa_number($this->photos->count()) }})</span></figcaption>
             </figure>
             @if ($this->photos->count() > 1)
-                <button wire:click="nextPhoto(-1)" class="absolute top-1/2 right-4 rounded-full bg-white/10 px-4 py-3 text-2xl text-white hover:bg-white/20">›</button>
-                <button wire:click="nextPhoto(1)" class="absolute top-1/2 left-4 rounded-full bg-white/10 px-4 py-3 text-2xl text-white hover:bg-white/20">‹</button>
+                {{-- فلش‌ها SVG هستند چون کاراکترهای ‹ › در متن راست‌به‌چپ خودکار برعکس نمایش داده می‌شوند --}}
+                <button wire:click="nextPhoto(-1)" class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20" aria-label="عکس قبلی">
+                    <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+                </button>
+                <button wire:click="nextPhoto(1)" class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20" aria-label="عکس بعدی">
+                    <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+                </button>
             @endif
         </div>
     @endif
