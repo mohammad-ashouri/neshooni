@@ -31,6 +31,10 @@
                                 <a href="{{ $listing->externalUrl() }}" target="_blank" rel="noopener" class="block text-right text-sm text-violet-700 hover:underline" dir="ltr">{{ $listing->displayHandle() }} ↗</a>
                                 <p class="mt-1 text-xs text-slate-500">{{ $listing->categoryLabel() }} · {{ $listing->user->name }} ({{ fa_digits($listing->user->mobile) }}) · {{ fa_date($listing->created_at) }}</p>
                                 <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ $listing->description }}</p>
+                                {{-- متنی که صاحب پیج برای گوگل نوشته (از ابزار سئو) --}}
+                                @if ($listing->seo->title || $listing->seo->description)
+                                    <p class="mt-1 text-xs text-slate-500">🔎 متن گوگل: {{ $listing->seo->title }} {{ $listing->seo->title && $listing->seo->description ? '—' : '' }} {{ $listing->seo->description }}</p>
+                                @endif
                                 @if ($listing->reject_reason)
                                     <p class="mt-1 text-xs text-rose-600">دلیل رد: {{ $listing->reject_reason }}</p>
                                 @endif

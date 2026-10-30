@@ -4,8 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ isset($title) ? $title.' | ' : '' }}{{ config('site.name') }} - {{ config('site.tagline') }}</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    {{-- عنوان، توضیح، canonical، robots، Open Graph، Twitter و JSON-LD (پکیج laravel-seo) --}}
+    {!! App\Support\Seo::render($title ?? null) !!}
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#7c3aed">
 
     {{-- حالت تیره قبل از نمایش صفحه اعمال می‌شود تا صفحه چشمک نزند --}}
     <script>

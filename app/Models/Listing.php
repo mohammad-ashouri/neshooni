@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\ModerationStatus;
+use App\Models\Concerns\HasSlugInUrl;
+use App\Support\Seo;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -11,9 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use RalphJSmit\Laravel\SEO\Support\HasSEO;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
 
 /**
  * پیج یا کانال یک کسب‌وکار در یکی از پلتفرم‌ها.
+ *
+ * HasSEO: عنوان و توضیح دلخواه صاحب پیج برای گوگل در جدول seo (رابطه seo) ذخیره می‌شود.
  */
 #[Fillable([
     'user_id', 'platform_id', 'category_id', 'handle', 'title', 'description', 'image', 'followers',
@@ -22,6 +29,8 @@ use Illuminate\Support\Facades\Storage;
 ])]
 class Listing extends Model
 {
+    use HasSEO, HasSlugInUrl;
+
     /** روزهای هفته؛ ایندکس ۰ = شنبه */
     public const WEEK_DAYS = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
 
@@ -146,7 +155,12 @@ class Listing extends Model
     /** لینک عمومی همین پیج در نشونی (برای اشتراک‌گذاری، QR و بنر) */
     public function publicUrl(): string
     {
-        return rtrim(config('site.url'), '/').'/l/'.$this->id;
+        return rtrim(config('site.url'), '/').'/l/'.$this->getRouteKey();
+    }
+
+    protected function slugSource(): string
+    {
+        return $this->title;
     }
 
     public function displayHandle(): string
@@ -177,6 +191,96 @@ class Listing extends Model
         }
 
         return $this->province && $this->province !== $this->city ? "{$this->city}، {$this->province}" : $this->city;
+    }
+
+    // ---------- سئو ----------
+
+    /** عنوان خودکار برای گوگل: «گالری ماهور | مانتو در تهران» */
+    public function autoSeoTitle(): string
+    {
+        $place = $this->online_only || ! $this->city ? '' : ' در '.$this->city;
+
+        return Str::limit($this->title.' | '.($this->category?->name ?? $this->platform->label).$place, 60, '');
+    }
+
+    /** توضیح خودکار: خلاصه توضیحات پیج + پلتفرم و شهر */
+    public function autoSeoDescription(): string
+    {
+        $suffix = " — {$this->platform->label} {$this->displayHandle()}".($this->city ? "، {$this->city}" : '');
+
+        return Seo::excerpt($this->description, 160 - mb_strlen($suffix)).$suffix;
+    }
+
+    /**
+     * داده کامل سئوی صفحه پیج برای پکیج laravel-seo.
+     * عنوان و توضیحی که صاحب پیج در «ابزار سئو» نوشته (جدول seo) بر مقدار خودکار مقدم است.
+     */
+    public function seoData(): SEOData
+    {
+        $reviews = $this->approvedReviews()->get(['rating']);
+        $categoryPath = $this->category?->path() ?? collect();
+
+        $business = array_filter([
+            '@context' => 'https://schema.org',
+            // پیج با آدرس حضوری = کسب‌وکار محلی؛ فروش آنلاین = سازمان
+            '@type' => $this->online_only || ! $this->address ? 'Organization' : 'LocalBusiness',
+            'name' => $this->title,
+            'description' => Seo::excerpt($this->description, 300),
+            'url' => route('listings.show', $this),
+            'image' => $this->imageUrl() ? url($this->imageUrl()) : null,
+            'telephone' => $this->phone,
+            'sameAs' => [$this->externalUrl()],
+            'address' => $this->online_only || ! $this->city ? null : array_filter([
+                '@type' => 'PostalAddress',
+                'streetAddress' => $this->address,
+                'addressLocality' => $this->city,
+                'addressRegion' => $this->province,
+                'addressCountry' => $this->country,
+            ]),
+            'openingHoursSpecification' => $this->hasHours() ? $this->openingHoursSchema() : null,
+            'aggregateRating' => $reviews->isEmpty() ? null : [
+                '@type' => 'AggregateRating',
+                'ratingValue' => round($reviews->avg('rating'), 1),
+                'reviewCount' => $reviews->count(),
+                'bestRating' => 5,
+                'worstRating' => 1,
+            ],
+        ]);
+
+        $crumbs = ['نشونی' => route('home')]
+            + $categoryPath->mapWithKeys(fn (Category $c) => [$c->name => $c->url()])->all()
+            + [$this->title => route('listings.show', $this)];
+
+        $data = new SEOData(
+            title: $this->seo->title ?: $this->autoSeoTitle(),
+            description: $this->seo->description ?: $this->autoSeoDescription(),
+            image: $this->imageUrl() ? ltrim($this->imageUrl(), '/') : null,
+            url: route('listings.show', $this),
+            published_time: $this->published_at,
+            modified_time: $this->updated_at,
+            schema: Seo::schemas($business, Seo::breadcrumbs($crumbs)),
+            type: 'profile',
+        );
+
+        // پیج منتشرنشده (فقط صاحبش و ناظر می‌بینند) نباید ایندکس شود
+        return $this->status === ModerationStatus::Approved ? $data : $data->markAsNoindex();
+    }
+
+    /** ساعات کاری به شکل schema.org (روزهای ما از شنبه شروع می‌شوند) */
+    private function openingHoursSchema(): array
+    {
+        $englishDays = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+        return collect($this->hours['days'])
+            ->filter(fn (array $day) => ! empty($day['open']))
+            ->map(fn (array $day, int $i) => [
+                '@type' => 'OpeningHoursSpecification',
+                'dayOfWeek' => 'https://schema.org/'.$englishDays[$i],
+                'opens' => $day['from'],
+                'closes' => $day['to'],
+            ])
+            ->values()
+            ->all();
     }
 
     // ---------- ساعات کاری ----------

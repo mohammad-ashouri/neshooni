@@ -26,16 +26,16 @@ test('پیج تأییدنشده فقط برای صاحبش دیده می‌شو�
     $owner = userWithRole();
     $listing = makeListing($owner, ['status' => ModerationStatus::Pending]);
 
-    $this->get("/l/{$listing->id}")->assertNotFound();
-    $this->actingAs(userWithRole())->get("/l/{$listing->id}")->assertNotFound();
-    $this->actingAs($owner)->get("/l/{$listing->id}")->assertOk();
+    $this->get(route('listings.show', $listing))->assertNotFound();
+    $this->actingAs(userWithRole())->get(route('listings.show', $listing))->assertNotFound();
+    $this->actingAs($owner)->get(route('listings.show', $listing))->assertOk();
 });
 
 test('بازدید پیج در هر نشست یک‌بار شمرده می‌شود', function () {
     $listing = makeListing();
 
-    $this->get("/l/{$listing->id}");
-    $this->get("/l/{$listing->id}");
+    $this->get(route('listings.show', $listing));
+    $this->get(route('listings.show', $listing));
 
     expect($listing->fresh()->views)->toBe(1)
         ->and($listing->dailyStats()->sum('views'))->toBe(1);

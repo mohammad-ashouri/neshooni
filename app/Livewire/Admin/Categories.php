@@ -30,6 +30,13 @@ class Categories extends Component
 
     public string $icon = '';
 
+    // سئوی صفحه دسته
+    public string $intro = '';
+
+    public string $seo_title = '';
+
+    public string $seo_description = '';
+
     public $parent_id = '';
 
     public int $sort = 0;
@@ -50,6 +57,9 @@ class Categories extends Component
             'name' => $category->name,
             'slug' => $category->slug,
             'icon' => $category->icon ?? '',
+            'intro' => $category->intro ?? '',
+            'seo_title' => $category->seo_title ?? '',
+            'seo_description' => $category->seo_description ?? '',
             'parent_id' => $category->parent_id ?? '',
             'sort' => $category->sort,
             'showForm' => true,
@@ -66,6 +76,9 @@ class Categories extends Component
             // نامک فقط بین خواهر و برادرها یکتا باشد (مسیر کامل در آدرس استفاده می‌شود)
             'slug' => ['required', 'alpha_dash', 'max:60', Rule::unique('categories')->where('parent_id', $parentId)->ignore($this->editingId)],
             'icon' => ['nullable', 'string', 'max:8'],
+            'intro' => ['nullable', 'string', 'max:2000'],
+            'seo_title' => ['nullable', 'string', 'max:70'],
+            'seo_description' => ['nullable', 'string', 'max:300'],
             'parent_id' => ['nullable', Rule::in($this->allowedParents()->pluck('id')->all())],
             'sort' => ['integer'],
         ], ['parent_id.in' => 'این دسته نمی‌تواند زیرمجموعه دسته انتخاب‌شده باشد (حداکثر سه سطح).']);
@@ -74,6 +87,9 @@ class Categories extends Component
             'name' => trim($this->name),
             'slug' => $this->slug,
             'icon' => $this->icon ?: null,
+            'intro' => trim($this->intro) ?: null,
+            'seo_title' => trim($this->seo_title) ?: null,
+            'seo_description' => trim($this->seo_description) ?: null,
             'parent_id' => $parentId,
             'sort' => $this->sort,
         ]);
@@ -110,7 +126,7 @@ class Categories extends Component
 
     private function resetForm(): void
     {
-        $this->reset('editingId', 'name', 'slug', 'icon', 'parent_id', 'sort');
+        $this->reset('editingId', 'name', 'slug', 'icon', 'intro', 'seo_title', 'seo_description', 'parent_id', 'sort');
         $this->resetErrorBag();
     }
 

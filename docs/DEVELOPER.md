@@ -134,6 +134,27 @@ docs/                    راهنمای سایت و پنل (در /help و /panel
 - در `Admin\Users` کاربر نقش خودش را تغییر نمی‌دهد و غیر مدیر کل فقط نقش‌هایی را می‌دهد که دسترسی‌هایشان زیرمجموعه دسترسی خودش است.
 - اقدام‌های حساس داخل کامپوننت هم دوباره چک می‌شوند (فقط پنهان کردن دکمه کافی نیست).
 
+### سئو
+
+از پکیج **`ralphjsmit/laravel-seo`** استفاده می‌شود (تنظیمات: `config/seo.php`).
+
+- هر صفحه در `mount()` داده سئوی خودش را می‌سازد: `Seo::set(new SEOData(title: ..., description: ..., schema: ...))`.
+  `App\Support\Seo::render()` در `layouts/app.blade.php` همه تگ‌ها را چاپ می‌کند: `<title>`، description، canonical، robots، Open Graph، Twitter و JSON-LD.
+- صفحه‌هایی که در `Seo::PRIVATE_ROUTES` هستند (داشبورد، پنل، ورود، پرداخت) خودکار `noindex` می‌شوند.
+- **آدرس خوانا:** `Listing` و `User` از تریت `HasSlugInUrl` استفاده می‌کنند؛ `route('listings.show', $listing)` آدرس `/l/12-گالری-ماهور` می‌سازد.
+  فقط عدد اول آدرس مهم است و `Seo::redirectToCanonical()` آدرس قدیمی یا نامک اشتباه را با **۳۰۱** به آدرس اصلی می‌برد.
+- **داده ساختاریافته:** صفحه اول `WebSite` (با جعبه جستجو) و `Organization`؛ پیج `LocalBusiness` یا `Organization` با امتیاز، آدرس و ساعات کاری (`Listing::seoData()`)؛
+  دسته‌ها `ItemList` و همه صفحه‌ها `BreadcrumbList`؛ تماس با ما `ContactPage`؛ صفحه کسب‌وکار `ProfilePage`.
+- **صفحه دسته‌ها:** صفحه‌بندی با لینک واقعی `?page=2` (کامپوننت `x-page-links`)؛ دسته، پلتفرم، استان و شهر صفحه قابل ایندکس می‌سازند
+  و جستجو، مرتب‌سازی و «الان باز است» `noindex` با canonical به نسخه بدون فیلتر هستند. صفحه خالی بعد از صفحه اول ۴۰۴ می‌دهد.
+  مدیر می‌تواند برای هر دسته متن معرفی، عنوان و توضیح گوگل بنویسد (ستون‌های `intro`، `seo_title`، `seo_description`).
+- **ابزار سئوی صاحب پیج** (`Dashboard\SeoTools` در `/dashboard/seo`): پیش‌نمایش نتیجه گوگل، عنوان و توضیح اختصاصی
+  (در جدول `seo` پکیج، از طریق رابطه `$listing->seo` / تریت `HasSEO`)، امتیاز ۱۰۰تایی و چک‌لیست (`App\Services\ListingSeoAudit`)،
+  کلمات کلیدی پیشنهادی و لینک ابزارهای گوگل. متن گوگل پیج را به صف بررسی نمی‌برد ولی در پنل مدیریت کنار پیج دیده می‌شود.
+- `/sitemap.xml` (یک ساعت کش، کلید `sitemap.xml`) و `/robots.txt` از `SitemapController` می‌آیند. robots در محیط غیر production کل سایت را می‌بندد.
+- تصویر پیش‌فرض اشتراک‌گذاری: `public/images/og-default.png` (۱۲۰۰×۶۳۰). صفحه‌های خطا در `resources/views/errors` فارسی و `noindex` هستند.
+- در production حتماً `APP_URL=https://neshooni.shop` باشد؛ canonical و نقشه سایت از آن ساخته می‌شوند. ریدایرکت www و http به https را در وب‌سرور تنظیم کنید.
+
 ### کپچای ورود
 
 فرم ورود از پکیج `mews/captcha` با پروفایل `neshooni` در `config/captcha.php` استفاده می‌کند (۵ رقم، بدون ارقام شبیه به هم).

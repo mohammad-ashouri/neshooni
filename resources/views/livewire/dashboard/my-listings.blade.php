@@ -35,6 +35,10 @@
 
                         <div class="flex flex-wrap gap-2">
                             <a href="{{ route('dashboard.listings.edit', $listing) }}" wire:navigate class="btn-light py-2">✏️ ویرایش</a>
+                            @php($grade = App\Services\ListingSeoAudit::grade($seoScores[$listing->id]))
+                            <a href="{{ route('dashboard.seo', $listing) }}" wire:navigate class="btn-light py-2" title="امتیاز سئو و راه‌های بهبود">
+                                🔎 سئو <span class="chip {{ $grade['class'] }} px-2 py-0.5">{{ fa_number($seoScores[$listing->id]) }}</span>
+                            </a>
                             @if ($listing->status === App\Enums\ModerationStatus::Approved)
                                 <a href="{{ route('dashboard.feature', $listing) }}" wire:navigate class="btn py-2 bg-amber-50 text-amber-700 hover:bg-amber-100">⭐ {{ $listing->isFeatured() ? 'تمدید ویژه' : 'ویژه کردن' }}</a>
                                 <a href="{{ route('dashboard.banner', $listing) }}" wire:navigate class="btn-light py-2">🖼️ بنر</a>

@@ -3,11 +3,13 @@
 namespace App\Livewire\Pages;
 
 use App\Models\ContactMessage;
+use App\Support\Seo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
 
 #[Title('تماس با ما')]
 class Contact extends Component
@@ -25,6 +27,23 @@ class Contact extends Component
 
     public function mount(): void
     {
+        Seo::set(new SEOData(
+            title: 'تماس با ما',
+            description: 'راه‌های ارتباط با پشتیبانی نشونی: تلفن '.config('site.contact.phone').'، ایمیل '.config('site.contact.email').' و فرم ارسال پیام برای پشتیبانی، همکاری و گزارش تخلف.',
+            schema: Seo::schemas([
+                '@context' => 'https://schema.org',
+                '@type' => 'ContactPage',
+                'url' => route('contact'),
+                'mainEntity' => [
+                    '@type' => 'Organization',
+                    'name' => config('site.name'),
+                    'email' => config('site.contact.email'),
+                    'telephone' => config('site.contact.phone'),
+                    'address' => config('site.contact.address'),
+                ],
+            ]),
+        ));
+
         if ($user = Auth::user()) {
             $this->name = $user->name;
             $this->contact = $user->mobile;

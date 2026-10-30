@@ -15,7 +15,7 @@ use Illuminate\Support\Collection as BaseCollection;
  * چون تعداد دسته‌ها کم است، کل جدول یک‌بار در هر درخواست خوانده و در حافظه
  * نگه داشته می‌شود (cached()) و کارهای درختی روی همان انجام می‌شود.
  */
-#[Fillable(['parent_id', 'name', 'slug', 'icon', 'sort'])]
+#[Fillable(['parent_id', 'name', 'slug', 'icon', 'intro', 'seo_title', 'seo_description', 'sort'])]
 class Category extends Model
 {
     public const MAX_DEPTH = 3;

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlugInUrl;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -19,7 +20,13 @@ use Illuminate\Support\Str;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasSlugInUrl, Notifiable;
+
+    /** نامک آدرس صفحه عمومی کسب‌وکار: /u/2-گالری-ماهور */
+    protected function slugSource(): string
+    {
+        return $this->name;
+    }
 
     protected function casts(): array
     {

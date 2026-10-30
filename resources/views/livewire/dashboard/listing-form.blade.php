@@ -74,7 +74,12 @@
             <div class="grid gap-4 sm:grid-cols-[1fr_12rem]">
                 <div>
                     <label class="label">توضیحات</label>
-                    <textarea wire:model="description" rows="4" class="input" placeholder="چه محصول یا خدمتی ارائه می‌دهید؟"></textarea>
+                    <textarea wire:model.live.debounce.500ms="description" rows="4" class="input" placeholder="چه محصول یا خدمتی ارائه می‌دهید؟ برای چه کسانی؟ در کدام شهر؟ چه مزیتی دارید؟"></textarea>
+                    {{-- راهنمای سئو: متن بلندتر = شانس بیشتر برای دیده شدن در گوگل --}}
+                    @php($length = mb_strlen($description))
+                    <p @class(['mt-1 text-xs', 'text-emerald-600' => $length >= 150, 'text-slate-400' => $length < 150])>
+                        {{ fa_number($length) }} کاراکتر{{ $length < 150 ? ' — برای سئوی بهتر حداقل ۱۵۰ کاراکتر بنویسید' : ' ✓' }}
+                    </p>
                     @error('description') <p class="error">{{ $message }}</p> @enderror
                 </div>
                 <div class="space-y-4">

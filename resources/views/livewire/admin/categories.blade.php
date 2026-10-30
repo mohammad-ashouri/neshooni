@@ -69,6 +69,27 @@
                         <input wire:model="sort" type="number" class="input">
                     </div>
                 </div>
+                {{-- سئو: متن معرفی بالای صفحه دسته و عنوان/توضیح دلخواه در گوگل --}}
+                <details class="rounded-xl border border-slate-200 p-3" @if ($intro || $seo_title || $seo_description) open @endif>
+                    <summary class="cursor-pointer text-sm font-bold">🔎 سئوی صفحه دسته</summary>
+                    <div class="mt-3 space-y-3">
+                        <div>
+                            <label class="label">متن معرفی (بالای صفحه دسته)</label>
+                            <textarea wire:model="intro" rows="3" class="input text-sm" placeholder="دو سه جمله درباره این دسته و اینکه در نشونی چه پیج‌هایی پیدا می‌شود"></textarea>
+                            @error('intro') <p class="error">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="label">عنوان در گوگل <span class="font-normal text-slate-400">({{ fa_number(mb_strlen($seo_title)) }}/۶۰)</span></label>
+                            <input wire:model.live.debounce.300ms="seo_title" class="input text-sm" placeholder="خالی = خودکار: «{{ $name ?: 'نام دسته' }} | معرفی و مقایسه»">
+                            @error('seo_title') <p class="error">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="label">توضیح در گوگل <span class="font-normal text-slate-400">({{ fa_number(mb_strlen($seo_description)) }}/۱۶۰)</span></label>
+                            <textarea wire:model.live.debounce.300ms="seo_description" rows="2" class="input text-sm" placeholder="خالی = خودکار از تعداد پیج‌ها"></textarea>
+                            @error('seo_description') <p class="error">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+                </details>
                 <button class="btn-primary w-full">ذخیره</button>
             </form>
         </x-modal>

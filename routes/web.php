@@ -3,6 +3,7 @@
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ReceiptController;
+use App\Http\Controllers\SitemapController;
 use App\Livewire\Admin;
 use App\Livewire\Auth;
 use App\Livewire\Dashboard;
@@ -54,6 +55,7 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard')->group(functio
     Route::get('/stats', Dashboard\Stats::class)->name('.stats');
     Route::get('/reviews', Dashboard\Reviews::class)->name('.reviews');
     Route::get('/banner/{listing?}', Dashboard\Banner::class)->name('.banner');
+    Route::get('/seo/{listing?}', Dashboard\SeoTools::class)->name('.seo');
     Route::get('/feature/{listing}', Dashboard\Feature::class)->name('.feature');
     Route::get('/verification', Dashboard\Verification::class)->name('.verification');
     Route::get('/payments', Dashboard\Payments::class)->name('.payments');
@@ -92,3 +94,12 @@ Route::middleware(['auth', 'can:access-panel'])->prefix('panel')->name('admin.')
     Route::get('/roles', Admin\Roles::class)->name('roles')->middleware('can:roles.manage');
     Route::get('/help', [GuideController::class, 'panel'])->name('help');
 });
+
+/*
+|--------------------------------------------------------------------------
+| سئو
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/sitemap.xml', [SitemapController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');

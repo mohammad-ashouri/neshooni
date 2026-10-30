@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Seo;
 use Illuminate\Support\Str;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
 
 /**
  * راهنمای استفاده؛ متن راهنما در پوشه docs به صورت Markdown نوشته شده
@@ -24,6 +26,11 @@ class GuideController extends Controller
     {
         $path = base_path('docs/'.$file);
         abort_unless(is_file($path), 404);
+
+        Seo::set(new SEOData(
+            title: $title,
+            description: 'آموزش قدم‌به‌قدم کار با نشونی: پیدا کردن پیج‌ها، ثبت پیج، گالری، ساعات کاری، آمار، آگهی ویژه، نشان تأیید و رسید پرداخت.',
+        ));
 
         return view('pages.guide', [
             'title' => $title,

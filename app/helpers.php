@@ -142,3 +142,17 @@ if (! function_exists('tehran_now')) {
         return Carbon::now('Asia/Tehran');
     }
 }
+
+if (! function_exists('fa_slug')) {
+    /**
+     * نامک فارسی برای آدرس صفحه: «گالری ماهور | مانتو» → گالری-ماهور-مانتو
+     * حروف فارسی و انگلیسی و رقم می‌مانند و بقیه به خط تیره تبدیل می‌شوند.
+     */
+    function fa_slug(?string $text, int $limit = 60): string
+    {
+        $text = str_replace(['ي', 'ك', "\u{200C}"], ['ی', 'ک', '-'], mb_strtolower(en_digits($text)));
+        $slug = trim(preg_replace('/[^\p{L}\p{N}]+/u', '-', $text), '-');
+
+        return rtrim(mb_substr($slug, 0, $limit), '-');
+    }
+}

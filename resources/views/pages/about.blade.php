@@ -1,3 +1,12 @@
+{{-- داده سئو قبل از قالب تنظیم می‌شود (محتوای صفحه پیش از قالب رندر می‌شود) --}}
+@php
+    App\Support\Seo::set(new RalphJSmit\Laravel\SEO\Support\SEOData(
+        title: 'درباره نشونی',
+        description: 'نشونی ویترین پیج‌ها و کانال‌های کسب‌وکارهای ایرانی است؛ با بررسی دستی هر پیج، نشان تأیید کسب‌وکار و نظر واقعی خریداران. ثبت پیج رایگان است.',
+        type: 'website',
+    ));
+@endphp
+
 <x-layouts::app title="درباره ما">
     <div class="mx-auto max-w-4xl px-4 py-12">
         <div class="text-center">

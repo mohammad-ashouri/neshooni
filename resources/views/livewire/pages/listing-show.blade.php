@@ -76,7 +76,7 @@
                     <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
                         @foreach ($this->photos as $i => $item)
                             <button wire:click="showPhoto({{ $i }})" class="group relative aspect-square overflow-hidden rounded-xl bg-slate-100">
-                                <img src="{{ $item->url() }}" alt="{{ $item->caption }}" class="size-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
+                                <img src="{{ $item->url() }}" alt="{{ $item->caption ?: $listing->title }}" class="size-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
                                 @if ($item->caption)
                                     <span class="absolute inset-x-0 bottom-0 truncate bg-linear-to-t from-black/70 px-2 pt-6 pb-1.5 text-xs text-white">{{ $item->caption }}</span>
                                 @endif
@@ -234,7 +234,7 @@
              @keydown.escape.window="$wire.set('photo', null)" @keydown.arrow-left.window="$wire.nextPhoto(1)" @keydown.arrow-right.window="$wire.nextPhoto(-1)">
             <button wire:click="$set('photo', null)" class="absolute top-4 left-4 rounded-full bg-white/10 px-3 py-1.5 text-white hover:bg-white/20">✕</button>
             <figure class="max-w-4xl text-center">
-                <img src="{{ $current->url() }}" alt="{{ $current->caption }}" class="max-h-[80vh] rounded-xl object-contain">
+                <img src="{{ $current->url() }}" alt="{{ $current->caption ?: $listing->title }}" class="max-h-[80vh] rounded-xl object-contain">
                 <figcaption class="mt-3 text-sm text-white/80">{{ $current->caption }} <span class="text-white/50">({{ fa_number($photo + 1) }} از {{ fa_number($this->photos->count()) }})</span></figcaption>
             </figure>
             @if ($this->photos->count() > 1)

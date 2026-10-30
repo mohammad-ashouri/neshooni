@@ -8,6 +8,7 @@
     $menu = [
         ['dashboard', '📋', 'پیج‌های من'],
         ['dashboard.stats', '📊', 'آمار بازدید'],
+        ['dashboard.seo', '🔎', 'سئوی پیج'],
         ['dashboard.reviews', '💬', 'نظرات پیج‌ها'],
         ['dashboard.following', '❤️', 'دنبال‌شده‌ها'],
         ['dashboard.alerts', '🔔', 'اعلان و خبرنامه'],

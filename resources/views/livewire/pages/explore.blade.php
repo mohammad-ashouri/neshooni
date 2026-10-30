@@ -10,7 +10,12 @@
         @endforeach
     </nav>
 
-    <h1 class="text-2xl font-extrabold">{{ $current ? $current->root()->icon.' '.$current->name : 'همه پیج‌ها و کانال‌ها' }}</h1>
+    <h1 class="text-2xl font-extrabold">{{ $current?->root()->icon }} {{ $heading }}</h1>
+
+    {{-- متن معرفی دسته (از پنل مدیریت)؛ فقط در صفحه اول و بدون فیلتر، تا محتوای تکراری ساخته نشود --}}
+    @if ($current?->intro && $listings->currentPage() === 1 && ! $platform && ! $province)
+        <p class="mt-3 max-w-4xl leading-8 whitespace-pre-line text-slate-600">{{ $current->intro }}</p>
+    @endif
 
     <div class="mt-6 grid gap-6 lg:grid-cols-[16rem_1fr]">
         {{-- ===== ستون دسته‌ها ===== --}}
@@ -69,7 +74,7 @@
             </div>
 
             <div class="mt-5 mb-3 flex items-center justify-between text-sm text-slate-500">
-                <span>{{ fa_number($total) }} نتیجه</span>
+                <span>{{ fa_number($listings->total()) }} نتیجه</span>
                 <span wire:loading class="text-violet-600">در حال جستجو...</span>
             </div>
 
@@ -84,11 +89,7 @@
                     @endforeach
                 </div>
 
-                @if ($total > $listings->count())
-                    <div class="mt-6 text-center">
-                        <button wire:click="loadMore" class="btn-light">نمایش بیشتر ({{ fa_number($total - $listings->count()) }} پیج دیگر)</button>
-                    </div>
-                @endif
+                <x-page-links :paginator="$listings" :url="$pageUrl" class="mt-8" />
             @endif
         </div>
     </div>

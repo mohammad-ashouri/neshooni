@@ -1,0 +1,14 @@
+{
+    "name": "نشونی — ویترین پیج و کانال کسب‌وکارها",
+    "short_name": "نشونی",
+    "lang": "fa",
+    "dir": "rtl",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#7c3aed",
+    "icons": [
+        { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+        { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+    ]
+}

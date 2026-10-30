@@ -6,7 +6,7 @@
 @endphp
 
 @if ($src)
-    <img src="{{ $src }}" alt="" {{ $attributes->class([$rounded, 'shrink-0 object-cover']) }}>
+    <img src="{{ $src }}" alt="{{ $name }}" loading="lazy" decoding="async" {{ $attributes->class([$rounded, 'shrink-0 object-cover']) }}>
 @else
     <div {{ $attributes->class([$rounded, 'grid shrink-0 place-items-center bg-linear-to-br font-black text-white', $gradients[$seed % count($gradients)]]) }}>
         {{ mb_substr(trim($name), 0, 1) ?: '؟' }}

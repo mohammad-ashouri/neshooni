@@ -8,6 +8,7 @@ use App\Models\Report;
 use App\Models\Review;
 use App\Services\InterestTracker;
 use App\Services\ListingStats;
+use App\Support\Seo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
@@ -47,6 +48,10 @@ class ListingShow extends Component
 
         // پیج تأییدنشده فقط برای صاحبش و ناظرها قابل مشاهده است
         abort_unless($listing->status === ModerationStatus::Approved || $isOwner || Gate::allows('listings.moderate'), 404);
+
+        // آدرس بدون نامک یا با نامک قدیمی → ۳۰۱ به آدرس اصلی
+        Seo::redirectToCanonical($listing, 'listings.show', 'listing');
+        Seo::set($listing->seoData());
 
         if (! $isOwner) {
             $stats->record($listing, 'views');
