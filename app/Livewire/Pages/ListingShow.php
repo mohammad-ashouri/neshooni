@@ -69,7 +69,7 @@ class ListingShow extends Component
     #[Computed]
     public function isFollowing(): bool
     {
-        return Auth::check() && $this->listing->followers()->whereKey(Auth::id())->exists();
+        return Auth::check() && $this->listing->fans()->whereKey(Auth::id())->exists();
     }
 
     #[Computed]
@@ -106,10 +106,10 @@ class ListingShow extends Component
         }
 
         if ($this->isFollowing) {
-            $this->listing->followers()->detach(Auth::id());
+            $this->listing->fans()->detach(Auth::id());
             $this->dispatch('toast', message: 'دیگر این پیج را دنبال نمی‌کنید.', type: 'info');
         } else {
-            $this->listing->followers()->attach(Auth::id());
+            $this->listing->fans()->attach(Auth::id());
             $tracker->add($this->listing->category_id, 'follow');
             $this->dispatch('interest-updated');
             $this->dispatch('toast', message: 'پیج به لیست دنبال‌شده‌ها اضافه شد.');
@@ -197,7 +197,7 @@ class ListingShow extends Component
             'reviews' => $reviews,
             'average' => $reviews->avg('rating') ?? 0,
             'distribution' => collect(range(5, 1))->mapWithKeys(fn ($star) => [$star => $reviews->where('rating', $star)->count()]),
-            'followersCount' => $this->listing->followers()->count(),
+            'followersCount' => $this->listing->fans()->count(),
             'hours' => $this->listing->hoursStatus(),
             'similar' => Listing::approved()->forCards()
                 ->where('id', '!=', $this->listing->id)

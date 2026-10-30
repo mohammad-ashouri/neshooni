@@ -3,7 +3,7 @@
 --}}
 @props(['items'])
 
-@php($max = max(1, ...array_column($items, 'value')))
+@php($max = max([1, ...array_column($items, 'value')]))
 
 <div {{ $attributes->class('space-y-3') }}>
     @foreach ($items as $item)

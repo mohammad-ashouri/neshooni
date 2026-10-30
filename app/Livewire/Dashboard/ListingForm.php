@@ -84,8 +84,11 @@ class ListingForm extends Component
 
         abort_unless($listing->user_id === Auth::id(), 403);
 
-        $this->fill($listing->only(['platform_id', 'handle', 'title', 'followers', 'description', 'country', 'online_only']));
+        $this->fill($listing->only(['platform_id', 'handle', 'title', 'description']));
         $this->fill([
+            'followers' => $listing->followers ?? '',
+            'country' => $listing->country ?? 'IR',
+            'online_only' => (bool) $listing->online_only,
             'province' => $listing->province ?? '',
             'city' => $listing->city ?? '',
             'address' => $listing->address ?? '',
@@ -235,7 +238,7 @@ class ListingForm extends Component
             'handle' => $handle,
             'title' => trim($this->title),
             'category_id' => $category->id,
-            'followers' => $this->followers === '' ? null : (int) $this->followers,
+            'followers' => (int) $this->followers,
             'description' => trim($this->description),
             'country' => $this->country,
             'province' => $this->province ?: null,
@@ -243,7 +246,9 @@ class ListingForm extends Component
             'online_only' => $this->online_only,
             'address' => $this->online_only ? null : (trim($this->address) ?: null),
             'phone' => $this->phone ?: null,
-            'hours' => $this->hours,
+            // پیجی که هیچ‌وقت ساعت کاری نداشته و الان هم فعالش نکرده، همان خالی می‌ماند
+            // (وگرنه ساعت پیش‌فرض فرم «تغییر» حساب می‌شد و پیج بی‌دلیل به صف بررسی می‌رفت)
+            'hours' => $this->hours['enabled'] || $this->listing?->hours ? $this->hours : null,
         ];
 
         $listing = $this->listing ?? new Listing(['user_id' => Auth::id(), 'status' => ModerationStatus::Pending]);

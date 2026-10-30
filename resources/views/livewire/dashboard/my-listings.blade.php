@@ -28,7 +28,7 @@
                                 </div>
                                 <p class="truncate text-right text-sm text-slate-500" dir="ltr">{{ $listing->displayHandle() }}</p>
                                 <p class="mt-0.5 text-xs text-slate-400">
-                                    {{ $listing->categoryLabel() }} · 👁️ {{ fa_number($listing->views) }} · 🖱️ {{ fa_number($listing->clicks) }} · ❤️ {{ fa_number($listing->followers_count) }} · 💬 {{ fa_number($listing->reviews_count) }}
+                                    {{ $listing->categoryLabel() }} · 👁️ {{ fa_number($listing->views) }} · 🖱️ {{ fa_number($listing->clicks) }} · ❤️ {{ fa_number($listing->fans_count) }} · 💬 {{ fa_number($listing->reviews_count) }}
                                 </p>
                             </div>
                         </div>

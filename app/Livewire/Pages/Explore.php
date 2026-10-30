@@ -98,7 +98,7 @@ class Explore extends Component
             // پیج‌های ویژه همیشه اول
             ->orderByRaw('CASE WHEN featured_until > ? THEN 0 ELSE 1 END', [now()])
             ->when($this->sort === 'views', fn (Builder $q) => $q->orderByDesc('views'))
-            ->when($this->sort === 'popular', fn (Builder $q) => $q->withCount('followers')->orderByDesc('followers_count'))
+            ->when($this->sort === 'popular', fn (Builder $q) => $q->withCount('fans')->orderByDesc('fans_count'))
             ->when($this->sort === 'followers', fn (Builder $q) => $q->orderByDesc('followers'))
             ->latest();
     }

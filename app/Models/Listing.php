@@ -74,7 +74,11 @@ class Listing extends Model
         return $this->reviews()->where('status', ModerationStatus::Approved);
     }
 
-    public function followers(): BelongsToMany
+    /**
+     * کاربرانی که پیج را در نشونی دنبال می‌کنند.
+     * (ستون followers تعداد دنبال‌کننده در خود پلتفرم است؛ برای همین نام رابطه fans است)
+     */
+    public function fans(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'follows')->withTimestamps();
     }

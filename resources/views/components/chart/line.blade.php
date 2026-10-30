@@ -10,7 +10,7 @@
     $height = 200;
     $pad = 8;
     $count = count($series['labels']);
-    $max = max(1, ...$series['views'], ...$series['clicks']);
+    $max = max([1, ...$series['views'], ...$series['clicks']]);
     $x = fn (int $i) => $count > 1 ? $pad + $i * ($width - 2 * $pad) / ($count - 1) : $width / 2;
     $y = fn (int $value) => $height - $pad - $value / $max * ($height - 2 * $pad);
     $points = fn (array $values) => collect($values)->map(fn ($v, $i) => round($x($i), 1).','.round($y($v), 1))->implode(' ');

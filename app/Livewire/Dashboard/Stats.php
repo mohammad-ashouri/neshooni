@@ -28,7 +28,7 @@ class Stats extends Component
     {
         abort_unless(in_array($this->days, [7, 30, 90]), 404);
 
-        $listings = Auth::user()->listings()->withCount('followers')->get();
+        $listings = Auth::user()->listings()->withCount('fans')->get();
         $ids = $this->listingId ? $listings->where('id', $this->listingId)->pluck('id') : $listings->pluck('id');
 
         $current = $stats->series($ids, $this->days);
@@ -54,7 +54,7 @@ class Stats extends Component
             'series' => $current,
             'views' => $tile('views'),
             'clicks' => $tile('clicks'),
-            'followers' => $listings->whereIn('id', $ids)->sum('followers_count'),
+            'followers' => $listings->whereIn('id', $ids)->sum('fans_count'),
             'rating' => ['average' => (clone $reviews)->avg('rating'), 'count' => (clone $reviews)->count()],
             'bars' => $listings->map(fn ($l) => ['label' => $l->title, 'value' => (int) ($perListing[$l->id] ?? 0)])->sortByDesc('value')->values()->all(),
         ]);

@@ -26,7 +26,7 @@ class MyListings extends Component
         return view('livewire.dashboard.my-listings', [
             'listings' => Auth::user()->listings()
                 ->with(['platform', 'category'])
-                ->withCount(['followers', 'approvedReviews as reviews_count', 'photos as pending_photos_count' => fn ($q) => $q->where('status', 'pending')])
+                ->withCount(['fans', 'approvedReviews as reviews_count', 'photos as pending_photos_count' => fn ($q) => $q->where('status', 'pending')])
                 ->latest()
                 ->get(),
         ]);

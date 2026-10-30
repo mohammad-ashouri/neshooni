@@ -112,7 +112,7 @@ class DemoSeeder extends Seeder
         foreach (Listing::approved()->get() as $item) {
             foreach ($customers as $customer) {
                 if ($customer->id !== $item->user_id && ($item->id * $customer->id) % 3 !== 1) {
-                    $item->followers()->attach($customer->id, ['created_at' => now()->subDays(($item->id + $customer->id) % 20)]);
+                    $item->fans()->attach($customer->id, ['created_at' => now()->subDays(($item->id + $customer->id) % 20)]);
                 }
             }
         }
