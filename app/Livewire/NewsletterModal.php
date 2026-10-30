@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Subscription;
 use App\Services\InterestTracker;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -13,6 +14,7 @@ use Livewire\Component;
  * مودال پیشنهاد خبرنامه.
  * - اگر کاربر به دسته‌ای علاقه نشان داده باشد (InterestTracker)، خبرنامه همان دسته پیشنهاد می‌شود.
  * - مهمانی که چند صفحه دیده ولی علاقه مشخصی ندارد، خبرنامه عمومی می‌بیند.
+ * - در هر session حداکثر یک بار و فقط در صفحه‌های گشت‌وگذار نشان داده می‌شود.
  */
 class NewsletterModal extends Component
 {
@@ -25,8 +27,13 @@ class NewsletterModal extends Component
     /** موبایل یا ایمیل مهمان */
     public string $contact = '';
 
+    /** فقط در صفحه‌های گشت‌وگذار (config/site.php → newsletter_routes) */
+    #[Locked]
+    public bool $enabled = false;
+
     public function mount(InterestTracker $tracker): void
     {
+        $this->enabled = request()->routeIs(config('site.newsletter_routes'));
         $this->check($tracker);
     }
 
@@ -34,12 +41,16 @@ class NewsletterModal extends Component
     #[On('interest-updated')]
     public function check(InterestTracker $tracker): void
     {
-        if ($this->visible) {
+        if ($this->visible || ! $this->enabled || ! $tracker->canOffer()) {
             return;
         }
 
         $this->categoryId = $tracker->suggestion()?->id;
         $this->visible = $this->categoryId !== null || $tracker->shouldOfferGeneralNewsletter();
+
+        if ($this->visible) {
+            $tracker->markOffered();
+        }
     }
 
     public function subscribe(): void

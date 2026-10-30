@@ -12,9 +12,10 @@ use Illuminate\Support\Facades\Auth;
  * هر بار که کاربر پیجی را می‌بیند، صفحه دسته‌ای را باز می‌کند، نظر می‌دهد یا دنبال می‌کند،
  * به دسته آن پیج و همه دسته‌های بالاترش امتیاز داده می‌شود (config/site.php → interest_points).
  * وقتی امتیاز دسته‌ای به حد نصاب برسد، مودال خبرنامه برای همان دسته نشان داده می‌شود.
+ * برای اینکه مزاحم نباشد: در هر session حداکثر یک بار و بین دو پیشنهاد حداقل newsletter_gap_days روز فاصله.
  *
  * کاربر عضو: داده در ستون users.interests | مهمان: داده در session
- * ساختار داده: ['scores' => [category_id => points], 'dismissed' => [category_id => timestamp], 'general_dismissed' => timestamp]
+ * ساختار داده: ['scores' => [category_id => points], 'dismissed' => [category_id => timestamp], 'general_dismissed' => timestamp, 'offered_at' => timestamp]
  */
 class InterestTracker
 {
@@ -35,7 +36,11 @@ class InterestTracker
         $this->save($data);
     }
 
-    /** دسته پیشنهادی برای مودال؛ بین دسته‌های هم‌امتیاز، دقیق‌ترین (عمیق‌ترین) انتخاب می‌شود */
+    /**
+     * دسته پیشنهادی برای مودال.
+     * دقیق‌ترین (عمیق‌ترین) دسته‌ای که به حد نصاب رسیده انتخاب می‌شود. دسته والد همیشه امتیاز بیشتری
+     * از فرزندش دارد، پس مرتب‌سازی اول با امتیاز، بعد از هر «نه» دسته دیگری از همان مسیر را پیشنهاد می‌داد.
+     */
     public function suggestion(): ?Category
     {
         $data = $this->data();
@@ -47,7 +52,7 @@ class InterestTracker
                 && ! $this->isSubscribed($id))
             ->map(fn (int $score, int $id) => ['category' => Category::fromCache($id), 'score' => $score])
             ->filter(fn (array $item) => $item['category'] !== null)
-            ->sortBy([['score', 'desc'], [fn (array $a, array $b) => $b['category']->depth() <=> $a['category']->depth()]])
+            ->sortBy([fn (array $a, array $b) => $b['category']->depth() <=> $a['category']->depth(), ['score', 'desc']])
             ->first()['category'] ?? null;
     }
 
@@ -64,11 +69,34 @@ class InterestTracker
             && $dismissedAt < now()->subDays(config('site.interest_cooldown_days'))->timestamp;
     }
 
+    /** آیا الان وقت پیشنهاد خبرنامه هست؟ (یک بار در هر session و با فاصله از پیشنهاد قبلی) */
+    public function canOffer(): bool
+    {
+        if (session('newsletter_offered')) {
+            return false;
+        }
+
+        return ($this->data()['offered_at'] ?? 0) < now()->subDays(config('site.newsletter_gap_days'))->timestamp;
+    }
+
+    /** ثبت اینکه مودال نشان داده شد */
+    public function markOffered(): void
+    {
+        session(['newsletter_offered' => true]);
+
+        $data = $this->data();
+        $data['offered_at'] = now()->timestamp;
+        $this->save($data);
+    }
+
     public function dismiss(?int $categoryId): void
     {
         $data = $this->data();
         if ($categoryId) {
-            $data['dismissed'][$categoryId] = now()->timestamp;
+            // دسته‌های بالاتر هم کنار گذاشته می‌شوند تا بعد از «نه» برای «مانتو»، «پوشاک» پیشنهاد نشود
+            foreach (Category::fromCache($categoryId)?->path() ?? [] as $node) {
+                $data['dismissed'][$node->id] = now()->timestamp;
+            }
         } else {
             $data['general_dismissed'] = now()->timestamp;
         }

@@ -165,8 +165,13 @@ docs/                    راهنمای سایت و پنل (در /help و /panel
 ### علاقه‌مندی و خبرنامه
 
 `InterestTracker::add($categoryId, $action)` به دسته و همه والدهایش امتیاز می‌دهد (`site.interest_points`).
-با رسیدن به `site.interest_threshold`، `NewsletterModal` همان دسته را پیشنهاد می‌کند. رد کردن پیشنهاد تا `interest_cooldown_days` روز اعتبار دارد.
+با رسیدن به `site.interest_threshold`، `NewsletterModal` عمیق‌ترین دسته‌ای را که به حد نصاب رسیده پیشنهاد می‌کند.
+رد کردن پیشنهاد، آن دسته و دسته‌های بالاترش را تا `interest_cooldown_days` روز کنار می‌گذارد.
 مهمانی که علاقه مشخصی ندارد بعد از `guest_newsletter_after_pages` صفحه خبرنامه عمومی می‌بیند.
+
+برای اینکه مودال مزاحم نباشد (`InterestTracker::canOffer`):
+- در هر session حداکثر یک بار، و بین دو پیشنهاد حداقل `newsletter_gap_days` روز (زمان آخرین پیشنهاد در `offered_at`).
+- فقط در صفحه‌های `site.newsletter_routes` (صفحه اول، دسته‌ها، پیج و کسب‌وکار).
 
 ### آمار
 

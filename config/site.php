@@ -34,15 +34,20 @@ return [
     'gallery_max' => 8,
 
     // امتیاز علاقه‌مندی؛ با رسیدن به interest_threshold پیشنهاد خبرنامه نشان داده می‌شود
+    // (مثلاً دیدن ۵ پیج از یک دسته، یا دیدن یک پیج و دنبال کردنش و یک بازدید دیگر)
     'interest_points' => [
-        'view' => 3,
-        'category' => 2,
-        'review' => 4,
-        'follow' => 5,
+        'view' => 2,
+        'category' => 1,
+        'review' => 6,
+        'follow' => 6,
     ],
-    'interest_threshold' => 6,
-    // بعد از «نه، ممنون» تا چند روز همان دسته دوباره پیشنهاد نشود
-    'interest_cooldown_days' => 3,
+    'interest_threshold' => 10,
+    // فاصله بین دو پیشنهاد خبرنامه (هر دسته‌ای باشد)؛ در هر بازدید (session) هم حداکثر یک بار
+    'newsletter_gap_days' => 7,
+    // بعد از «نه، ممنون» تا چند روز همان دسته (و دسته‌های بالاترش) دوباره پیشنهاد نشود
+    'interest_cooldown_days' => 30,
     // مهمانی که علاقه مشخصی ندارد، بعد از چند صفحه خبرنامه عمومی را می‌بیند
-    'guest_newsletter_after_pages' => 4,
+    'guest_newsletter_after_pages' => 6,
+    // مودال فقط در این صفحه‌ها نشان داده می‌شود (نه در ورود، داشبورد، پنل و پرداخت)
+    'newsletter_routes' => ['home', 'explore', 'listings.show', 'business.show'],
 ];
