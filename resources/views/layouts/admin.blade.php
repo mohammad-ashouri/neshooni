@@ -26,7 +26,7 @@
 <x-layouts::app :title="$title ?? 'پنل مدیریت'">
     <div class="mx-auto grid max-w-7xl gap-6 px-4 py-8 lg:grid-cols-[14rem_1fr]">
         <aside class="h-fit min-w-0 lg:sticky lg:top-20">
-            <div class="mb-3 rounded-2xl bg-linear-to-l from-slate-800 to-slate-700 px-4 py-3 text-white">
+            <div class="mb-3 rounded-2xl bg-linear-to-l from-violet-600 to-fuchsia-600 px-4 py-3 text-white">
                 <div class="text-xs text-white/60">پنل {{ auth()->user()->isAdmin() ? 'مدیریت' : auth()->user()->roleLabel() }}</div>
                 <div class="truncate font-bold">{{ auth()->user()->name }}</div>
             </div>
