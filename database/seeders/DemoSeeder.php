@@ -75,6 +75,7 @@ class DemoSeeder extends Seeder
                 'province' => $owner->province,
                 'city' => $owner->city,
                 'created_at' => now()->subDays($daysAgo),
+                'published_at' => ($extra['status'] ?? ModerationStatus::Approved) === ModerationStatus::Approved ? now()->subDays($daysAgo) : null,
                 ...$extra,
             ]);
         };

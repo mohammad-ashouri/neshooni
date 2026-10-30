@@ -3,6 +3,7 @@
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ReceiptController;
+use App\Livewire\Admin;
 use App\Livewire\Auth;
 use App\Livewire\Dashboard;
 use App\Livewire\Pages;
@@ -66,3 +67,28 @@ Route::middleware('auth')->group(function () {
 
 // صفحه استعلام رسید (لینک QR روی رسید چاپی)
 Route::get('/r/{ref}', [ReceiptController::class, 'verify'])->name('receipts.verify');
+
+/*
+|--------------------------------------------------------------------------
+| پنل مدیریت
+|--------------------------------------------------------------------------
+| ورود به پنل با Gate «access-panel» و هر بخش با دسترسی خودش کنترل می‌شود.
+| داشبورد خودش کسی را که آمار نمی‌بیند به اولین بخش مجازش می‌فرستد.
+*/
+
+Route::middleware(['auth', 'can:access-panel'])->prefix('panel')->name('admin.')->group(function () {
+    Route::get('/', Admin\Dashboard::class)->name('dashboard');
+    Route::get('/listings', Admin\Listings::class)->name('listings')->middleware('can:listings.moderate');
+    Route::get('/photos', Admin\Photos::class)->name('photos')->middleware('can:images.moderate');
+    Route::get('/reviews', Admin\Reviews::class)->name('reviews')->middleware('can:reviews.moderate');
+    Route::get('/reports', Admin\Reports::class)->name('reports')->middleware('can:reports.handle');
+    Route::get('/messages', Admin\Messages::class)->name('messages')->middleware('can:messages.read');
+    Route::get('/newsletter', Admin\Newsletter::class)->name('newsletter')->middleware('can:newsletter.view');
+    Route::get('/verifications', Admin\Verifications::class)->name('verifications')->middleware('can:verifications.manage');
+    Route::get('/payments', Admin\Payments::class)->name('payments')->middleware('can:payments.view');
+    Route::get('/categories', Admin\Categories::class)->name('categories')->middleware('can:categories.manage');
+    Route::get('/platforms', Admin\Platforms::class)->name('platforms')->middleware('can:platforms.manage');
+    Route::get('/users', Admin\Users::class)->name('users')->middleware('can:users.manage');
+    Route::get('/roles', Admin\Roles::class)->name('roles')->middleware('can:roles.manage');
+    Route::get('/help', [GuideController::class, 'panel'])->name('help');
+});

@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Storage;
  */
 #[Fillable([
     'user_id', 'platform_id', 'category_id', 'handle', 'title', 'description', 'image', 'followers',
-    'status', 'reject_reason', 'country', 'province', 'city', 'online_only', 'address', 'phone', 'hours',
+    'status', 'reject_reason', 'published_at', 'country', 'province', 'city', 'online_only', 'address', 'phone', 'hours',
     'views', 'clicks', 'featured_until',
 ])]
 class Listing extends Model
@@ -32,6 +32,7 @@ class Listing extends Model
             'online_only' => 'boolean',
             'hours' => 'array',
             'featured_until' => 'datetime',
+            'published_at' => 'datetime',
         ];
     }
 
