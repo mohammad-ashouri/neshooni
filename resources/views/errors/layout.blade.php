@@ -22,7 +22,7 @@
 <body class="grid min-h-screen place-items-center bg-page px-4 font-sans text-slate-800">
     <main class="max-w-md text-center">
         <a href="/" class="cursor-pointer inline-block" aria-label="{{ config('site.name') }}">
-            <img src="/images/logo.svg" alt="" class="h-20 w-auto">
+            <img src="/images/logo.svg" alt="" width="73" height="80">
         </a>
         <div class="mt-6 text-6xl font-black text-violet-600">@yield('code')</div>
         <h1 class="mt-3 text-xl font-extrabold">@yield('title')</h1>

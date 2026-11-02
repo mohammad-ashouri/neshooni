@@ -5,7 +5,7 @@
     <div class="card w-full p-6 shadow-xl shadow-violet-500/5 sm:p-8">
         <div class="mb-6 text-center">
             <a href="{{ route('home') }}" wire:navigate class="cursor-pointer inline-block" aria-label="{{ config('site.name') }}">
-                <img src="/images/logo.svg" alt="" class="h-16 w-auto">
+                <img src="/images/logo.svg" alt="" width="59" height="64">
             </a>
             <h1 class="mt-4 text-xl font-extrabold">{{ $title }}</h1>
             @if ($subtitle)
