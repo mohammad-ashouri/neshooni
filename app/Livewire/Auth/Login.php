@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Support\Maintenance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Title;
@@ -65,8 +66,21 @@ class Login extends Component
         }
 
         RateLimiter::clear($key);
+
+        // در حالت تعمیر فقط مدیر وارد می‌شود تا حالت تعمیر را مدیریت کند
+        if (Maintenance::isActive() && ! Auth::user()->isAdmin()) {
+            Auth::logout();
+            $this->addError('mobile', 'سایت در حالت تعمیر است و فعلاً فقط مدیر می‌تواند وارد شود.');
+
+            return;
+        }
+
         session()->regenerate();
         session()->flash('toast', ['message' => 'خوش آمدید '.Auth::user()->name]);
+
+        if (Maintenance::isActive()) {
+            return $this->redirectRoute('admin.maintenance', navigate: true);
+        }
 
         return $this->redirectIntended(route('dashboard'), navigate: true);
     }

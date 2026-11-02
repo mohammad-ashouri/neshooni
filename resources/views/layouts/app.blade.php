@@ -23,8 +23,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen flex-col bg-page font-sans text-slate-800 antialiased">
-    {{-- کارکنان پنل در حالت تعمیر سایت را عادی می‌بینند؛ این نوار یادآوری می‌کند که برای بقیه بسته است --}}
-    @if (auth()->user()?->isStaff() && App\Support\Maintenance::isActive())
+    {{-- مدیر در حالت تعمیر سایت را عادی می‌بیند؛ این نوار یادآوری می‌کند که برای بقیه بسته است --}}
+    @if (auth()->user()?->isAdmin() && App\Support\Maintenance::isActive())
         <div class="bg-amber-400 px-4 py-2 text-center text-sm font-semibold text-amber-950">
             🛠️ سایت در حالت تعمیر است و بازدیدکننده‌ها آن را نمی‌بینند.
             @can('site.maintenance')

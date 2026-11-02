@@ -25,8 +25,12 @@
         <h1 class="mt-3 text-xl font-extrabold">@yield('title')</h1>
         <p class="mt-2 leading-8 text-slate-500">@yield('message')</p>
         <div class="mt-6 flex flex-wrap justify-center gap-2">
-            <a href="/" class="cursor-pointer btn-primary">صفحه اصلی</a>
-            <a href="/c" class="cursor-pointer btn-light">همه پیج‌ها</a>
+            @hasSection('actions')
+                @yield('actions')
+            @else
+                <a href="/" class="cursor-pointer btn-primary">صفحه اصلی</a>
+                <a href="/c" class="cursor-pointer btn-light">همه پیج‌ها</a>
+            @endif
         </div>
     </main>
 </body>

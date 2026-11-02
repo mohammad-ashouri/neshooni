@@ -8,14 +8,15 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * وقتی حالت تعمیر روشن است، به همه به جز کارکنان پنل صفحه ۵۰۳ نشان می‌دهد.
- * صفحه ورود (و درخواست‌های Livewire و کپچای آن) باز می‌ماند تا مدیر بتواند وارد شود و حالت تعمیر را خاموش کند.
+ * وقتی حالت تعمیر روشن است، به همه به جز مدیر صفحه ۵۰۳ نشان می‌دهد.
+ * صفحه ورود (و درخواست‌های Livewire و کپچای آن) باز می‌ماند تا مدیر بتواند وارد شود و حالت تعمیر را خاموش کند؛
+ * خود فرم ورود در این حالت فقط مدیر را راه می‌دهد.
  */
 class CheckMaintenance
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! Maintenance::isActive() || $request->user()?->isStaff() || $this->isAllowed($request)) {
+        if (! Maintenance::isActive() || $request->user()?->isAdmin() || $this->isAllowed($request)) {
             return $next($request);
         }
 
