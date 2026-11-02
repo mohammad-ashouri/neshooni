@@ -38,5 +38,6 @@ return [
         'categories.manage' => 'مدیریت دسته‌بندی‌ها',
         'platforms.manage' => 'مدیریت پلتفرم‌ها',
         'users.manage' => 'مدیریت کاربران و تعیین نقش',
+        'site.maintenance' => 'روشن و خاموش کردن حالت تعمیر',
     ],
 ];

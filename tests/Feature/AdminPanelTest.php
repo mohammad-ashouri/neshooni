@@ -13,7 +13,7 @@ use Livewire\Livewire;
 test('مدیر کل همه بخش‌های پنل را می‌بیند', function (string $url) {
     $this->actingAs(userWithRole('admin'))->get($url)->assertOk();
 })->with(['/panel', '/panel/listings', '/panel/photos', '/panel/reviews', '/panel/reports', '/panel/messages', '/panel/newsletter',
-    '/panel/verifications', '/panel/payments', '/panel/categories', '/panel/platforms', '/panel/users', '/panel/roles', '/panel/help']);
+    '/panel/verifications', '/panel/payments', '/panel/categories', '/panel/platforms', '/panel/users', '/panel/maintenance', '/panel/roles', '/panel/help']);
 
 test('ناظر فقط بخش‌های مجاز را می‌بیند', function () {
     $moderator = userWithRole('moderator');

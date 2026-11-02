@@ -19,6 +19,7 @@
         ['admin.categories', '🗂️', 'دسته‌بندی‌ها', 'categories.manage', null],
         ['admin.platforms', '🌐', 'پلتفرم‌ها', 'platforms.manage', null],
         ['admin.users', '👥', 'کاربران', 'users.manage', null],
+        ['admin.maintenance', '🛠️', 'حالت تعمیر', 'site.maintenance', null],
         ['admin.roles', '🔐', 'نقش‌ها', 'roles.manage', null],
     ];
 @endphp

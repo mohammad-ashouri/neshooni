@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckMaintenance;
 use App\Http\Middleware\CountGuestPages;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -13,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [CountGuestPages::class]);
+        $middleware->web(append: [CheckMaintenance::class, CountGuestPages::class]);
         $middleware->redirectGuestsTo('/login');
         $middleware->redirectUsersTo('/dashboard');
     })
