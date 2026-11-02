@@ -38,7 +38,7 @@ class Home extends Component
                     '@type' => 'Organization',
                     'name' => config('site.name'),
                     'url' => route('home'),
-                    'logo' => url('apple-touch-icon.png'),
+                    'logo' => url('images/icon-512.png'),
                     'email' => config('site.contact.email'),
                     'telephone' => config('site.contact.phone'),
                 ],

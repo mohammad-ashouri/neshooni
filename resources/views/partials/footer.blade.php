@@ -1,9 +1,8 @@
 <footer class="mt-12 border-t border-slate-200 bg-surface">
     <div class="mx-auto grid max-w-7xl gap-8 px-4 py-10 md:grid-cols-4">
         <div class="md:col-span-2">
-            <a href="{{ route('home') }}" wire:navigate class="cursor-pointer flex items-center gap-2">
-                <span class="grid size-9 place-items-center rounded-xl bg-linear-to-br from-violet-600 to-fuchsia-500 text-lg font-black text-white">ن</span>
-                <span class="text-lg font-extrabold">{{ config('site.name') }}</span>
+            <a href="{{ route('home') }}" wire:navigate class="cursor-pointer inline-flex" aria-label="{{ config('site.name') }}">
+                <x-logo tagline mark="h-11" />
             </a>
             <p class="mt-3 max-w-md text-sm leading-7 text-slate-500">
                 نشونی ویترین آنلاین پیج‌ها و کانال‌های کسب‌وکارهای ایرانی در شبکه‌های اجتماعی و پیام‌رسان‌هاست.

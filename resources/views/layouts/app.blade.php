@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- عنوان، توضیح، canonical، robots، Open Graph، Twitter و JSON-LD (پکیج laravel-seo) --}}
     {!! App\Support\Seo::render($title ?? null) !!}
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#7c3aed">

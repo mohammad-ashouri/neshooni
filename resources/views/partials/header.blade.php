@@ -1,9 +1,8 @@
 {{-- هدر سایت. منوهای کشویی با Alpine (فقط باز و بسته شدن) --}}
 <header class="sticky top-0 z-40 border-b border-slate-200 bg-surface/90 backdrop-blur" x-data="{ mobile: false }">
     <div class="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4">
-        <a href="{{ route('home') }}" wire:navigate class="cursor-pointer flex shrink-0 items-center gap-2">
-            <span class="grid size-9 place-items-center rounded-xl bg-linear-to-br from-violet-600 to-fuchsia-500 text-lg font-black text-white">ن</span>
-            <span class="text-lg font-extrabold text-slate-800">{{ config('site.name') }}</span>
+        <a href="{{ route('home') }}" wire:navigate class="cursor-pointer shrink-0" aria-label="{{ config('site.name') }}">
+            <x-logo />
         </a>
 
         <nav class="ms-4 hidden items-center gap-1 text-sm md:flex">

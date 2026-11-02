@@ -16,7 +16,7 @@
         .rc * { box-sizing: border-box; }
         .rc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 6mm; padding-bottom: 5mm; border-bottom: 2px solid #6d28d9; }
         .rc-brand { display: flex; align-items: center; gap: 3mm; }
-        .rc-logo { width: 13mm; height: 13mm; border-radius: 3.5mm; background: linear-gradient(135deg, #7c3aed, #d946ef); color: #fff; display: grid; place-items: center; font-weight: 900; font-size: 18pt; }
+        .rc-logo { height: 14mm; width: auto; }
         .rc-brand b { display: block; font-size: 15pt; font-weight: 900; line-height: 1.2; }
         .rc-brand small { color: #64748b; font-size: 8pt; }
         .rc-title { text-align: left; }
@@ -66,7 +66,7 @@
     <article class="rc">
         <header class="rc-head">
             <div class="rc-brand">
-                <div class="rc-logo">ن</div>
+                <img class="rc-logo" src="/images/logo-mark.svg" alt="">
                 <div><b>{{ config('site.name') }}</b><small>{{ config('site.tagline') }}</small></div>
             </div>
             <div class="rc-title">
