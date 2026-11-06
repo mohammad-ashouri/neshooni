@@ -33,6 +33,8 @@ return [
         'key' => env('MELIPAYAMAK_API_KEY'),
         'from' => env('MELIPAYAMAK_FROM'),
         'otp_body_id' => (int) env('MELIPAYAMAK_OTP_BODY_ID', 0),
+        // اگر خالی باشد از همان الگوی بازیابی رمز استفاده می‌شود
+        'register_body_id' => (int) env('MELIPAYAMAK_REGISTER_BODY_ID', env('MELIPAYAMAK_OTP_BODY_ID', 0)),
     ],
 
     'slack' => [
