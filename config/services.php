@@ -28,6 +28,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // کنسول ملی پیامک — کلید API از console.melipayamak.com
+    'melipayamak' => [
+        'key' => env('MELIPAYAMAK_API_KEY'),
+        'from' => env('MELIPAYAMAK_FROM'),
+        'otp_body_id' => (int) env('MELIPAYAMAK_OTP_BODY_ID', 0),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

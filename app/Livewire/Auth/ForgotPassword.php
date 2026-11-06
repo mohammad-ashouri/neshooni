@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
+use App\Services\Sms;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,8 +16,8 @@ use Livewire\Component;
  * بازیابی رمز با کد یک‌بارمصرف.
  * مرحله ۱: موبایل → ساخت کد ۵ رقمی | مرحله ۲: کد + رمز جدید
  *
- * پنل پیامک هنوز وصل نشده؛ کد در جدول password_reset_tokens (هش‌شده) ذخیره
- * و در محیط توسعه برای تست روی صفحه نمایش داده می‌شود. محل اتصال پیامک با TODO مشخص است.
+ * کد در جدول password_reset_tokens (هش‌شده) ذخیره و با الگوی خدماتی ملی پیامک فرستاده می‌شود؛
+ * در محیط توسعه برای تست روی صفحه هم نمایش داده می‌شود.
  */
 #[Title('بازیابی رمز عبور')]
 class ForgotPassword extends Component
@@ -51,7 +52,9 @@ class ForgotPassword extends Component
                 ['token' => Hash::make($code), 'created_at' => now()],
             );
 
-            // TODO: ارسال پیامک: Sms::send($this->mobile, "کد بازیابی نشونی: {$code}");
+            // خطای ارسال فقط لاگ می‌شود تا از پیام خطا معلوم نشود این شماره عضو است
+            app(Sms::class)->sendPattern($this->mobile, config('services.melipayamak.otp_body_id'), [$code]);
+
             if (app()->isLocal()) {
                 $this->dispatch('toast', message: 'کد آزمایشی (فقط در محیط توسعه): '.$code, type: 'info');
             }
