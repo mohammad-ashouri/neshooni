@@ -51,6 +51,7 @@ class ForgotPassword extends Component
                 ['mobile' => $this->mobile],
                 ['token' => Hash::make($code), 'created_at' => now()],
             );
+            RateLimiter::clear('reset-verify:'.$this->mobile);
 
             // خطای ارسال فقط لاگ می‌شود تا از پیام خطا معلوم نشود این شماره عضو است
             app(Sms::class)->sendPattern($this->mobile, config('services.melipayamak.otp_body_id'), [$code]);
@@ -71,14 +72,26 @@ class ForgotPassword extends Component
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
+        // بعد از ۵ کد اشتباه، کد باطل می‌شود تا نشود همه ترکیب‌ها را امتحان کرد
+        $attemptsKey = 'reset-verify:'.$this->mobile;
+        if (RateLimiter::tooManyAttempts($attemptsKey, 5)) {
+            DB::table('password_reset_tokens')->where('mobile', $this->mobile)->delete();
+            $this->addError('code', 'کد منقضی شده. دوباره کد بگیرید.');
+
+            return;
+        }
+
         $row = DB::table('password_reset_tokens')->where('mobile', $this->mobile)->first();
         $valid = $row && now()->subMinutes(10)->lt($row->created_at) && Hash::check($this->code, $row->token);
 
         if (! $valid) {
+            RateLimiter::hit($attemptsKey, 600);
             $this->addError('code', 'کد اشتباه است یا منقضی شده.');
 
             return;
         }
+
+        RateLimiter::clear($attemptsKey);
 
         $user = User::where('mobile', $this->mobile)->firstOrFail();
         $user->update(['password' => $this->password]);
