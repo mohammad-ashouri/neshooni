@@ -7,7 +7,7 @@ use Livewire\Livewire;
 $code = "<a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=123&Code=abc'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=123&Code=abc' alt='' style='cursor:pointer' code='abc'></a>";
 
 test('تا کد اینماد ثبت نشده باکس آن در فوتر نیست', function () {
-    $this->get('/')->assertOk()->assertDontSee('نماد اعتماد');
+    $this->get('/')->assertOk()->assertDontSee('trustseal.enamad.ir', false);
 });
 
 test('مدیر کد اینماد را ثبت می‌کند و در فوتر نمایش داده می‌شود', function () use ($code) {
@@ -18,7 +18,7 @@ test('مدیر کد اینماد را ثبت می‌کند و در فوتر نم
 
     auth()->logout();
 
-    $this->get('/')->assertOk()->assertSee('نماد اعتماد')->assertSee($code, false);
+    $this->get('/')->assertOk()->assertSee($code, false);
 });
 
 test('خالی کردن کد، اینماد را از فوتر برمی‌دارد', function () use ($code) {

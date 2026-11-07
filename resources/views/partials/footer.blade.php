@@ -1,7 +1,8 @@
 @php($enamad = App\Support\Enamad::code())
 <footer class="mt-12 border-t border-slate-200 bg-surface">
-    <div @class(['mx-auto grid max-w-7xl gap-8 px-4 py-10', 'md:grid-cols-5' => $enamad, 'md:grid-cols-4' => ! $enamad])>
-        <div class="md:col-span-2">
+    {{-- دسکتاپ چهار ستون: معرفی · دسته‌بندی‌ها · دسترسی سریع · اینماد (بدون کد اینماد، معرفی دو ستون می‌گیرد) --}}
+    <div class="mx-auto grid max-w-7xl gap-8 px-4 py-10 md:grid-cols-4">
+        <div @class(['md:col-span-2' => ! $enamad])>
             <a href="{{ route('home') }}" wire:navigate class="cursor-pointer inline-flex" aria-label="{{ config('site.name') }}">
                 <x-logo tagline :size="44" />
             </a>
