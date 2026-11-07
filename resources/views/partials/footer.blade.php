@@ -1,5 +1,6 @@
+@php($enamad = App\Support\Enamad::code())
 <footer class="mt-12 border-t border-slate-200 bg-surface">
-    <div class="mx-auto grid max-w-7xl gap-8 px-4 py-10 md:grid-cols-4">
+    <div @class(['mx-auto grid max-w-7xl gap-8 px-4 py-10', 'md:grid-cols-5' => $enamad, 'md:grid-cols-4' => ! $enamad])>
         <div class="md:col-span-2">
             <a href="{{ route('home') }}" wire:navigate class="cursor-pointer inline-flex" aria-label="{{ config('site.name') }}">
                 <x-logo tagline :size="44" />
@@ -27,6 +28,13 @@
                 <li><a href="{{ auth()->check() ? route('dashboard.listings.create') : route('register') }}" wire:navigate class="cursor-pointer hover:text-violet-700">ثبت پیج</a></li>
             </ul>
         </div>
+        @if ($enamad)
+            {{-- کد اینماد از پنل «نماد اینماد» عوض می‌شود (App\Support\Enamad) --}}
+            <div>
+                <h3 class="font-bold">نماد اعتماد</h3>
+                <div class="mt-3 inline-grid size-28 place-items-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 [&_img]:max-h-full [&_img]:max-w-full">{!! $enamad !!}</div>
+            </div>
+        @endif
     </div>
     <div class="border-t border-slate-100 py-4 text-center text-xs text-slate-400">© {{ fa_date(now(), 'y') }} {{ config('site.name') }} — همه حقوق محفوظ است.</div>
 </footer>

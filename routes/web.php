@@ -96,6 +96,7 @@ Route::middleware(['auth', 'can:access-panel'])->prefix('panel')->name('admin.')
     Route::get('/platforms', Admin\Platforms::class)->name('platforms')->middleware('can:platforms.manage');
     Route::get('/users', Admin\Users::class)->name('users')->middleware('can:users.manage');
     Route::get('/maintenance', Admin\Maintenance::class)->name('maintenance')->middleware('can:site.maintenance');
+    Route::get('/enamad', Admin\Enamad::class)->name('enamad')->middleware('can:site.enamad');
     Route::get('/roles', Admin\Roles::class)->name('roles')->middleware('can:roles.manage');
     Route::get('/activity', Admin\Activity::class)->name('activity')->middleware('can:activity.view');
     Route::get('/help', [GuideController::class, 'panel'])->name('help');

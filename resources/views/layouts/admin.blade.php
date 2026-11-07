@@ -20,6 +20,7 @@
         ['admin.platforms', '🌐', 'پلتفرم‌ها', 'platforms.manage', null],
         ['admin.users', '👥', 'کاربران', 'users.manage', null],
         ['admin.maintenance', '🛠️', 'حالت تعمیر', 'site.maintenance', null],
+        ['admin.enamad', '🛡️', 'نماد اینماد', 'site.enamad', null],
         ['admin.activity', '🗂️', 'تاریخچه اقدامات', 'activity.view', null],
         ['admin.roles', '🔐', 'نقش‌ها', 'roles.manage', null],
     ];
