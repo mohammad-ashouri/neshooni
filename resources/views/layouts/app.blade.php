@@ -24,6 +24,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen flex-col bg-page font-sans text-slate-800 antialiased">
+    {{-- نوار پیشرفت اسکرول (app.css → scroll-progress) --}}
+    <div class="scroll-progress" aria-hidden="true"></div>
+
     {{-- مدیر در حالت تعمیر سایت را عادی می‌بیند؛ این نوار یادآوری می‌کند که برای بقیه بسته است --}}
     @if (auth()->user()?->isAdmin() && App\Support\Maintenance::isActive())
         <div class="bg-amber-400 px-4 py-2 text-center text-sm font-semibold text-amber-950">
@@ -42,6 +45,16 @@
 
     @include('partials.footer')
 
+    {{-- دکمه بازگشت به بالا؛ بعد از کمی اسکرول ظاهر می‌شود --}}
+    <button x-data="{ show: false }" @scroll.window.throttle.150ms="show = scrollY > 600" x-show="show" x-cloak
+            x-transition:enter="transition duration-300 ease-out" x-transition:enter-start="translate-y-4 scale-75 opacity-0"
+            x-transition:leave="transition duration-200 ease-in" x-transition:leave-end="translate-y-4 scale-75 opacity-0"
+            @click="scrollTo({ top: 0, behavior: 'smooth' })"
+            class="fixed bottom-5 left-5 z-50 grid size-11 cursor-pointer place-items-center rounded-full bg-violet-600 text-white shadow-lg shadow-violet-500/30 transition hover:-translate-y-1 hover:bg-violet-700"
+            aria-label="بازگشت به بالای صفحه">
+        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+
     {{-- مودال پیشنهاد خبرنامه بر اساس علاقه‌مندی‌ها --}}
     <livewire:newsletter-modal />
 
@@ -51,7 +64,8 @@
          class="pointer-events-none fixed inset-x-0 top-20 z-[90] flex flex-col items-center gap-2 px-4">
         <template x-for="t in items" :key="t.id">
             <div :class="{ 'bg-emerald-600': t.type === 'success', 'bg-rose-600': t.type === 'error', 'bg-gray-800': t.type === 'info' }"
-                 class="pointer-events-auto max-w-md rounded-xl px-4 py-3 text-sm text-white shadow-lg" x-text="t.message" x-transition></div>
+                 class="toast-enter pointer-events-auto max-w-md rounded-xl px-4 py-3 text-sm text-white shadow-lg" x-text="t.message"
+                 x-transition:leave="transition duration-300 ease-in" x-transition:leave-end="-translate-y-3 scale-95 opacity-0"></div>
         </template>
     </div>
 </body>

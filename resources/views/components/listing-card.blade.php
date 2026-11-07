@@ -12,12 +12,12 @@
 
 <a href="{{ route('listings.show', $listing) }}" wire:navigate
    {{ $attributes->class([
-       'group relative flex h-full cursor-pointer flex-col rounded-2xl border p-4 transition duration-300 hover:-translate-y-1 hover:shadow-xl',
+       'spotlight tilt group relative flex h-full cursor-pointer flex-col rounded-2xl border p-4 transition duration-300 hover:-translate-y-1 hover:shadow-xl',
        'border-amber-300 bg-linear-to-b from-amber-50 to-surface ring-1 ring-amber-200 hover:shadow-amber-500/15' => $featured,
        'border-slate-200 bg-surface hover:border-violet-200 hover:shadow-violet-500/10' => ! $featured,
    ]) }}>
     @if ($featured)
-        <span class="absolute -top-2.5 left-4 rounded-full bg-linear-to-l from-amber-400 to-orange-500 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-sm shadow-orange-500/30" title="جایگاه تبلیغاتی؛ صاحب پیج برای نمایش آن هزینه پرداخت کرده">آگهی ویژه</span>
+        <span class="shine absolute -top-2.5 left-4 rounded-full bg-linear-to-l from-amber-400 to-orange-500 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-sm shadow-orange-500/30" title="جایگاه تبلیغاتی؛ صاحب پیج برای نمایش آن هزینه پرداخت کرده">آگهی ویژه</span>
     @endif
 
     <div class="flex items-start gap-3">
@@ -36,7 +36,7 @@
                     @if ($listing->city) <span>📍 {{ $listing->city }}</span> @endif
                     @if ($hours)
                         <span @class(['inline-flex items-center gap-1', 'text-emerald-600' => $hours['open']])>
-                            <span @class(['size-1.5 rounded-full', 'bg-emerald-500' => $hours['open'], 'bg-slate-300' => ! $hours['open']])></span>
+                            <span @class(['size-1.5 rounded-full', 'ping-dot bg-emerald-500' => $hours['open'], 'bg-slate-300' => ! $hours['open']])></span>
                             {{ $hours['open'] ? 'الان باز' : 'بسته' }}
                         </span>
                     @endif

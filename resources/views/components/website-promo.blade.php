@@ -13,10 +13,10 @@
 @if ($enabled)
     @if ($variant === 'banner')
         <section {{ $attributes->class('relative overflow-hidden rounded-3xl border border-teal-200 bg-linear-to-l from-teal-50 to-emerald-50 p-6 sm:p-10 dark:border-teal-900 dark:from-teal-950/40 dark:to-emerald-950/40') }}>
-            <div class="pointer-events-none absolute -top-16 -left-16 size-64 rounded-full bg-teal-300/30 blur-3xl"></div>
+            <div class="blob pointer-events-none absolute -top-16 -left-16 size-64 rounded-full bg-teal-300/30 blur-3xl"></div>
             <div class="relative grid items-center gap-8 md:grid-cols-[1fr_auto]">
                 <div>
-                    <span class="chip bg-teal-600 text-white">🌐 تازه در نشونی</span>
+                    <span class="shine chip bg-teal-600 text-white">🌐 تازه در نشونی</span>
                     <h2 class="mt-4 text-2xl font-black text-slate-900">سایت فروشگاهی دارید؟ آن را هم معرفی کنید</h2>
                     <p class="mt-2 max-w-2xl leading-8 text-slate-600">
                         فروشگاه اینترنتی‌تان را مثل یک پیج در نشونی ثبت کنید تا در دسته و شهر خودش، کنار پیج‌ها دیده شود و مشتری مستقیم به سایت شما برود.

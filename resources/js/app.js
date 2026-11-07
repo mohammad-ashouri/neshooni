@@ -5,14 +5,15 @@
  *  - سازنده بنر «ما در نشونی هستیم» (فایل banner.js)
  */
 import './banner';
+import { withThemeTransition } from './effects';
 
 // حالت تیره: انتخاب کاربر در localStorage ذخیره می‌شود
-window.toggleTheme = () => {
+window.toggleTheme = withThemeTransition(() => {
     const dark = document.documentElement.classList.toggle('dark');
     try {
         localStorage.setItem('neshooni-theme', dark ? 'dark' : 'light');
     } catch (e) {}
-};
+});
 
 // با wire:navigate کلاس‌های <html> از صفحه جدید می‌آید؛ حالت تیره دوباره اعمال می‌شود
 document.addEventListener('livewire:navigated', () => {
