@@ -123,7 +123,10 @@
 
         <section class="rc-pay">
             <dl>
-                <dt>روش پرداخت</dt><dd>درگاه پرداخت اینترنتی</dd>
+                <dt>روش پرداخت</dt><dd>درگاه پرداخت اینترنتی{{ $payment->gatewayLabel() ? " ({$payment->gatewayLabel()})" : "" }}</dd>
+                @if ($payment->card_number)
+                    <dt>شماره کارت</dt><dd dir="ltr" style="text-align: right">{{ fa_digits($payment->card_number) }}</dd>
+                @endif
                 <dt>کد پیگیری</dt><dd dir="ltr" style="text-align: right">{{ fa_digits($payment->ref_id) }}</dd>
                 <dt>زمان پرداخت</dt><dd>{{ fa_datetime($payment->paid_at) }}</dd>
                 <dt>وضعیت</dt><dd style="color: #059669">موفق</dd>

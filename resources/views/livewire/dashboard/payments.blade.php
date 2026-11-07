@@ -22,7 +22,12 @@
                             <td class="td">
                                 @switch($payment->status)
                                     @case('paid') <span class="chip bg-emerald-50 text-emerald-700">موفق</span> @break
-                                    @case('pending') <span class="chip bg-amber-50 text-amber-700">در انتظار پرداخت</span> @break
+                                    @case('pending')
+                                        <span class="chip bg-amber-50 text-amber-700">در انتظار پرداخت</span>
+                                        @if ($payment->failure_reason)
+                                            <div class="mt-1 max-w-56 text-xs leading-5 text-rose-600">{{ $payment->failure_reason }}</div>
+                                        @endif
+                                        @break
                                     @default <span class="chip bg-slate-100 text-slate-500">لغو شده</span>
                                 @endswitch
                             </td>

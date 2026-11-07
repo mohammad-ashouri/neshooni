@@ -19,7 +19,7 @@ class Seo
 {
     /** صفحه‌هایی که نباید در گوگل ایندکس شوند (پنل، داشبورد، ورود و پرداخت) */
     private const PRIVATE_ROUTES = [
-        'dashboard', 'dashboard.*', 'admin.*', 'login', 'register', 'password.request', 'checkout', 'receipts.*',
+        'dashboard', 'dashboard.*', 'admin.*', 'login', 'register', 'password.request', 'checkout', 'payments.*', 'receipts.*',
     ];
 
     private ?SEOData $data = null;

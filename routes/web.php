@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\SitemapController;
 use App\Livewire\Admin;
@@ -63,8 +64,10 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard')->group(functio
 });
 
 Route::middleware('auth')->group(function () {
-    // درگاه پرداخت نمایشی؛ در نسخه واقعی به درگاه بانک منتقل می‌شود
+    // صفحه پرداخت: انتخاب درگاه و انتقال به بانک (بازگشت از بانک در routes/gateway.php است)
     Route::get('/checkout/{payment}', Pages\Checkout::class)->name('checkout');
+    Route::post('/payments/{payment}/start', [PaymentController::class, 'start'])->middleware('throttle:10,1')->name('payments.start');
+    Route::get('/payments/{payment}/finish', [PaymentController::class, 'finish'])->name('payments.finish');
     Route::get('/receipts/{payment}', [ReceiptController::class, 'show'])->name('receipts.show');
 });
 
