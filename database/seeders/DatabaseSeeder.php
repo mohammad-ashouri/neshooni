@@ -8,7 +8,7 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * داده‌های پایه (نقش‌ها، پلتفرم‌ها، دسته‌ها) همیشه لازم‌اند.
-     * DemoSeeder فقط برای محیط توسعه/نمایش است و در production اجرا نمی‌شود.
+     * DemoSeeder (داده فیک) به‌طور پیش‌فرض غیرفعال است؛ فقط با SEED_DEMO=true در .env اجرا می‌شود.
      */
     public function run(): void
     {
@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
         ]);
 
-        if (! app()->isProduction()) {
+        if (! app()->isProduction() && env('SEED_DEMO', false)) {
             $this->call(DemoSeeder::class);
         }
     }
