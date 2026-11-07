@@ -6,15 +6,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Livewire\Livewire;
 
-/** پیامک‌ها را جعل می‌کند و آخرین کد فرستاده‌شده را برمی‌گرداند. */
-function fakeSmsAndCapture(): Closure
-{
-    config(['services.melipayamak.key' => 'test-key', 'services.melipayamak.register_body_id' => 777]);
-    Http::fake(['console.melipayamak.com/*' => Http::response(['recId' => 123456789])]);
-
-    return fn () => Http::recorded()->last()[0]['args'][0];
-}
-
 function registerForm(string $mobile = '09123456789')
 {
     return Livewire::test(Register::class)

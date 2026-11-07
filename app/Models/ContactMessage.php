@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['user_id', 'name', 'contact', 'subject', 'body', 'read_at'])]
 class ContactMessage extends Model
 {
+    use RecordsActivity;
+
+    /** فقط حذف پیام ثبت می‌شود (ارسال پیام کار بازدیدکننده است و خواندنش تغییری نیست) */
+    protected static function activityEvents(): array
+    {
+        return ['deleted'];
+    }
+
     public const SUBJECTS = ['پشتیبانی', 'گزارش تخلف', 'همکاری', 'پیشنهاد و انتقاد', 'سایر'];
 
     protected function casts(): array

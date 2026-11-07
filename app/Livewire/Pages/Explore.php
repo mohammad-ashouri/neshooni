@@ -8,6 +8,7 @@ use App\Models\Platform;
 use App\Services\InterestTracker;
 use App\Support\Seo;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -85,6 +86,7 @@ class Explore extends Component
 
         return view('livewire.pages.explore', [
             'listings' => $listings,
+            'ads' => $this->page === 1 && ! $this->open ? $this->ads() : collect(),
             'heading' => $this->heading($platform),
             'pageUrl' => fn (int $page) => $this->pageUrl($page),
             'platforms' => Platform::active()->get(),
@@ -116,13 +118,22 @@ class Explore extends Component
             ->when($this->platform, fn (Builder $q) => $q->whereRelation('platform', 'key', $this->platform))
             ->when($this->province, fn (Builder $q) => $q->where('province', $this->province))
             ->when($this->city, fn (Builder $q) => $q->where('city', $this->city))
-            // پیج‌های ویژه همیشه اول
-            ->orderByRaw('CASE WHEN featured_until > ? THEN 0 ELSE 1 END', [now()])
+            // رتبه‌بندی نتایج مستقل از پرداخت است؛ پیج‌های ویژه جدا در ردیف «آگهی ویژه» بالای نتایج می‌آیند
+            ->when($this->sort === 'rating', fn (Builder $q) => $q->orderByRaw('rating DESC NULLS LAST')->orderByDesc('reviews_count'))
             ->when($this->sort === 'views', fn (Builder $q) => $q->orderByDesc('views'))
             ->when($this->sort === 'popular', fn (Builder $q) => $q->withCount('fans')->orderByDesc('fans_count'))
             ->when($this->sort === 'followers', fn (Builder $q) => $q->orderByDesc('followers'))
             ->latest()
             ->orderByDesc('id');
+    }
+
+    /**
+     * حداکثر ۳ پیج ویژه که با همین فیلترها جور هستند، به ترتیب تصادفی.
+     * جدا از نتایج عادی و با برچسب «آگهی ویژه» نمایش داده می‌شوند.
+     */
+    private function ads(): Collection
+    {
+        return $this->query()->reorder()->featured()->inRandomOrder()->limit(3)->get();
     }
 
     /** «مانتو در اینستاگرام در تهران» */

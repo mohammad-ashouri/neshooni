@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ModerationStatus;
 use App\Models\Concerns\HasSlugInUrl;
+use App\Models\Concerns\RecordsActivity;
 use App\Support\Seo;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,6 +31,13 @@ use RalphJSmit\Laravel\SEO\Support\SEOData;
 class Listing extends Model
 {
     use HasSEO, HasSlugInUrl;
+    use RecordsActivity;
+
+    /** شمارنده‌ها با هر بازدید عوض می‌شوند و جایی در تاریخچه ندارند */
+    protected function activityIgnored(): array
+    {
+        return ['views', 'clicks'];
+    }
 
     /** روزهای هفته؛ ایندکس ۰ = شنبه */
     public const WEEK_DAYS = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];

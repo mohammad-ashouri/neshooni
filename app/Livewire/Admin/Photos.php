@@ -21,7 +21,8 @@ class Photos extends Component
 
     public function approve(array $ids): void
     {
-        ListingPhoto::whereIn('id', $ids)->update(['status' => ModerationStatus::Approved]);
+        // تک‌تک به‌روزرسانی می‌شوند تا در تاریخچه اقدامات ثبت شوند
+        ListingPhoto::whereIn('id', $ids)->get()->each->update(['status' => ModerationStatus::Approved]);
         $this->finish(count($ids).' تصویر تأیید شد.');
     }
 
@@ -29,7 +30,7 @@ class Photos extends Component
     {
         $photos = ListingPhoto::whereIn('id', $ids)->get();
         Storage::disk('public')->delete($photos->pluck('path')->all());
-        ListingPhoto::whereIn('id', $ids)->delete();
+        $photos->each->delete();
 
         $this->finish(count($ids).' تصویر رد و حذف شد.');
     }

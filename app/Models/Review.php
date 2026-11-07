@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ModerationStatus;
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,13 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 #[Fillable(['listing_id', 'user_id', 'rating', 'body', 'status', 'reply', 'replied_at'])]
 class Review extends Model
 {
+    use RecordsActivity;
+
+    public function activityLabel(): string
+    {
+        return 'نظر '.fa_number($this->rating).' ستاره برای «'.($this->listing?->title ?? '#'.$this->listing_id).'»';
+    }
+
     protected function casts(): array
     {
         return [

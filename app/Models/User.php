@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasSlugInUrl;
+use App\Models\Concerns\RecordsActivity;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -21,6 +22,14 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasSlugInUrl, Notifiable;
+
+    use RecordsActivity;
+
+    /** از تغییرات حساب فقط موارد امنیتی و دسترسی ثبت می‌شوند */
+    protected function activityOnly(): ?array
+    {
+        return ['name', 'mobile', 'password', 'role_id', 'verified_at'];
+    }
 
     /** نامک آدرس صفحه عمومی کسب‌وکار: /u/2-گالری-ماهور */
     protected function slugSource(): string

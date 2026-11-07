@@ -46,10 +46,14 @@ test('در حالت تعمیر صفحه ورود باز می‌ماند و صف�
 test('در حالت تعمیر مدیر وارد می‌شود و به صفحه حالت تعمیر می‌رود', function () {
     Maintenance::enable(null, null, null);
     $admin = userWithRole('admin');
+    $lastCode = fakeSmsAndCapture();
 
     Livewire::test(Login::class)
         ->set('mobile', $admin->mobile)->set('password', 'password')->set('captcha', '12345')
         ->call('login')
+        ->assertSet('step', 2)
+        ->set('code', $lastCode())
+        ->call('verifyCode')
         ->assertHasNoErrors()
         ->assertRedirect(route('admin.maintenance'));
 

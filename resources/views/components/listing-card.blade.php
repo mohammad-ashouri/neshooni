@@ -1,10 +1,12 @@
 {{--
     کارت پیج در لیست‌ها. برای امتیاز و تعداد تصاویر، کوئری را با ->forCards() بگیرید.
+    ad: کارت در جایگاه تبلیغاتی نمایش داده می‌شود و برچسب «آگهی ویژه» می‌گیرد.
+    در نتایج عادی کارت پیج ویژه با بقیه یکسان است تا رتبه‌بندی مستقل از پرداخت دیده شود.
 --}}
-@props(['listing'])
+@props(['listing', 'ad' => false])
 
 @php
-    $featured = $listing->isFeatured();
+    $featured = $ad && $listing->isFeatured();
     $hours = $listing->hoursStatus();
 @endphp
 
@@ -15,7 +17,7 @@
        'border-slate-200 bg-surface hover:border-violet-200 hover:shadow-violet-500/10' => ! $featured,
    ]) }}>
     @if ($featured)
-        <span class="absolute -top-2.5 left-4 rounded-full bg-linear-to-l from-amber-400 to-orange-500 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-sm shadow-orange-500/30">⭐ ویژه</span>
+        <span class="absolute -top-2.5 left-4 rounded-full bg-linear-to-l from-amber-400 to-orange-500 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-sm shadow-orange-500/30" title="جایگاه تبلیغاتی؛ صاحب پیج برای نمایش آن هزینه پرداخت کرده">آگهی ویژه</span>
     @endif
 
     <div class="flex items-start gap-3">

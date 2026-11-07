@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReportStatus;
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,13 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 #[Fillable(['reporter_id', 'reportable_type', 'reportable_id', 'reason', 'body', 'status', 'note'])]
 class Report extends Model
 {
+    use RecordsActivity;
+
+    public function activityLabel(): string
+    {
+        return 'گزارش «'.$this->reason.'»';
+    }
+
     /** دلیل‌های قابل انتخاب برای هر نوع */
     public const REASONS = [
         'listing' => ['کلاهبرداری یا فروش جعلی', 'محتوای غیراخلاقی یا نامناسب', 'اطلاعات یا لینک نادرست', 'پیج تکراری', 'نقض حقوق دیگران', 'سایر'],

@@ -36,7 +36,10 @@ class SubscriptionNotifier
             if ($subscription->user) {
                 $subscription->user->notify(new SiteMessage($text, route('listings.show', $listing)));
             } else {
-                OutboxMessage::create(['contact' => $subscription->contact, 'body' => $text.' — '.$listing->publicUrl()]);
+                OutboxMessage::create([
+                    'contact' => $subscription->contact,
+                    'body' => $text.' — '.$listing->publicUrl()."\nلغو عضویت: ".$subscription->unsubscribeUrl(),
+                ]);
             }
         }
 

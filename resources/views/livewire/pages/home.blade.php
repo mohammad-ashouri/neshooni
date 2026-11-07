@@ -36,12 +36,15 @@
         @if ($featured->isNotEmpty())
             <section>
                 <div class="mb-5 flex items-end justify-between">
-                    <h2 class="text-xl font-extrabold">⭐ پیج‌های ویژه</h2>
+                    <div>
+                        <h2 class="text-xl font-extrabold">⭐ آگهی‌های ویژه</h2>
+                        <p class="mt-1 text-xs text-slate-500">این پیج‌ها برای نمایش در این بخش هزینه پرداخت کرده‌اند.</p>
+                    </div>
                     <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" wire:navigate class="cursor-pointer text-sm text-violet-700 hover:underline">پیج شما هم اینجا باشد؟</a>
                 </div>
                 <div class="stagger grid gap-4 pt-2 sm:grid-cols-2 lg:grid-cols-4">
                     @foreach ($featured as $listing)
-                        <x-listing-card :listing="$listing" />
+                        <x-listing-card :listing="$listing" ad />
                     @endforeach
                 </div>
             </section>

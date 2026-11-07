@@ -10,6 +10,7 @@ use Database\Seeders\CategorySeeder;
 use Database\Seeders\PlatformSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /*
@@ -24,6 +25,15 @@ pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(fn () => test()->seed([RoleSeeder::class, PlatformSeeder::class, CategorySeeder::class]))
     ->in('Feature');
+
+/** پیامک‌ها را جعل می‌کند و آخرین کد فرستاده‌شده را برمی‌گرداند. */
+function fakeSmsAndCapture(): Closure
+{
+    config(['services.melipayamak.key' => 'test-key', 'services.melipayamak.register_body_id' => 777, 'services.melipayamak.otp_body_id' => 555]);
+    Http::fake(['console.melipayamak.com/*' => Http::response(['recId' => 123456789])]);
+
+    return fn () => Http::recorded()->last()[0]['args'][0];
+}
 
 /** کاربر با نقش مشخص: 'user'، 'moderator' یا 'admin' */
 function userWithRole(string $role = 'user'): User

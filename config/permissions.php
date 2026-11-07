@@ -39,5 +39,6 @@ return [
         'platforms.manage' => 'مدیریت پلتفرم‌ها',
         'users.manage' => 'مدیریت کاربران و تعیین نقش',
         'site.maintenance' => 'روشن و خاموش کردن حالت تعمیر',
+        'activity.view' => 'مشاهده تاریخچه اقدامات',
     ],
 ];

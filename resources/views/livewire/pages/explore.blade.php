@@ -54,6 +54,7 @@
                     </select>
                     <select wire:model.live="sort" class="input md:w-40">
                         <option value="new">جدیدترین</option>
+                        <option value="rating">بیشترین امتیاز</option>
                         <option value="views">پربازدیدترین</option>
                         <option value="popular">محبوب‌ترین</option>
                         <option value="followers">بیشترین دنبال‌کننده</option>
@@ -77,6 +78,20 @@
                 <span>{{ fa_number($listings->total()) }} نتیجه</span>
                 <span wire:loading class="text-violet-600">در حال جستجو...</span>
             </div>
+
+            @if ($ads->isNotEmpty())
+                <section class="mb-6 rounded-2xl border border-amber-200 bg-amber-50/50 p-4" aria-label="آگهی‌های ویژه">
+                    <div class="mb-1 flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <span class="font-bold text-amber-700">آگهی ویژه</span>
+                        <span class="text-slate-500">جایگاه تبلیغاتی؛ نتایج زیر مستقل از پرداخت مرتب شده‌اند</span>
+                    </div>
+                    <div class="grid gap-4 pt-3 sm:grid-cols-2 xl:grid-cols-3">
+                        @foreach ($ads as $listing)
+                            <x-listing-card :listing="$listing" ad wire:key="ad-{{ $listing->id }}" />
+                        @endforeach
+                    </div>
+                </section>
+            @endif
 
             @if ($listings->isEmpty())
                 <x-empty icon="🔍" title="پیجی با این مشخصات پیدا نشد">

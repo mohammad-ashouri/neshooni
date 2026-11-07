@@ -37,7 +37,7 @@
                         <div class="flex flex-wrap items-center gap-2">
                             <h1 class="text-2xl font-extrabold">{{ $listing->title }}</h1>
                             @if ($listing->user->isVerified()) <x-verified-badge class="size-5" /> @endif
-                            @if ($listing->isFeatured()) <span class="chip bg-amber-100 text-amber-700">⭐ ویژه</span> @endif
+                            @if ($listing->isFeatured()) <span class="chip bg-amber-100 text-amber-700" title="صاحب پیج برای نمایش ویژه هزینه پرداخت کرده">آگهی ویژه</span> @endif
                         </div>
                         <p class="mt-1 text-right text-slate-500" dir="ltr">{{ $listing->displayHandle() }}</p>
                         <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">

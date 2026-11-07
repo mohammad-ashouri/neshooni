@@ -29,7 +29,9 @@
                                     @if ($listing->isFeatured()) <span class="chip bg-amber-100 text-amber-700">⭐ تا {{ fa_date($listing->featured_until, 'd MMMM') }}</span> @endif
                                 </div>
                                 <a href="{{ $listing->externalUrl() }}" target="_blank" rel="noopener" class="cursor-pointer block text-right text-sm text-violet-700 hover:underline" dir="ltr">{{ $listing->displayHandle() }} ↗</a>
-                                <p class="mt-1 text-xs text-slate-500">{{ $listing->categoryLabel() }} · {{ $listing->user->name }} ({{ fa_digits($listing->user->mobile) }}) · {{ fa_date($listing->created_at) }}</p>
+                                <p class="mt-1 text-xs text-slate-500">{{ $listing->categoryLabel() }} · {{ $listing->user->name }} ({{ fa_digits($listing->user->mobile) }}) · {{ fa_date($listing->created_at) }}
+                                    @can('activity.view') · <a href="{{ route('admin.activity', ['subject' => 'listing', 'id' => $listing->id]) }}" wire:navigate class="cursor-pointer text-violet-700 hover:underline">تاریخچه تغییرات</a> @endcan
+                                </p>
                                 <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ $listing->description }}</p>
                                 {{-- متنی که صاحب پیج برای گوگل نوشته (از ابزار سئو) --}}
                                 @if ($listing->seo->title || $listing->seo->description)

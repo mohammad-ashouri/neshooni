@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['key', 'value'])]
 class Setting extends Model
 {
+    use RecordsActivity;
+
     protected $primaryKey = 'key';
 
     protected $keyType = 'string';

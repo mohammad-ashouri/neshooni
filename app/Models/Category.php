@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,8 @@ use Illuminate\Support\Collection as BaseCollection;
 #[Fillable(['parent_id', 'name', 'slug', 'icon', 'intro', 'seo_title', 'seo_description', 'sort'])]
 class Category extends Model
 {
+    use RecordsActivity;
+
     public const MAX_DEPTH = 3;
 
     protected static ?Collection $cache = null;

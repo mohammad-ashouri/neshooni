@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ModerationStatus;
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 #[Fillable(['listing_id', 'path', 'caption', 'status', 'sort'])]
 class ListingPhoto extends Model
 {
+    use RecordsActivity;
+
     protected function casts(): array
     {
         return ['status' => ModerationStatus::class];

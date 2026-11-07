@@ -1,4 +1,25 @@
 <x-auth-card title="ورود به نشونی" subtitle="برای مدیریت پیج‌ها وارد حساب خود شوید">
+    @if ($step === 2)
+    {{-- مرحله دوم ورود اعضای پنل: کد پیامکی --}}
+    <form wire:submit="verifyCode" class="space-y-4">
+        <div class="rounded-xl bg-violet-50 px-4 py-3 text-sm leading-7 text-violet-800">
+            🔐 حساب شما به پنل مدیریت دسترسی دارد. کد ۵ رقمی به شماره <span dir="ltr">{{ fa_digits($maskedMobile) }}</span> پیامک شد.
+        </div>
+        <div>
+            <label class="label" for="code">کد پیامکی</label>
+            <input wire:model="code" id="code" class="input text-center tracking-[0.4em]" dir="ltr" inputmode="numeric" maxlength="5" autocomplete="one-time-code" placeholder="۵ رقم" autofocus>
+            @error('code') <p class="error">{{ $message }}</p> @enderror
+        </div>
+        <button class="cursor-pointer btn-primary w-full" wire:loading.attr="disabled">
+            <span wire:loading.remove wire:target="verifyCode">تأیید و ورود</span>
+            <span wire:loading wire:target="verifyCode">در حال بررسی...</span>
+        </button>
+        <div class="flex items-center justify-between text-sm">
+            <button type="button" wire:click="resendCode" class="cursor-pointer text-violet-700 hover:underline">ارسال دوباره کد</button>
+            <button type="button" wire:click="restart" class="cursor-pointer text-slate-500 hover:underline">بازگشت</button>
+        </div>
+    </form>
+    @else
     <form wire:submit="login" class="space-y-4">
         <div>
             <label class="label" for="mobile">شماره موبایل</label>
@@ -33,6 +54,7 @@
             <span wire:loading>در حال ورود...</span>
         </button>
     </form>
+    @endif
     <p class="mt-6 text-center text-sm text-slate-500">
         حساب ندارید؟ <a href="{{ route('register') }}" wire:navigate class="cursor-pointer font-semibold text-violet-700 hover:underline">ثبت‌نام رایگان</a>
     </p>

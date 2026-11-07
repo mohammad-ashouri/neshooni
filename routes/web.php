@@ -22,6 +22,7 @@ Route::get('/c/{category?}', Pages\Explore::class)->where('category', '.*')->nam
 Route::get('/l/{listing}', Pages\ListingShow::class)->name('listings.show');
 Route::get('/u/{user}', Pages\BusinessProfile::class)->name('business.show');
 Route::get('/contact', Pages\Contact::class)->name('contact');
+Route::get('/unsubscribe/{token}', Pages\Unsubscribe::class)->name('unsubscribe');
 Route::view('/about', 'pages.about')->name('about');
 Route::get('/help', [GuideController::class, 'site'])->name('help');
 
@@ -93,6 +94,7 @@ Route::middleware(['auth', 'can:access-panel'])->prefix('panel')->name('admin.')
     Route::get('/users', Admin\Users::class)->name('users')->middleware('can:users.manage');
     Route::get('/maintenance', Admin\Maintenance::class)->name('maintenance')->middleware('can:site.maintenance');
     Route::get('/roles', Admin\Roles::class)->name('roles')->middleware('can:roles.manage');
+    Route::get('/activity', Admin\Activity::class)->name('activity')->middleware('can:activity.view');
     Route::get('/help', [GuideController::class, 'panel'])->name('help');
 });
 

@@ -112,6 +112,11 @@ return [
     |
     */
 
+    /*
+    | ورود دومرحله‌ای با کد پیامکی برای اعضای پنل مدیریت (مدیر، ناظر و نقش‌های اختصاصی)
+    */
+    'staff_two_factor' => (bool) env('STAFF_TWO_FACTOR', true),
+
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 #[Fillable(['key', 'label', 'color', 'base_url', 'handle_type', 'letter', 'logo', 'is_active', 'sort'])]
 class Platform extends Model
 {
+    use RecordsActivity;
+
     protected function casts(): array
     {
         return ['is_active' => 'boolean'];

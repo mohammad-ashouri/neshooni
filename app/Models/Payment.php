@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['user_id', 'type', 'listing_id', 'verification_request_id', 'days', 'amount', 'title', 'status', 'ref_id', 'paid_at'])]
 class Payment extends Model
 {
+    use RecordsActivity;
+
     protected function casts(): array
     {
         return ['paid_at' => 'datetime'];
