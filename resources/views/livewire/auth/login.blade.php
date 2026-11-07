@@ -14,8 +14,8 @@
             <span wire:loading.remove wire:target="verifyCode">تأیید و ورود</span>
             <span wire:loading wire:target="verifyCode">در حال بررسی...</span>
         </button>
-        <div class="flex items-center justify-between text-sm">
-            <button type="button" wire:click="resendCode" class="cursor-pointer text-violet-700 hover:underline">ارسال دوباره کد</button>
+        <x-code-timer :expires-at="$codeExpiresAt" resend="resendCode" />
+        <div class="text-center text-sm">
             <button type="button" wire:click="restart" class="cursor-pointer text-slate-500 hover:underline">بازگشت</button>
         </div>
     </form>

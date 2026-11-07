@@ -15,6 +15,7 @@
                 <input wire:model="code" id="code" class="input text-center tracking-[0.5em]" dir="ltr" inputmode="numeric" maxlength="5" autofocus>
                 @error('code') <p class="error">{{ $message }}</p> @enderror
             </div>
+            <x-code-timer :expires-at="$codeExpiresAt" resend="sendCode" />
             <div class="grid gap-4 sm:grid-cols-2">
                 <div>
                     <label class="label" for="password">رمز جدید</label>

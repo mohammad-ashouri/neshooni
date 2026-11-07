@@ -31,8 +31,9 @@
                 <input wire:model="code" id="code" class="input text-center tracking-[0.5em]" dir="ltr" inputmode="numeric" maxlength="5" autocomplete="one-time-code" autofocus>
                 @error('code') <p class="error">{{ $message }}</p> @enderror
             </div>
+            <x-code-timer :expires-at="$codeExpiresAt" resend="sendCode" />
             <button class="cursor-pointer btn-primary w-full" wire:loading.attr="disabled">تأیید و ساخت حساب</button>
-            <button type="button" wire:click="$set('step', 1)" class="cursor-pointer w-full text-sm text-slate-500 hover:text-slate-700">ویرایش اطلاعات یا ارسال دوباره کد</button>
+            <button type="button" wire:click="$set('step', 1)" class="cursor-pointer w-full text-sm text-slate-500 hover:text-slate-700">ویرایش اطلاعات</button>
         </form>
     @endif
     <p class="mt-6 text-center text-sm text-slate-500">

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Livewire\Concerns\HasCodeTimer;
 use App\Models\User;
 use App\Services\Sms;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,8 @@ use Livewire\Component;
 #[Title('بازیابی رمز عبور')]
 class ForgotPassword extends Component
 {
+    use HasCodeTimer;
+
     public int $step = 1;
 
     public string $mobile = '';
@@ -37,12 +40,23 @@ class ForgotPassword extends Component
         $this->mobile = en_digits($this->mobile);
         $this->validate(['mobile' => ['required', 'regex:/^09\d{9}$/']], ['mobile.regex' => 'شماره موبایل معتبر نیست.']);
 
+        // کد قبلی همین شماره هنوز معتبر است؛ همان را وارد کند
+        if ($wait = $this->codeWaitSeconds('reset:'.$this->mobile)) {
+            $this->notifyCodeStillValid($wait);
+            $this->step = 2;
+
+            return;
+        }
+
         if (RateLimiter::tooManyAttempts('reset:'.$this->mobile, 3)) {
             $this->addError('mobile', 'چند دقیقه دیگر دوباره تلاش کنید.');
 
             return;
         }
         RateLimiter::hit('reset:'.$this->mobile, 300);
+
+        // تایمر برای همه شماره‌ها یکسان است تا معلوم نشود چه شماره‌ای عضو است
+        $this->startCodeTimer('reset:'.$this->mobile);
 
         // برای اینکه معلوم نشود چه شماره‌ای عضو است، در هر حال به مرحله بعد می‌رویم
         if (User::where('mobile', $this->mobile)->exists()) {
@@ -82,7 +96,7 @@ class ForgotPassword extends Component
         }
 
         $row = DB::table('password_reset_tokens')->where('mobile', $this->mobile)->first();
-        $valid = $row && now()->subMinutes(10)->lt($row->created_at) && Hash::check($this->code, $row->token);
+        $valid = $row && now()->subSeconds(self::CODE_SECONDS)->lt($row->created_at) && Hash::check($this->code, $row->token);
 
         if (! $valid) {
             RateLimiter::hit($attemptsKey, 600);

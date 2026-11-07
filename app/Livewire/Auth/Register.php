@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Livewire\Concerns\HasCodeTimer;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\Sms;
@@ -18,12 +19,12 @@ use Livewire\Component;
  * ثبت‌نام دومرحله‌ای.
  * مرحله ۱: اطلاعات حساب → ارسال کد ۵ رقمی | مرحله ۲: کد → ساخت حساب
  *
- * کد هش‌شده و به شماره موبایل گره‌خورده در کش نگه داشته می‌شود و ۱۰ دقیقه اعتبار دارد.
+ * کد هش‌شده و به شماره موبایل گره‌خورده در کش نگه داشته می‌شود و دو دقیقه و نیم اعتبار دارد.
  */
 #[Title('ثبت‌نام')]
 class Register extends Component
 {
-    private const CODE_TTL_MINUTES = 10;
+    use HasCodeTimer;
 
     private const MAX_CODE_ATTEMPTS = 5;
 
@@ -44,6 +45,14 @@ class Register extends Component
         $this->mobile = en_digits($this->mobile);
         $this->validateAccount();
 
+        // کد قبلی همین شماره هنوز معتبر است؛ همان را وارد کند
+        if ($wait = $this->codeWaitSeconds($this->cacheKey())) {
+            $this->notifyCodeStillValid($wait);
+            $this->step = 2;
+
+            return;
+        }
+
         if (RateLimiter::tooManyAttempts('register:'.$this->mobile, 3)) {
             $this->addError('mobile', 'چند دقیقه دیگر دوباره تلاش کنید.');
 
@@ -52,7 +61,8 @@ class Register extends Component
         RateLimiter::hit('register:'.$this->mobile, 300);
 
         $code = (string) random_int(10000, 99999);
-        Cache::put($this->cacheKey(), ['hash' => Hash::make($code), 'attempts' => 0], now()->addMinutes(self::CODE_TTL_MINUTES));
+        Cache::put($this->cacheKey(), ['hash' => Hash::make($code), 'attempts' => 0], now()->addSeconds(self::CODE_SECONDS));
+        $this->startCodeTimer($this->cacheKey());
 
         app(Sms::class)->sendPattern($this->mobile, config('services.melipayamak.register_body_id'), [$code]);
 
@@ -80,7 +90,8 @@ class Register extends Component
 
         if (! Hash::check($this->code, $entry['hash'])) {
             $entry['attempts']++;
-            Cache::put($this->cacheKey(), $entry, now()->addMinutes(self::CODE_TTL_MINUTES));
+            // تلاش اشتباه زمان اعتبار کد را تمدید نمی‌کند
+            Cache::put($this->cacheKey(), $entry, max(1, $this->codeWaitSeconds($this->cacheKey())));
             $this->addError('code', 'کد اشتباه است.');
 
             return;

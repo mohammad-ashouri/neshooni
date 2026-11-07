@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Livewire\Concerns\HasCodeTimer;
 use App\Models\User;
 use App\Services\Sms;
 use App\Support\Maintenance;
@@ -22,8 +23,7 @@ use Livewire\Component;
 #[Title('ورود')]
 class Login extends Component
 {
-    /** مدت اعتبار کد پیامکی ورود (دقیقه) */
-    private const CODE_MINUTES = 5;
+    use HasCodeTimer;
 
     public string $mobile = '';
 
@@ -158,7 +158,7 @@ class Login extends Component
     public function restart(?string $message = null): void
     {
         session()->forget('login.2fa');
-        $this->reset('step', 'code', 'password');
+        $this->reset('step', 'code', 'password', 'codeExpiresAt');
         if ($message) {
             $this->addError('mobile', $message);
         }
@@ -166,6 +166,13 @@ class Login extends Component
 
     private function sendCode(User $user): void
     {
+        // کد قبلی هنوز معتبر است؛ تا پایان تایمر کد تازه فرستاده نمی‌شود
+        if ($wait = $this->codeWaitSeconds('2fa:'.$user->id)) {
+            $this->notifyCodeStillValid($wait);
+
+            return;
+        }
+
         // حداکثر ۳ پیامک در ۵ دقیقه برای هر حساب
         $limitKey = '2fa-send:'.$user->id;
         if (RateLimiter::tooManyAttempts($limitKey, 3)) {
@@ -176,8 +183,9 @@ class Login extends Component
         RateLimiter::hit($limitKey, 300);
 
         $code = (string) random_int(10000, 99999);
-        Cache::put('2fa:'.$user->id, Hash::make($code), now()->addMinutes(self::CODE_MINUTES));
+        Cache::put('2fa:'.$user->id, Hash::make($code), now()->addSeconds(self::CODE_SECONDS));
         RateLimiter::clear('2fa-verify:'.$user->id);
+        $this->startCodeTimer('2fa:'.$user->id);
 
         app(Sms::class)->sendPattern($user->mobile, config('services.melipayamak.otp_body_id'), [$code]);
 
