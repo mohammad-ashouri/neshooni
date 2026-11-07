@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PlatformSeeder::class,
             CategorySeeder::class,
+            AdminSeeder::class,
         ]);
 
         if (! app()->isProduction() && env('SEED_DEMO', false)) {
