@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>راهنمای کار با نشونی</title>
+<style>
+@font-face { font-family: Vazir; font-weight: 400; src: url("../../node_modules/vazirmatn/fonts/webfonts/Vazirmatn-Regular.woff2"); }
+@font-face { font-family: Vazir; font-weight: 500; src: url("../../node_modules/vazirmatn/fonts/webfonts/Vazirmatn-Medium.woff2"); }
+@font-face { font-family: Vazir; font-weight: 700; src: url("../../node_modules/vazirmatn/fonts/webfonts/Vazirmatn-Bold.woff2"); }
+@font-face { font-family: Vazir; font-weight: 800; src: url("../../node_modules/vazirmatn/fonts/webfonts/Vazirmatn-ExtraBold.woff2"); }
+@font-face { font-family: Vazir; font-weight: 900; src: url("../../node_modules/vazirmatn/fonts/webfonts/Vazirmatn-Black.woff2"); }
+
+:root {
+  --v1: #7b56f2; --v2: #4430bd; --v-soft: #f1edff; --v-line: #ddd3ff;
+  --ink: #1e1b3a; --muted: #5d5a78; --line: #e7e5f0; --paper: #ffffff;
+  --sky: #0ea5e9; --sky-soft: #e6f6fd;
+  --emerald: #059669; --emerald-soft: #e3f7ef;
+  --amber: #d97706; --amber-soft: #fef4e2;
+  --rose: #e11d48; --rose-soft: #fde9ee;
+}
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #d9d6e6; }
+body { font-family: Vazir, Tahoma, sans-serif; color: var(--ink); font-size: 10.6pt; line-height: 1.78;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+.page { width: 210mm; height: 297mm; background: var(--paper); position: relative; overflow: hidden;
+  padding: 18mm 17mm 20mm; page-break-after: always; margin: 0 auto; }
+.page:last-child { page-break-after: auto; }
+
+/* ---------- ریزاجزا ---------- */
+.foot { position: absolute; bottom: 9mm; left: 17mm; right: 17mm; display: flex; justify-content: space-between;
+  align-items: center; font-size: 8.5pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 3mm; }
+.foot b { color: var(--v2); font-weight: 800; }
+.pn { background: var(--v-soft); color: var(--v2); font-weight: 800; border-radius: 99px; padding: 0 10px; }
+
+.tag { display: inline-block; font-size: 8.5pt; font-weight: 700; padding: 1px 11px; border-radius: 99px; }
+.t-sky { background: var(--sky-soft); color: #0369a1; }
+.t-em { background: var(--emerald-soft); color: #047857; }
+.t-am { background: var(--amber-soft); color: #b45309; }
+.t-ro { background: var(--rose-soft); color: #be123c; }
+.t-v { background: var(--v-soft); color: var(--v2); }
+
+.head { display: flex; align-items: center; gap: 5mm; margin-bottom: 5mm; }
+.head .ico { width: 17mm; height: 17mm; border-radius: 5mm; display: grid; place-items: center; font-size: 25pt; flex: none; }
+.head h1 { font-size: 22pt; font-weight: 900; line-height: 1.3; }
+.head p { color: var(--muted); font-size: 10pt; }
+.band { position: absolute; top: 0; right: 0; left: 0; height: 4.5mm; }
+
+h2 { font-size: 13.5pt; font-weight: 800; margin: 4mm 0 2mm; display: flex; align-items: center; gap: 2.5mm; }
+h2::before { content: ""; width: 4px; height: 15pt; border-radius: 2px; background: var(--accent, var(--v1)); }
+p + p { margin-top: 1.5mm; }
+b, strong { font-weight: 700; }
+code { font-family: Consolas, monospace; direction: ltr; unicode-bidi: embed; background: #f3f2f8; padding: 0 5px; border-radius: 4px; font-size: 9pt; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3.5mm; }
+.card { border: 1px solid var(--line); border-radius: 4mm; padding: 4mm 4.5mm; background: #fff; }
+.card h3 { font-size: 11pt; font-weight: 800; margin-bottom: 1mm; display: flex; align-items: center; gap: 2mm; }
+.card h3 .e { font-size: 13pt; }
+.card p, .card li { font-size: 9.6pt; color: #3d3a58; }
+.soft { background: #faf9fe; }
+
+ul.dots { list-style: none; }
+ul.dots li { position: relative; padding-right: 5mm; margin: .6mm 0; }
+ul.dots li::before { content: ""; position: absolute; right: 0; top: .72em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent, var(--v1)); }
+
+/* مراحل */
+.steps { counter-reset: s; list-style: none; position: relative; }
+.steps li { counter-increment: s; position: relative; padding: 0 12mm 3mm 0; }
+.steps li::before { content: counter(s, persian); position: absolute; right: 0; top: 0; width: 8mm; height: 8mm; border-radius: 50%;
+  background: var(--accent, var(--v1)); color: #fff; font-weight: 800; display: grid; place-items: center; font-size: 10pt; line-height: 1; }
+.steps li::after { content: ""; position: absolute; right: 3.85mm; top: 8.5mm; bottom: .5mm; width: 2px; background: var(--line); }
+.steps li:last-child::after { display: none; }
+.steps li b:first-child { display: block; font-size: 10.6pt; }
+
+.note { border-radius: 3.5mm; padding: 3mm 4.5mm; font-size: 9.6pt; display: flex; gap: 3mm; align-items: flex-start; margin-top: 3mm; }
+.note .e { font-size: 13pt; line-height: 1.5; }
+.n-am { background: var(--amber-soft); border: 1px solid #f8deb0; }
+.n-v { background: var(--v-soft); border: 1px solid var(--v-line); }
+.n-sky { background: var(--sky-soft); border: 1px solid #bfe7f8; }
+.n-ro { background: var(--rose-soft); border: 1px solid #f8c9d4; }
+
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 9.4pt; border: 1px solid var(--line); border-radius: 3.5mm; overflow: hidden; }
+th { background: var(--v2); color: #fff; font-weight: 700; text-align: right; padding: 2mm 3mm; }
+td { padding: 1.3mm 3mm; border-top: 1px solid var(--line); vertical-align: top; }
+tr:nth-child(even) td { background: #faf9fe; }
+td:first-child { font-weight: 700; white-space: nowrap; }
+
+/* ---------- جلد ---------- */
+.cover { background: radial-gradient(120% 80% at 85% 0%, #9a7cff 0%, var(--v1) 35%, var(--v2) 75%, #2b1f86 100%); color: #fff; padding: 22mm 20mm; }
+.cover .blob { position: absolute; border-radius: 50%; background: rgba(255,255,255,.07); }
+.cover .logo { width: 30mm; height: 35mm; background: #fff; border-radius: 7mm; padding: 4mm; box-shadow: 0 10px 40px rgba(20,10,80,.35); }
+.cover .logo svg { width: 100%; height: 100%; }
+.cover .brand { font-size: 13pt; font-weight: 700; opacity: .85; margin-top: 8mm; letter-spacing: .5px; }
+.cover h1 { font-size: 40pt; font-weight: 900; line-height: 1.35; margin-top: 2mm; }
+.cover .lead { font-size: 12.5pt; opacity: .9; max-width: 135mm; margin-top: 4mm; line-height: 1.9; }
+.roles { position: absolute; bottom: 30mm; right: 20mm; left: 20mm; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; }
+.role { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 5mm; padding: 4.5mm 4mm; }
+.role .e { font-size: 20pt; }
+.role b { display: block; font-size: 12pt; font-weight: 800; margin-top: 1mm; }
+.role span { font-size: 8.8pt; opacity: .85; line-height: 1.7; display: block; }
+.role i { font-style: normal; font-size: 8pt; background: rgba(255,255,255,.2); border-radius: 99px; padding: 0 8px; display: inline-block; margin-top: 2mm; }
+.cover .date { position: absolute; bottom: 14mm; right: 20mm; left: 20mm; display: flex; justify-content: space-between; font-size: 9pt; opacity: .75; }
+
+/* ---------- فهرست ---------- */
+.toc { display: grid; gap: 2mm; }
+.toc a { display: flex; align-items: center; gap: 4mm; border: 1px solid var(--line); border-radius: 4mm; padding: 2mm 4.5mm; text-decoration: none; color: inherit; }
+.toc .e { width: 10mm; height: 10mm; border-radius: 3.5mm; display: grid; place-items: center; font-size: 16pt; flex: none; }
+.toc b { font-size: 11.5pt; font-weight: 800; display: block; line-height: 1.5; }
+.toc span { font-size: 9pt; color: var(--muted); }
+.toc .n { margin-right: auto; font-weight: 900; color: var(--v1); font-size: 14pt; }
+
+/* ماتریس */
+.matrix td, .matrix th { text-align: center; }
+.matrix td:first-child, .matrix th:first-child { text-align: right; }
+.yes { color: var(--emerald); font-weight: 900; }
+.no { color: #c3c0d4; }
+.part { color: var(--amber); font-weight: 900; }
+
+/* پلن‌ها */
+.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3.5mm; margin-top: 2mm; }
+.plan { border: 1.5px solid var(--line); border-radius: 4mm; padding: 3.5mm; text-align: center; position: relative; }
+.plan.pop { border-color: var(--amber); background: linear-gradient(#fffaf0, #fff); }
+.plan .pop-tag { position: absolute; top: -3mm; right: 50%; transform: translateX(50%); background: var(--amber); color: #fff; font-size: 8pt; font-weight: 700; padding: 0 10px; border-radius: 99px; }
+.plan b { display: block; font-size: 11pt; font-weight: 800; }
+.plan .price { font-size: 16pt; font-weight: 900; color: var(--v2); line-height: 1.5; }
+.plan .price small { font-size: 8.5pt; color: var(--muted); font-weight: 500; }
+
+/* ماکت مرورگر */
+.mock { border: 1px solid var(--line); border-radius: 4mm; overflow: hidden; background: #fff; box-shadow: 0 4px 18px rgba(68,48,189,.08); }
+.mock .bar { background: #f3f2f8; padding: 2mm 3.5mm; display: flex; gap: 1.5mm; align-items: center; }
+.mock .bar i { width: 2.4mm; height: 2.4mm; border-radius: 50%; background: #d4d1e3; }
+.mock .bar span { margin-right: 3mm; font-size: 8pt; color: var(--muted); background: #fff; border-radius: 99px; padding: 0 10px; direction: ltr; }
+.mock .body { padding: 4mm; }
+
+.flow { display: flex; align-items: stretch; gap: 2mm; margin: 2mm 0; }
+.flow > div { flex: 1; border-radius: 3.5mm; padding: 2.5mm 3mm; font-size: 9pt; text-align: center; border: 1px solid var(--line); background: #fff; }
+.flow > div b { display: block; font-size: 10pt; font-weight: 800; }
+.flow .arr { flex: none; border: 0; background: none; padding: 0; display: grid; place-items: center; color: var(--v1); font-size: 14pt; font-weight: 900; }
+
+.big-tip { background: linear-gradient(135deg, var(--v1), var(--v2)); color: #fff; border-radius: 5mm; padding: 5mm 6mm; }
+.big-tip h3 { font-size: 13pt; font-weight: 800; margin-bottom: 1mm; }
+.big-tip p { font-size: 9.8pt; opacity: .92; }
+</style>
+</head>
+<body>
+
+<!-- ================= جلد ================= -->
+<section class="page cover">
+  <div class="blob" style="width:150mm;height:150mm;left:-50mm;top:-40mm"></div>
+  <div class="blob" style="width:90mm;height:90mm;left:40mm;top:120mm;background:rgba(255,255,255,.05)"></div>
+
+  <div class="logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 254 300">
+      <defs>
+        <linearGradient id="b" x1="40" y1="0" x2="214" y2="300" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7b56f2"/><stop offset="1" stop-color="#4430bd"/></linearGradient>
+        <linearGradient id="s" x1="0" y1="28" x2="0" y2="110" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#e2daff"/><stop offset="1" stop-color="#b6a4f4"/></linearGradient>
+        <mask id="m"><path fill="#fff" d="M4 113Q22 122 40 120H213Q231 122 249 113V150C249 205 195 250 142 291Q126 302 110 291C57 250 4 205 4 150Z"/><path fill="#000" d="M40 100V168Q40 202 74 202H118V207H163Q213 207 213 160V100Z"/></mask>
+      </defs>
+      <path fill="url(#b)" d="M59 8H194Q209 8 216 21L250 85A24.7 24.7 0 0 1 200.6 85A24.7 24.7 0 0 1 151.2 85A24.7 24.7 0 0 1 101.8 85A24.7 24.7 0 0 1 52.4 85A24.7 24.7 0 0 1 3 85L37 21Q44 8 59 8Z"/>
+      <path fill="url(#s)" d="M74 28H108L101.8 85A24.7 24.7 0 0 1 52.4 85ZM145 28H179L200.6 85A24.7 24.7 0 0 1 151.2 85Z"/>
+      <rect fill="url(#b)" width="254" height="300" mask="url(#m)"/>
+      <path fill="url(#b)" d="M72 140Q72 135 77 135H113Q118 135 118 140V212H72Z"/>
+      <rect fill="url(#b)" x="137" y="135" width="46" height="40" rx="5"/>
+    </svg>
+  </div>
+
+  <div class="brand">نشونی · ویترین پیج‌های کسب‌وکار</div>
+  <h1>راهنمای جامع<br>کار با سایت</h1>
+  <p class="lead">از پیدا کردن یک پیج خوب تا ثبت کسب‌وکار، ویژه کردن آگهی، بررسی محتوا و مدیریت کامل سایت — هر نقش، راهنمای مخصوص خودش.</p>
+
+  <div class="roles">
+    <div class="role"><div class="e">🧭</div><b>بازدیدکننده</b><span>جستجو، دنبال کردن، نظر دادن و خبرنامه</span><i>صفحه ۳</i></div>
+    <div class="role"><div class="e">🏪</div><b>صاحب کسب‌وکار</b><span>ثبت پیج، آمار، سئو، آگهی ویژه و تیک آبی</span><i>صفحه ۵</i></div>
+    <div class="role"><div class="e">🛡️</div><b>ناظر</b><span>بررسی پیج‌ها، تصاویر، نظرات و گزارش‌ها</span><i>صفحه ۸</i></div>
+    <div class="role"><div class="e">👑</div><b>مدیر</b><span>کاربران، نقش‌ها، دسته‌ها، پرداخت‌ها و تعمیر</span><i>صفحه ۱۰</i></div>
+  </div>
+  <div class="date"><span>نسخه آبان ۱۴۰۵</span><span>neshooni · راهنمای کاربری</span></div>
+</section>
+
+<!-- ================= فهرست و نقش‌ها ================= -->
+<section class="page">
+  <div class="band" style="background:linear-gradient(90deg,var(--v2),var(--v1))"></div>
+  <div class="head">
+    <div class="ico" style="background:var(--v-soft)">🗺️</div>
+    <div><h1>نقشه راهنما</h1><p>اول نقش خودتان را پیدا کنید، بعد مستقیم سراغ بخش مربوط بروید.</p></div>
+  </div>
+
+  <div class="toc">
+    <a><div class="e" style="background:var(--sky-soft)">🧭</div><div><b>بازدیدکننده</b><span>هر کسی که سایت را باز می‌کند؛ حتی بدون ثبت‌نام</span></div><div class="n">۳</div></a>
+    <a><div class="e" style="background:#f3f2f8">🔐</div><div><b>ثبت‌نام، ورود و فراموشی رمز</b><span>تأیید موبایل با پیامک، کد امنیتی و بازیابی رمز</span></div><div class="n">۴</div></a>
+    <a><div class="e" style="background:var(--emerald-soft)">🏪</div><div><b>صاحب کسب‌وکار</b><span>هر کاربر عضو؛ داشبورد شخصی برای مدیریت پیج‌ها</span></div><div class="n">۵</div></a>
+    <a><div class="e" style="background:var(--amber-soft)">🛡️</div><div><b>ناظر</b><span>نقش محدود پنل؛ بررسی محتوا بدون حذف و تنظیمات</span></div><div class="n">۸</div></a>
+    <a><div class="e" style="background:var(--v-soft)">👑</div><div><b>مدیر کل</b><span>دسترسی کامل به همه بخش‌ها، نقش‌ها و حالت تعمیر</span></div><div class="n">۱۰</div></a>
+  </div>
+
+  <h2>چه کسی چه چیزی می‌بیند؟</h2>
+  <table class="matrix">
+    <tr><th>قابلیت</th><th>بازدیدکننده</th><th>کاربر عضو</th><th>ناظر</th><th>مدیر</th></tr>
+    <tr><td>جستجو و دیدن پیج‌ها</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>دنبال کردن، نظر، گزارش تخلف</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>ثبت پیج، آمار، سئو، آگهی ویژه</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>پنل مدیریت و آمار سایت</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>تأیید/رد پیج، تصویر، نظر</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>گزارش‌ها و پیام‌های تماس</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>حذف پیج، نظر و پیام</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+    <tr><td>پرداخت‌ها، نشان تأیید، خبرنامه</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+    <tr><td>دسته‌ها، پلتفرم‌ها، کاربران</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+    <tr><td>حالت تعمیر و تعریف نقش</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+  </table>
+  <div class="note n-v"><span class="e">💡</span><div>مدیر کل می‌تواند <b>نقش‌های دلخواه</b> با ترکیب دلخواهی از دسترسی‌ها بسازد (مثلاً «حسابدار» فقط با دیدن پرداخت‌ها). ستون «ناظر» نقش پیش‌فرض سایت را نشان می‌دهد.</div></div>
+
+  <div class="foot"><span><b>نشونی</b> · راهنمای کاربری</span><span class="pn">۲</span></div>
+</section>
+
+<!-- ================= بازدیدکننده ================= -->
+<section class="page" style="--accent:var(--sky)">
+  <div class="band" style="background:var(--sky)"></div>
+  <div class="head">
+    <div class="ico" style="background:var(--sky-soft)">🧭</div>
+    <div><span class="tag t-sky">نقش ۱</span><h1>بازدیدکننده</h1><p>پیج‌ها و کانال‌های کسب‌وکارها در اینستاگرام، تلگرام، ایتا، روبیکا، بله، واتساپ، یوتیوب، آپارات و…</p></div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h2>پیدا کردن پیج‌ها</h2>
+      <ul class="dots">
+        <li>در <b>صفحه اول</b> نام پیج، محصول یا شهر را جستجو کنید، یا روی یک پلتفرم/دسته بزنید.</li>
+        <li><b>دسته‌بندی</b> تا سه سطح؛ مثلاً پوشاک › زنانه › مانتو.</li>
+        <li>فیلتر <b>پلتفرم</b>، <b>استان و شهر</b>.</li>
+        <li>گزینه <b>«الان باز است»</b>: فقط پیج‌هایی که طبق ساعات کاری همین حالا باز هستند.</li>
+        <li><b>مرتب‌سازی</b>: جدیدترین، پربازدیدترین، محبوب‌ترین و بیشترین دنبال‌کننده.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>نشانه‌ها را بشناسید</h2>
+      <div class="card soft" style="margin-bottom:2mm;padding:2.5mm 4mm"><h3><span class="e">🏅</span>قاب طلایی = پیج ویژه</h3><p>همیشه بالاتر از بقیه نمایش داده می‌شود.</p></div>
+      <div class="card soft" style="margin-bottom:2mm;padding:2.5mm 4mm"><h3><span class="e">✔️</span>تیک آبی = تأییدشده</h3><p>کسب‌وکار مدارکش را ارائه کرده و تأیید شده است.</p></div>
+      <div class="card soft" style="padding:2.5mm 4mm"><h3><span class="e">🟢</span>باز / بسته</h3><p>وضعیت لحظه‌ای بر اساس ساعات کاری پیج.</p></div>
+    </div>
+  </div>
+
+  <h2>صفحه هر پیج</h2>
+  <div class="grid3">
+    <div class="card"><h3><span class="e">↗️</span>مشاهده در پلتفرم</h3><p>رفتن به پیج اصلی، مثلاً اینستاگرام.</p></div>
+    <div class="card"><h3><span class="e">➕</span>دنبال کردن</h3><p>اضافه شدن به «دنبال‌شده‌ها» در داشبورد. <span class="tag t-v">نیاز به ورود</span></p></div>
+    <div class="card"><h3><span class="e">📤</span>اشتراک‌گذاری</h3><p>تلگرام، واتساپ، ایکس، ایمیل یا کپی لینک.</p></div>
+    <div class="card"><h3><span class="e">🖼️</span>گالری</h3><p>روی عکس بزنید تا بزرگ شود؛ با کلیدهای جهت جابه‌جا شوید.</p></div>
+    <div class="card"><h3><span class="e">📍</span>ساعات و آدرس</h3><p>ساعت هر روز، نقشه و کپی آدرس.</p></div>
+    <div class="card"><h3><span class="e">⭐</span>نظر و امتیاز</h3><p>۱ تا ۵ ستاره؛ هر کاربر یک نظر برای هر پیج (قابل ویرایش).</p></div>
+  </div>
+  <div class="note n-sky"><span class="e">🚩</span><div><b>گزارش تخلف:</b> اگر پیج یا نظری مشکل دارد، دکمه «گزارش» را بزنید. نظرها <b>بعد از تأیید مدیر</b> نمایش داده می‌شوند.</div></div>
+
+  <h2>خبرنامه هوشمند</h2>
+  <p>نشونی از روی پیج‌هایی که می‌بینید، دنبال می‌کنید یا درباره‌شان نظر می‌دهید علاقه‌تان را تشخیص می‌دهد و عضویت در خبرنامه همان دسته را پیشنهاد می‌کند. مهمان‌ها با <b>موبایل یا ایمیل</b> و اعضا با <b>یک کلیک</b> عضو می‌شوند. این پیشنهاد حداکثر <b>هفته‌ای یک بار</b> می‌آید و با «نه، ممنون» همان دسته تا <b>یک ماه</b> دوباره پیشنهاد نمی‌شود.</p>
+  <div class="note n-v"><span class="e">🌙</span><div><b>حالت تیره:</b> با دکمه ماه/خورشید بالای صفحه جابه‌جا کنید؛ انتخاب شما در همین مرورگر به خاطر سپرده می‌شود.</div></div>
+
+  <div class="foot"><span><b>نشونی</b> · بازدیدکننده</span><span class="pn">۳</span></div>
+</section>
+
+<!-- ================= حساب کاربری ================= -->
+<section class="page">
+  <div class="band" style="background:linear-gradient(90deg,var(--sky),var(--emerald))"></div>
+  <div class="head">
+    <div class="ico" style="background:#f3f2f8">🔐</div>
+    <div><span class="tag t-v">همه کاربران</span><h1>ثبت‌نام، ورود و بازیابی رمز</h1><p>حساب کاربری در نشونی با شماره موبایل ساخته می‌شود.</p></div>
+  </div>
+
+  <h2>ثبت‌نام در دو قدم</h2>
+  <div class="flow">
+    <div><b>۱. اطلاعات</b>نام، موبایل و رمز عبور</div>
+    <div class="arr">←</div>
+    <div><b>۲. کد پیامکی</b>کد ۵ رقمی به موبایل شما فرستاده می‌شود</div>
+    <div class="arr">←</div>
+    <div style="background:var(--emerald-soft);border-color:#bfe9d6"><b>✓ حساب فعال</b>ورود خودکار و رفتن به داشبورد</div>
+  </div>
+  <div class="note n-am"><span class="e">⏱️</span><div>کد پیامکی مدت محدودی اعتبار دارد. اگر منقضی شد یا چند بار اشتباه وارد شد، دوباره کد بگیرید. تا موبایل تأیید نشود، حسابی ساخته نمی‌شود.</div></div>
+
+  <div class="grid2" style="margin-top:3mm">
+    <div>
+      <h2>ورود</h2>
+      <ol class="steps">
+        <li><b>شماره موبایل و رمز</b>همان اطلاعات ثبت‌نام.</li>
+        <li><b>کد امنیتی تصویر</b>کاراکترهای تصویر را بنویسید. اگر خوانا نیست دکمه «تصویر جدید» را بزنید.</li>
+        <li><b>ورود</b>به داشبورد شخصی منتقل می‌شوید؛ اگر نقش پنل دارید، لینک «پنل مدیریت» در منوی حساب دیده می‌شود.</li>
+      </ol>
+    </div>
+    <div>
+      <h2>فراموشی رمز</h2>
+      <ol class="steps">
+        <li><b>درخواست کد</b>در «فراموشی رمز» موبایل را وارد کنید.</li>
+        <li><b>کد ۵ رقمی پیامکی</b>کد را وارد کنید.</li>
+        <li><b>رمز تازه</b>رمز جدید را بگذارید و وارد شوید.</li>
+      </ol>
+      <div class="note n-ro" style="margin-top:0"><span class="e">🔒</span><div>بعد از <b>۵ بار کد اشتباه</b>، کد باطل می‌شود و باید کد جدید بگیرید.</div></div>
+    </div>
+  </div>
+
+  <h2>نمای کلی پس از ورود</h2>
+  <div class="mock">
+    <div class="bar"><i></i><i></i><i></i><span>neshooni / dashboard</span></div>
+    <div class="body" style="display:flex;gap:4mm">
+      <div style="width:45mm;flex:none;font-size:9pt;line-height:1.85">
+        <div style="background:var(--v-soft);color:var(--v2);font-weight:800;border-radius:2.5mm;padding:0 3mm">📋 پیج‌های من</div>
+        <div style="padding:0 3mm">📈 آمار بازدید</div>
+        <div style="padding:0 3mm">🔎 سئوی پیج</div>
+        <div style="padding:0 3mm">💬 نظرات پیج‌ها</div>
+        <div style="padding:0 3mm">❤️ دنبال‌شده‌ها</div>
+        <div style="padding:0 3mm">🔔 اعلان و خبرنامه</div>
+        <div style="padding:0 3mm">📢 بنر و نشان سایت</div>
+        <div style="padding:0 3mm">✔️ نشان تأیید</div>
+        <div style="padding:0 3mm">🧾 پرداخت‌ها</div>
+        <div style="padding:0 3mm">👤 پروفایل</div>
+      </div>
+      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:3mm;align-content:start">
+        <div class="card" style="padding:3mm"><b style="font-size:10pt">گالری مد سارا</b><br><span class="tag t-em">تأییدشده</span> <span class="tag t-am">ویژه</span></div>
+        <div class="card" style="padding:3mm"><b style="font-size:10pt">کافه دنج</b><br><span class="tag t-sky">در انتظار تأیید</span></div>
+        <div class="card" style="padding:3mm"><b style="font-size:10pt">آموزشگاه نوا</b><br><span class="tag t-ro">رد شده — با دلیل</span></div>
+        <div class="card" style="padding:3mm;border-style:dashed;text-align:center;color:var(--v1);font-weight:800;display:grid;place-items:center">+ ثبت پیج جدید</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot"><span><b>نشونی</b> · حساب کاربری</span><span class="pn">۴</span></div>
+</section>
+
+<!-- ================= صاحب کسب‌وکار ۱ ================= -->
+<section class="page" style="--accent:var(--emerald)">
+  <div class="band" style="background:var(--emerald)"></div>
+  <div class="head">
+    <div class="ico" style="background:var(--emerald-soft)">🏪</div>
+    <div><span class="tag t-em">نقش ۲</span><h1>صاحب کسب‌وکار</h1><p>پیج خود را ثبت کنید، دیده شوید و رشدش را با آمار دنبال کنید.</p></div>
+  </div>
+
+  <h2>ثبت پیج جدید در ۶ قدم</h2>
+  <div class="grid2" style="gap:6mm">
+    <ol class="steps">
+      <li><b>پلتفرم</b>اینستاگرام، تلگرام، واتساپ و… را انتخاب کنید.</li>
+      <li><b>آیدی</b>آیدی یا حتی لینک کامل پیج را بچسبانید، خودش تمیز می‌شود. برای واتساپ شماره موبایل بنویسید.</li>
+      <li><b>نام، دسته و توضیحات</b>دسته تا سه سطح، تعداد دنبال‌کننده و عکس پروفایل (اختیاری).</li>
+    </ol>
+    <ol class="steps" style="counter-reset:s 3">
+      <li><b>موقعیت</b>کشور، استان، شهر، آدرس و تلفن — یا تیک «فقط فروش آنلاین».</li>
+      <li><b>ساعات کاری</b>برای هر روز یا با الگوهای آماده. ساعت پایان کمتر از شروع (مثلاً ۱۸ تا ۲) یعنی تا بامداد روز بعد.</li>
+      <li><b>گالری</b>تا ۸ تصویر با توضیح کوتاه؛ ترتیب را با فلش‌ها عوض کنید.</li>
+    </ol>
+  </div>
+
+  <h2>چرخه بررسی پیج</h2>
+  <div class="flow">
+    <div><b>📝 ارسال</b>پیج ثبت می‌شود</div>
+    <div class="arr">←</div>
+    <div style="background:var(--sky-soft);border-color:#bfe7f8"><b>⏳ در انتظار</b>بررسی توسط تیم نشونی</div>
+    <div class="arr">←</div>
+    <div style="background:var(--emerald-soft);border-color:#bfe9d6"><b>✅ تأیید</b>نمایش عمومی + اعلان</div>
+    <div class="arr">یا</div>
+    <div style="background:var(--rose-soft);border-color:#f8c9d4"><b>❌ رد</b>با دلیل؛ اصلاح و ارسال دوباره</div>
+  </div>
+  <div class="note n-am"><span class="e">⚠️</span><div>اگر <b>اطلاعات اصلی</b> پیج تأییدشده را تغییر دهید، پیج دوباره بررسی می‌شود. ولی <b>افزودن عکس به گالری</b> پیج را از نمایش خارج نمی‌کند؛ هر عکس جداگانه تأیید می‌شود.</div></div>
+
+  <h2>بخش‌های داشبورد</h2>
+  <table>
+    <tr><th>بخش</th><th>کاربرد</th></tr>
+    <tr><td>📋 پیج‌های من</td><td>وضعیت هر پیج (در انتظار، تأییدشده، رد شده با دلیل)، ویرایش، حذف، ویژه کردن و بنر</td></tr>
+    <tr><td>📈 آمار بازدید</td><td>بازدید و کلیک ۷، ۳۰ یا ۹۰ روز اخیر با مقایسه دوره قبل، نمودار روزانه و سهم هر پیج</td></tr>
+    <tr><td>💬 نظرات پیج‌ها</td><td>دیدن نظرها و <b>پاسخ دادن</b>؛ پاسخ شما زیر نظر نمایش داده می‌شود</td></tr>
+    <tr><td>❤️ دنبال‌شده‌ها</td><td>پیج‌هایی که دنبال کرده‌اید</td></tr>
+    <tr><td>🔔 اعلان و خبرنامه</td><td>اعلان‌ها و انتخاب چند دسته برای خبرنامه</td></tr>
+    <tr><td>📢 بنر و نشان سایت</td><td>تصویر «ما در نشونی هستیم» برای استوری، پست یا سایت با QR، متن بیو و کد لینک</td></tr>
+    <tr><td>👤 پروفایل</td><td>نام، شهر، معرفی، تصویر و تغییر رمز</td></tr>
+  </table>
+
+  <div class="foot"><span><b>نشونی</b> · صاحب کسب‌وکار</span><span class="pn">۵</span></div>
+</section>
+
+<!-- ================= صاحب کسب‌وکار ۲: سئو ================= -->
+<section class="page" style="--accent:var(--emerald)">
+  <div class="band" style="background:var(--emerald)"></div>
+  <div class="head">
+    <div class="ico" style="background:var(--emerald-soft)">🔎</div>
+    <div><span class="tag t-em">صاحب کسب‌وکار</span><h1>دیده شدن در گوگل</h1><p>صفحه هر پیج در نشونی جداگانه در گوگل ایندکس می‌شود. از «سئوی پیج» یا دکمه 🔎 کنار هر پیج.</p></div>
+  </div>
+
+  <div class="grid2" style="grid-template-columns:1.05fr 1fr;gap:6mm">
+    <div>
+      <ol class="steps">
+        <li><b>امتیاز سئو از ۱۰۰</b>چک‌لیست را ببینید؛ هر مورد انجام‌نشده راهنمای کوتاه دارد: توضیحات بلندتر، عکس با توضیح، ساعات کاری، نظر مشتری‌ها و…</li>
+        <li><b>پیش‌نمایش گوگل</b>عنوان دلخواه (تا ۶۰ کاراکتر) و توضیح (۱۲۰ تا ۱۶۰ کاراکتر) بنویسید؛ خالی بگذارید تا خودکار ساخته شود.</li>
+        <li><b>کلمات کلیدی پیشنهادی</b>با یک کلیک کپی کنید و در توضیحات پیج و بیوی اینستاگرام به کار ببرید.</li>
+        <li><b>ابزارهای بررسی</b>بعد از تأیید، ببینید گوگل صفحه را ایندکس کرده، ستاره‌ها نمایش داده می‌شود و سرعت صفحه چطور است.</li>
+        <li><b>لینک بدهید</b>لینک صفحه نشونی را در بیو و کانال بگذارید؛ هر لینک ورودی به رتبه کمک می‌کند.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="mock">
+        <div class="bar"><i></i><i></i><i></i><span>google.com/search</span></div>
+        <div class="body">
+          <div style="font-size:8pt;color:#3c7a3c;direction:ltr;text-align:left">neshooni › l › sara-gallery</div>
+          <div style="color:#1a0dab;font-size:12pt;font-weight:500;line-height:1.5">گالری مد سارا | مانتو و شومیز در تهران</div>
+          <div style="font-size:8.5pt;color:#f59e0b">★★★★★ <span style="color:var(--muted)">۴٫۸ · ۳۲ نظر</span></div>
+          <div style="font-size:8.8pt;color:#4d5156;line-height:1.7">طراحی و فروش مانتوهای روزمره و مجلسی با ارسال به سراسر کشور. ساعات کاری، آدرس و نمونه کارها…</div>
+        </div>
+      </div>
+      <div class="card soft" style="margin-top:4mm;text-align:center">
+        <div style="font-size:8.5pt;color:var(--muted)">امتیاز سئوی پیج</div>
+        <div style="font-size:30pt;font-weight:900;color:var(--emerald);line-height:1.3">۸۶<span style="font-size:12pt;color:var(--muted)">/۱۰۰</span></div>
+        <div style="height:3mm;border-radius:99px;background:#e6e4ef;overflow:hidden"><div style="width:86%;height:100%;background:linear-gradient(90deg,#34d399,var(--emerald))"></div></div>
+        <ul class="dots" style="text-align:right;margin-top:2mm">
+          <li>✓ توضیحات کامل</li><li>✓ ساعات کاری</li><li style="color:var(--amber)">○ دو عکس دیگر با توضیح</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="big-tip" style="margin-top:6mm">
+    <h3>🚀 سه کار سریع برای امتیاز بالاتر</h3>
+    <p>۱) توضیحات پیج را حداقل چند جمله با کلمات کلیدی بنویسید · ۲) گالری را با عکس‌های توضیح‌دار پر کنید · ۳) از مشتری‌ها بخواهید نظر بدهند و به نظرها پاسخ دهید.</p>
+  </div>
+
+  <h2>بنر «ما در نشونی هستیم»</h2>
+  <p>از «بنر و نشان سایت» برای هر پیج یک تصویر آماده بسازید: قالب <b>استوری</b>، <b>پست</b> یا <b>نشان سایت</b>، همراه با <b>کد QR</b> صفحه شما. متن پیشنهادی بیو و کد HTML لینک را هم کپی کنید تا مشتری‌ها مستقیم به صفحه‌تان برسند.</p>
+
+  <div class="foot"><span><b>نشونی</b> · صاحب کسب‌وکار</span><span class="pn">۶</span></div>
+</section>
+
+<!-- ================= صاحب کسب‌وکار ۳: پرداخت ================= -->
+<section class="page" style="--accent:var(--emerald)">
+  <div class="band" style="background:var(--emerald)"></div>
+  <div class="head">
+    <div class="ico" style="background:var(--amber-soft)">🏅</div>
+    <div><span class="tag t-em">صاحب کسب‌وکار</span><h1>آگهی ویژه، تیک آبی و رسید</h1><p>خدمات پولی نشونی برای دیده شدن بیشتر و اعتماد مشتری.</p></div>
+  </div>
+
+  <h2>آگهی ویژه</h2>
+  <p>از «پیج‌های من» روی <b>ویژه کردن</b> بزنید و پلن را انتخاب کنید. پیج ویژه با قاب طلایی و همیشه بالاتر از بقیه نمایش داده می‌شود.</p>
+  <div class="plans">
+    <div class="plan"><b>یک هفته</b><div class="price">۹۹٬۰۰۰ <small>تومان</small></div><span style="font-size:9pt;color:var(--muted)">۷ روز ویژه</span></div>
+    <div class="plan pop"><span class="pop-tag">محبوب‌ترین</span><b>یک ماه</b><div class="price">۲۹۰٬۰۰۰ <small>تومان</small></div><span style="font-size:9pt;color:var(--muted)">۳۰ روز ویژه</span></div>
+    <div class="plan"><b>سه ماه</b><div class="price">۶۹۰٬۰۰۰ <small>تومان</small></div><span style="font-size:9pt;color:var(--muted)">۹۰ روز ویژه</span></div>
+  </div>
+  <div class="note n-v"><span class="e">➕</span><div>فقط پیج <b>تأییدشده</b> را می‌توان ویژه کرد. اگر پیج همین حالا ویژه باشد، روزهای جدید <b>به انتهای</b> مدت فعلی اضافه می‌شود.</div></div>
+
+  <h2>نشان تأیید (تیک آبی)</h2>
+  <div class="flow">
+    <div><b>📄 ارسال مدرک</b>نوع کسب‌وکار و مدرک</div>
+    <div class="arr">←</div>
+    <div><b>💳 پرداخت</b>هزینه بررسی ۱۵۰٬۰۰۰ تومان</div>
+    <div class="arr">←</div>
+    <div style="background:var(--sky-soft);border-color:#bfe7f8"><b>🔍 بررسی</b>توسط مدیر</div>
+    <div class="arr">←</div>
+    <div style="background:var(--emerald-soft);border-color:#bfe9d6"><b>✔️ تیک آبی</b>کنار نام شما</div>
+  </div>
+  <p style="margin-top:2mm">اگر درخواست رد شود، دلیل آن برایتان نمایش داده می‌شود و می‌توانید با مدرک درست دوباره اقدام کنید.</p>
+
+  <h2>پرداخت‌ها و رسید</h2>
+  <div class="grid2">
+    <div class="card"><h3><span class="e">🧾</span>رسید A5</h3><p>در «پرداخت‌ها» روی <b>رسید</b> بزنید؛ با «چاپ / ذخیره PDF» آن را چاپ یا ذخیره کنید.</p></div>
+    <div class="card"><h3><span class="e">📱</span>QR استعلام</h3><p>روی هر رسید کد QR هست؛ با اسکن آن، <b>اصل بودن رسید</b> در سایت نشان داده می‌شود.</p></div>
+  </div>
+
+  <div class="big-tip" style="margin-top:6mm;background:linear-gradient(135deg,#10b981,#047857)">
+    <h3>✅ چک‌لیست یک پیج حرفه‌ای</h3>
+    <p>عکس پروفایل واضح · توضیحات کامل با کلمات کلیدی · ساعات کاری دقیق · آدرس یا تیک «فروش آنلاین» · حداقل ۴ عکس گالری با توضیح · پاسخ به همه نظرها · بنر نشونی در استوری · تیک آبی برای اعتماد بیشتر</p>
+  </div>
+
+  <div class="foot"><span><b>نشونی</b> · صاحب کسب‌وکار</span><span class="pn">۷</span></div>
+</section>
+
+<!-- ================= ناظر ۱ ================= -->
+<section class="page" style="--accent:var(--amber)">
+  <div class="band" style="background:var(--amber)"></div>
+  <div class="head">
+    <div class="ico" style="background:var(--amber-soft)">🛡️</div>
+    <div><span class="tag t-am">نقش ۳</span><h1>ناظر</h1><p>بررسی محتوا بدون دسترسی به حذف و تنظیمات. پنل از منوی حساب یا آدرس <code>/panel</code> باز می‌شود.</p></div>
+  </div>
+
+  <div class="grid3" style="margin-bottom:2mm">
+    <div class="card soft"><h3><span class="e">📊</span>داشبورد</h3><p>بازدید، کلیک، کاربران و پیج‌های جدید در ۷/۳۰/۹۰ روز.</p></div>
+    <div class="card soft"><h3><span class="e">🔴</span>عدد قرمز</h3><p>کنار هر بخش = تعداد موارد منتظر بررسی. از بیشترین شروع کنید.</p></div>
+    <div class="card soft"><h3><span class="e">🔒</span>فقط بخش مجاز</h3><p>هر کس فقط بخش‌هایی را می‌بیند که نقشش اجازه داده.</p></div>
+  </div>
+
+  <h2>بررسی پیج‌ها</h2>
+  <p>زبانه‌ها: <span class="tag t-sky">در انتظار</span> <span class="tag t-em">تأییدشده</span> <span class="tag t-ro">رد شده</span> <span class="tag t-v">همه</span> — همراه با جستجو.</p>
+  <div class="grid2" style="margin-top:2mm">
+    <div class="card" style="border-color:#bfe9d6"><h3><span class="e">✅</span>تأیید</h3><p>پیج منتشر و به صاحبش اعلان داده می‌شود. در <b>اولین انتشار</b>، مشترکان خبرنامه دسته پیج (و دسته‌های بالاتر) هم باخبر می‌شوند.</p></div>
+    <div class="card" style="border-color:#f8c9d4"><h3><span class="e">❌</span>رد</h3><p>نوشتن <b>دلیل اجباری</b> است و برای صاحب پیج فرستاده می‌شود تا اصلاح و دوباره ارسال کند.</p></div>
+  </div>
+  <div class="note n-sky"><span class="e">🔎</span><div>اگر صاحب پیج برای گوگل عنوان یا توضیح نوشته باشد، با علامت 🔎 زیر توضیحات دیده می‌شود. متن نامناسب را با <b>رد و نوشتن دلیل</b> اصلاح کنید.</div></div>
+
+  <h2>تصاویر گالری</h2>
+  <p>همه عکس‌های منتظر تأیید در یک صفحه. روی هر عکس <b>✓</b> یا <b>✕</b> بزنید، یا چند عکس را تیک بزنید و <b>گروهی</b> تأیید یا رد کنید. عکس رد شده حذف می‌شود.</p>
+
+  <h2>نظرات</h2>
+  <p>نظرهای جدید را تأیید یا رد کنید. نظر تا تأیید نشود در صفحه پیج نمایش داده نمی‌شود.</p>
+
+  <h2>معیارهای پیشنهادی بررسی</h2>
+  <div class="grid2">
+    <ul class="dots">
+      <li>آیدی و پلتفرم با پیج واقعی یکی باشد.</li>
+      <li>دسته‌بندی متناسب با کار پیج باشد.</li>
+      <li>توضیحات و عنوان گوگل گمراه‌کننده یا اسپم نباشد.</li>
+    </ul>
+    <ul class="dots">
+      <li>عکس‌ها مرتبط، بدون محتوای نامناسب.</li>
+      <li>نظرها بدون توهین، تبلیغ یا اطلاعات شخصی.</li>
+      <li>دلیل رد را واضح و قابل اصلاح بنویسید.</li>
+    </ul>
+  </div>
+
+  <div class="foot"><span><b>نشونی</b> · ناظر</span><span class="pn">۸</span></div>
+</section>
+
+<!-- ================= ناظر ۲ ================= -->
+<section class="page" style="--accent:var(--amber)">
+  <div class="band" style="background:var(--amber)"></div>
+  <div class="head">
+    <div class="ico" style="background:var(--amber-soft)">🚩</div>
+    <div><span class="tag t-am">ناظر</span><h1>گزارش‌ها و پیام‌ها</h1><p>رسیدگی به گزارش تخلف کاربران و پیام‌های فرم تماس.</p></div>
+  </div>
+
+  <h2>گزارش تخلف</h2>
+  <p>هر گزارش، مورد گزارش‌شده (پیج یا نظر) را نشان می‌دهد. یادداشت بنویسید و یکی از سه اقدام را انتخاب کنید:</p>
+  <div class="grid3" style="margin-top:2mm">
+    <div class="card" style="border-color:#f8c9d4;background:var(--rose-soft)"><h3><span class="e">⛔</span>غیرفعال کردن</h3><p>پیج یا نظر رد می‌شود و <b>همه گزارش‌های باز</b> همان مورد بسته می‌شوند.</p></div>
+    <div class="card" style="border-color:#bfe9d6;background:var(--emerald-soft)"><h3><span class="e">✔️</span>بستن</h3><p>رسیدگی شد، بدون تغییر در محتوا.</p></div>
+    <div class="card" style="background:#f6f5fa"><h3><span class="e">🗑️</span>بی‌مورد</h3><p>گزارش رد می‌شود؛ محتوا مشکلی ندارد.</p></div>
+  </div>
+
+  <h2>پیام‌های تماس</h2>
+  <p>پیام‌های فرم «تماس با ما». با باز کردن هر پیام، <b>خوانده‌شده</b> علامت می‌خورد. حذف پیام فقط با دسترسی «حذف پیام» ممکن است.</p>
+
+  <h2>روال روزانه پیشنهادی</h2>
+  <div class="flow">
+    <div><b>۱. گزارش‌ها</b>فوری‌ترین؛ محتوای مشکل‌دار</div>
+    <div class="arr">←</div>
+    <div><b>۲. پیج‌ها</b>صف در انتظار</div>
+    <div class="arr">←</div>
+    <div><b>۳. تصاویر</b>تأیید گروهی</div>
+    <div class="arr">←</div>
+    <div><b>۴. نظرات</b>تأیید یا رد</div>
+    <div class="arr">←</div>
+    <div><b>۵. پیام‌ها</b>خواندن و ارجاع</div>
+  </div>
+
+  <h2>آنچه ناظر نمی‌بیند</h2>
+  <div class="card soft">
+    <ul class="dots" style="--accent:#b6b2cc;columns:2;column-gap:8mm">
+      <li>حذف پیج، نظر و پیام</li>
+      <li>ویژه کردن دستی پیج</li>
+      <li>پرداخت‌ها و درآمد</li>
+      <li>نشان تأیید و خبرنامه</li>
+      <li>دسته‌ها، پلتفرم‌ها و کاربران</li>
+      <li>حالت تعمیر و نقش‌ها</li>
+    </ul>
+  </div>
+  <div class="note n-am"><span class="e">🛠️</span><div>در <b>حالت تعمیر</b> سایت، ناظرها هم مثل بازدیدکننده‌ها صفحه «در حال به‌روزرسانی» را می‌بینند و تا پایان آن به پنل دسترسی ندارند.</div></div>
+
+  <div class="foot"><span><b>نشونی</b> · ناظر</span><span class="pn">۹</span></div>
+</section>
+
+<!-- ================= مدیر ۱ ================= -->
+<section class="page" style="--accent:var(--v1)">
+  <div class="band" style="background:linear-gradient(90deg,var(--v2),var(--v1))"></div>
+  <div class="head">
+    <div class="ico" style="background:var(--v-soft)">👑</div>
+    <div><span class="tag t-v">نقش ۴</span><h1>مدیر کل</h1><p>همه کارهای ناظر، به‌علاوه بخش‌های زیر. دسترسی کامل به همه بخش‌ها.</p></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3><span class="e">🗂️</span>پیج‌ها (اضافه بر ناظر)</h3><p><b>+۷ روز ویژه / لغو ویژه</b> برای هدیه یا پرداخت خارج از سایت، و <b>حذف</b> پیج همراه همه تصاویرش برای همیشه.</p></div>
+    <div class="card"><h3><span class="e">💬</span>نظرات (اضافه بر ناظر)</h3><p>حذف نظر یا <b>پاسخ نامناسب صاحب پیج</b>.</p></div>
+    <div class="card"><h3><span class="e">✔️</span>نشان تأیید</h3><p>دانلود و بررسی مدرک. <b>تأیید</b> فقط برای درخواست پرداخت‌شده فعال است؛ <b>رد</b> با دلیل. در «کاربران» هم می‌توانید نشان را دستی بدهید/بردارید.</p></div>
+    <div class="card"><h3><span class="e">💰</span>پرداخت‌ها</h3><p>درآمد امروز، ۳۰ روز اخیر و تفکیک خدمات؛ فهرست پرداخت‌ها با فیلتر نوع و وضعیت و لینک رسید.</p></div>
+    <div class="card"><h3><span class="e">📨</span>خبرنامه</h3><p>تعداد مشترکان (عضو و مهمان)، مشترکان هر دسته و صف پیام‌های پیامکی/ایمیلی مهمان‌ها.</p></div>
+    <div class="card"><h3><span class="e">🧩</span>پلتفرم‌ها</h3><p>نام فارسی، کلید انگلیسی، آدرس پایه (<code>instagram.com/</code>)، نوع شناسه، رنگ، لوگو و ترتیب. پلتفرم غیرفعال از فرم‌ها حذف ولی پیج‌های قبلی‌اش می‌ماند.</p></div>
+  </div>
+
+  <h2>دسته‌بندی‌ها</h2>
+  <div class="grid2" style="grid-template-columns:1.3fr 1fr">
+    <ul class="dots">
+      <li>درخت دسته‌ها تا <b>سه سطح</b>؛ «+ زیردسته» فقط جایی دیده می‌شود که جا هست.</li>
+      <li><b>نامک</b> بخشی از آدرس است (<code>/c/fashion/women</code>) و باید انگلیسی باشد.</li>
+      <li>دسته‌ای که زیردسته یا پیج دارد حذف نمی‌شود؛ اول آن‌ها را منتقل کنید.</li>
+      <li><b>سئوی دسته</b>: متن معرفی بالای صفحه، و عنوان/توضیح گوگل (خالی = خودکار).</li>
+    </ul>
+    <div class="card soft" style="font-size:9.5pt;line-height:2">
+      <div>👗 پوشاک</div>
+      <div style="padding-right:5mm">└ زنانه</div>
+      <div style="padding-right:10mm">└ مانتو <span class="tag t-v" style="font-size:7.5pt">سطح ۳</span></div>
+      <div style="padding-right:10mm">└ شومیز</div>
+      <div style="padding-right:5mm">└ مردانه</div>
+      <div>☕ کافه و رستوران</div>
+    </div>
+  </div>
+
+  <div class="note n-v"><span class="e">🗺️</span><div>نقشه سایت <code>/sitemap.xml</code> هر ساعت خودکار به‌روز می‌شود. آن را یک‌بار در <b>Google Search Console</b> ثبت کنید.</div></div>
+
+  <div class="foot"><span><b>نشونی</b> · مدیر کل</span><span class="pn">۱۰</span></div>
+</section>
+
+<!-- ================= مدیر ۲ ================= -->
+<section class="page" style="--accent:var(--v1)">
+  <div class="band" style="background:linear-gradient(90deg,var(--v2),var(--v1))"></div>
+  <div class="head">
+    <div class="ico" style="background:var(--v-soft)">🔑</div>
+    <div><span class="tag t-v">مدیر کل</span><h1>کاربران، نقش‌ها و حالت تعمیر</h1><p>حساس‌ترین بخش‌های پنل؛ با دقت استفاده کنید.</p></div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h2>کاربران</h2>
+      <p>جستجو با نام یا موبایل، تغییر نقش و دادن/برداشتن نشان تأیید.</p>
+      <div class="note n-ro"><span class="e">🛡️</span><div>هیچ‌کس نقش <b>خودش</b> را تغییر نمی‌دهد، و کسی که مدیر کل نیست نمی‌تواند نقش مدیر کل را عوض کند یا نقشی <b>با دسترسی بیشتر از خودش</b> بدهد.</div></div>
+    </div>
+    <div>
+      <h2>نقش‌ها</h2>
+      <p>نقش جدید بسازید و دسترسی‌هایش را تیک بزنید. نقش بدون هیچ دسترسی به پنل راه ندارد. نقش‌های سیستمی (مدیر، کاربر) و نقشی که کاربر دارد حذف نمی‌شوند.</p>
+      <div class="note n-v"><span class="e">💡</span><div>مثال: نقش «حسابدار» فقط با «مشاهده درآمد و پرداخت‌ها».</div></div>
+    </div>
+  </div>
+
+  <h2>فهرست دسترسی‌ها</h2>
+  <table>
+    <tr><th>گروه</th><th>دسترسی‌ها</th></tr>
+    <tr><td>داشبورد</td><td>مشاهده آمار سایت · مشاهده درآمد و پرداخت‌ها</td></tr>
+    <tr><td>پیج‌ها</td><td>تأیید و رد پیج‌ها · تأیید و رد تصاویر · ویژه کردن دستی · حذف پیج</td></tr>
+    <tr><td>نظرات</td><td>تأیید و رد نظرات · حذف نظر و پاسخ‌ها</td></tr>
+    <tr><td>گزارش و پیام</td><td>رسیدگی به گزارش تخلف · مشترکان خبرنامه · خواندن پیام · حذف پیام</td></tr>
+    <tr><td>مدیریت سایت</td><td>نشان تأیید · دسته‌بندی‌ها · پلتفرم‌ها · کاربران و نقش · حالت تعمیر</td></tr>
+    <tr><td>فقط مدیر کل</td><td>تعریف و ویرایش نقش‌ها (به هیچ نقش دیگری داده نمی‌شود)</td></tr>
+  </table>
+
+  <h2>حالت تعمیر</h2>
+  <div class="grid2" style="grid-template-columns:1.4fr 1fr">
+    <ol class="steps">
+      <li><b>روشن کردن</b>هنگام به‌روزرسانی یا بروز مشکل؛ پیام و مدت تقریبی را بنویسید.</li>
+      <li><b>در این حالت</b>همه به جز مدیر (حتی ناظرها) صفحه «در حال به‌روزرسانی» را می‌بینند؛ مدیر سایت را عادی با نوار زرد بالای صفحه می‌بیند.</li>
+      <li><b>خاموش کردن دستی</b>سایت بعد از پایان مدت <b>خودکار باز نمی‌شود</b>.</li>
+    </ol>
+    <div class="card" style="background:var(--amber-soft);border-color:#f8deb0;text-align:center">
+      <div style="font-size:26pt">🛠️</div>
+      <b style="font-size:11pt">در حال به‌روزرسانی</b>
+      <p style="font-size:9pt">تا حدود ۳۰ دقیقه دیگر برمی‌گردیم.</p>
+      <div style="margin-top:2mm;display:inline-block;background:var(--v2);color:#fff;border-radius:99px;padding:0 12px;font-size:9pt;font-weight:700">ورود به پنل</div>
+      <p style="font-size:8pt;color:var(--muted);margin-top:1.5mm">فرم ورود در این حالت فقط حساب مدیر را قبول می‌کند.</p>
+    </div>
+  </div>
+
+  <div class="foot"><span><b>نشونی</b> · مدیر کل</span><span class="pn">۱۱</span></div>
+</section>
+
+<!-- ================= پرسش‌ها ================= -->
+<section class="page">
+  <div class="band" style="background:linear-gradient(90deg,var(--sky),var(--emerald),var(--amber),var(--v1))"></div>
+  <div class="head">
+    <div class="ico" style="background:var(--v-soft)">❓</div>
+    <div><h1>پرسش‌های پرتکرار</h1><p>جواب سریع برای سؤال‌هایی که بیشتر پیش می‌آید.</p></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>پیجم چرا نمایش داده نمی‌شود؟</h3><p>یا هنوز «در انتظار تأیید» است یا رد شده؛ وضعیت و دلیل در «پیج‌های من» آمده. اگر اطلاعات اصلی را تغییر داده‌اید، دوباره بررسی می‌شود.</p></div>
+    <div class="card"><h3>عکس گالری‌ام دیده نمی‌شود</h3><p>هر عکس جداگانه تأیید می‌شود. پیج در این مدت نمایش داده می‌شود.</p></div>
+    <div class="card"><h3>نظرم ثبت نشد؟</h3><p>نظرها بعد از تأیید مدیر نمایش داده می‌شوند. برای هر پیج یک نظر دارید که قابل ویرایش است.</p></div>
+    <div class="card"><h3>کد پیامک نرسید</h3><p>شماره را بررسی و دوباره درخواست کنید. پس از ۵ کد اشتباه، کد جدید بگیرید.</p></div>
+    <div class="card"><h3>ویژه بودن کی تمام می‌شود؟</h3><p>از «پیج‌های من» ببینید. خرید دوباره، روزها را به انتهای مدت فعلی اضافه می‌کند.</p></div>
+    <div class="card"><h3>رسید را چطور تأیید کنم؟</h3><p>QR روی رسید را اسکن کنید؛ صفحه استعلام سایت اصالت آن را نشان می‌دهد.</p></div>
+    <div class="card"><h3>به پنل دسترسی ندارم</h3><p>نقش شما باید حداقل یک دسترسی پنل داشته باشد؛ از مدیر کل بخواهید.</p></div>
+    <div class="card"><h3>سایت در حال تعمیر است</h3><p>مدیر از دکمه «ورود به پنل» در صفحه تعمیر وارد شود و حالت تعمیر را خاموش کند.</p></div>
+  </div>
+
+  <div class="big-tip" style="margin-top:8mm;display:flex;gap:6mm;align-items:center">
+    <div style="font-size:30pt">📬</div>
+    <div>
+      <h3>راهنمای آنلاین و پشتیبانی</h3>
+      <p>نسخه آنلاین همین راهنما در صفحه <b>/help</b> و راهنمای پنل در <b>/panel/help</b> در دسترس است. برای سؤال‌های دیگر از فرم <b>تماس با ما</b> پیام بفرستید.</p>
+    </div>
+  </div>
+
+  <div class="foot"><span><b>نشونی</b> · ویترین پیج‌های کسب‌وکار</span><span class="pn">۱۲</span></div>
+</section>
+
+</body>
+</html>
