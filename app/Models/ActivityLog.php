@@ -58,6 +58,7 @@ class ActivityLog extends Model
         'featured_until' => 'ویژه تا',
         'published_at' => 'تاریخ انتشار',
         'role_id' => 'نقش',
+        'role' => 'نقش',
         'verified_at' => 'نشان تأیید',
         'mobile' => 'موبایل',
         'password' => 'رمز عبور',

@@ -36,8 +36,8 @@ class Users extends Component
 
     public function changeRole(int $userId, int $roleId): void
     {
-        $user = User::with('role')->findOrFail($userId);
-        $role = Role::findOrFail($roleId);
+        $user = User::with('roles')->findOrFail($userId);
+        $role = Role::with('permissions')->findOrFail($roleId);
 
         if (! $this->canManage($user) || ! $this->canAssign($role)) {
             $this->dispatch('toast', message: 'اجازه این تغییر را ندارید.', type: 'error');
@@ -45,7 +45,7 @@ class Users extends Component
             return;
         }
 
-        $user->update(['role_id' => $role->id]);
+        $user->setRole($role);
         $this->dispatch('toast', message: "نقش {$user->name} به «{$role->label}» تغییر کرد.");
     }
 
@@ -66,18 +66,18 @@ class Users extends Component
     {
         $me = Auth::user();
 
-        return $me->isAdmin() || collect($role->permissions)->every(fn ($permission) => $permission !== '*' && $me->hasPermission($permission));
+        return $me->isAdmin() || (! $role->isSuperAdmin() && collect($role->permissionNames())->every(fn (string $permission) => $me->hasPermission($permission)));
     }
 
     public function render()
     {
         return view('livewire.admin.users', [
-            'users' => User::with('role')->withCount('listings')
+            'users' => User::with('roles')->withCount('listings')
                 ->when($this->q !== '', fn ($q) => $q->where(fn ($q) => $q->where('name', 'like', "%{$this->q}%")->orWhere('mobile', 'like', '%'.en_digits($this->q).'%')))
-                ->when($this->role, fn ($q) => $q->where('role_id', $this->role))
+                ->when($this->role, fn ($q) => $q->whereRelation('roles', 'roles.id', $this->role))
                 ->latest()
                 ->paginate(20),
-            'roles' => Role::orderBy('id')->get(),
+            'roles' => Role::with('permissions')->orderBy('id')->get(),
         ]);
     }
 }

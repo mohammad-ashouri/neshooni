@@ -37,8 +37,8 @@
                             @if ($this->canManage($user))
                                 <select wire:change="changeRole({{ $user->id }}, $event.target.value)" class="input w-36 py-1.5 text-xs">
                                     @foreach ($roles as $item)
-                                        @if ($this->canAssign($item) || $item->id === $user->role_id)
-                                            <option value="{{ $item->id }}" @selected($item->id === $user->role_id)>{{ $item->label }}</option>
+                                        @if ($this->canAssign($item) || $item->id === $user->role?->id)
+                                            <option value="{{ $item->id }}" @selected($item->id === $user->role?->id)>{{ $item->label }}</option>
                                         @endif
                                     @endforeach
                                 </select>

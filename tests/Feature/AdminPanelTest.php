@@ -3,7 +3,9 @@
 use App\Enums\ModerationStatus;
 use App\Livewire\Admin\Categories;
 use App\Livewire\Admin\Listings;
+use App\Livewire\Admin\Roles;
 use App\Livewire\Admin\Users;
+use App\Models\ActivityLog;
 use App\Models\OutboxMessage;
 use App\Models\Role;
 use App\Models\Subscription;
@@ -85,13 +87,52 @@ test('دسته‌بندی بیشتر از سه سطح نمی‌شود', function
 });
 
 test('کاربر با مدیریت کاربران نمی‌تواند نقش مدیر کل بدهد', function () {
-    $manager = User::factory()->create([
-        'role_id' => Role::create(['key' => 'support', 'label' => 'پشتیبان', 'permissions' => ['users.manage']])->id,
-    ]);
+    $support = Role::create(['name' => 'support', 'label' => 'پشتیبان'])->givePermissionTo('users.manage');
+    $manager = User::factory()->create()->setRole($support);
     $target = userWithRole();
 
     Livewire::actingAs($manager)->test(Users::class)
-        ->call('changeRole', $target->id, Role::where('key', 'admin')->value('id'));
+        ->call('changeRole', $target->id, Role::findByName(Role::ADMIN)->id);
 
-    expect($target->fresh()->role->key)->toBe('user');
+    expect($target->fresh()->role->name)->toBe('user');
+});
+
+test('مدیر کل نقش کاربر را عوض می‌کند و در تاریخچه ثبت می‌شود', function () {
+    $target = userWithRole();
+
+    Livewire::actingAs(userWithRole('admin'))->test(Users::class)
+        ->call('changeRole', $target->id, Role::findByName('moderator')->id);
+
+    $target = $target->fresh();
+    expect($target->role->name)->toBe('moderator')
+        ->and($target->roles)->toHaveCount(1)
+        ->and($target->hasPermission('listings.moderate'))->toBeTrue()
+        ->and($target->hasPermission('users.manage'))->toBeFalse()
+        ->and(ActivityLog::where('subject_type', User::class)->where('subject_id', $target->id)->latest('id')->value('changes'))
+        ->toBe(['role' => ['old' => 'کاربر', 'new' => 'ناظر']]);
+});
+
+test('مدیر کل نقش تازه با دسترسی‌های انتخابی می‌سازد', function () {
+    Livewire::actingAs(userWithRole('admin'))->test(Roles::class)
+        ->call('create')
+        ->set('label', 'پشتیبان')->set('key', 'support')
+        ->set('permissions', ['messages.read', 'users.manage'])
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $role = Role::findByName('support');
+    expect($role->label)->toBe('پشتیبان')
+        ->and($role->permissionNames())->toEqualCanonicalizing(['messages.read', 'users.manage'])
+        ->and(userWithRole('support')->can('messages.read'))->toBeTrue();
+});
+
+test('دسترسی خارج از فهرست (مثل roles.manage) به نقش داده نمی‌شود', function () {
+    Livewire::actingAs(userWithRole('admin'))->test(Roles::class)
+        ->call('edit', Role::findByName('moderator')->id)
+        ->set('permissions', ['roles.manage'])
+        ->call('save')
+        ->assertHasErrors('permissions.0');
+
+    expect(userWithRole('moderator')->can('roles.manage'))->toBeFalse()
+        ->and(userWithRole('admin')->can('roles.manage'))->toBeTrue();
 });

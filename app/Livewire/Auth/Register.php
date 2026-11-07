@@ -107,7 +107,7 @@ class Register extends Component
         }
         Cache::forget($this->cacheKey());
 
-        $user = User::create($data + ['role_id' => Role::where('key', 'user')->value('id')]);
+        $user = User::create($data)->setRole(Role::USER);
 
         Auth::login($user, true);
         session()->regenerate();

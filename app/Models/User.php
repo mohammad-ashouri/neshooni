@@ -8,27 +8,30 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'mobile', 'password', 'role_id', 'country', 'province', 'city', 'bio', 'avatar', 'verified_at', 'interests'])]
+/**
+ * @property-read Role|null $role
+ */
+#[Fillable(['name', 'mobile', 'password', 'country', 'province', 'city', 'bio', 'avatar', 'verified_at', 'interests'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasSlugInUrl, Notifiable;
+    use HasFactory, HasRoles, HasSlugInUrl, Notifiable;
 
     use RecordsActivity;
 
-    /** از تغییرات حساب فقط موارد امنیتی و دسترسی ثبت می‌شوند */
+    /** از تغییرات حساب فقط موارد امنیتی ثبت می‌شوند (تغییر نقش جداگانه در setRole ثبت می‌شود) */
     protected function activityOnly(): ?array
     {
-        return ['name', 'mobile', 'password', 'role_id', 'verified_at'];
+        return ['name', 'mobile', 'password', 'verified_at'];
     }
 
     /** نامک آدرس صفحه عمومی کسب‌وکار: /u/2-گالری-ماهور */
@@ -44,11 +47,6 @@ class User extends Authenticatable
             'verified_at' => 'datetime',
             'interests' => 'array',
         ];
-    }
-
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class);
     }
 
     public function listings(): HasMany
@@ -82,16 +80,43 @@ class User extends Authenticatable
         return $this->hasMany(VerificationRequest::class);
     }
 
-    // ---------- نقش و دسترسی ----------
+    // ---------- نقش و دسترسی (spatie/laravel-permission) ----------
+    // در این سایت هر کاربر فقط یک نقش دارد؛ نقش با setRole تعیین می‌شود.
+
+    /**
+     * تنها نقش کاربر: $user->role
+     * (accessor قدیمی get...Attribute عمداً؛ متد role() با scope «User::role('admin')» پکیج تداخل دارد)
+     */
+    public function getRoleAttribute(): ?Role
+    {
+        /** @var Role|null */
+        return $this->roles->first();
+    }
+
+    /** جایگزینی نقش فعلی با نقش داده‌شده و ثبت آن در تاریخچه اقدامات */
+    public function setRole(Role|string $role): static
+    {
+        $old = $this->role?->label;
+        $this->syncRoles([$role]);
+        $new = $this->unsetRelation('roles')->role?->label;
+
+        if ($this->wasRecentlyCreated || $old === $new) {
+            return $this;
+        }
+
+        $this->logActivity('updated', ['role' => ['old' => $old, 'new' => $new]]);
+
+        return $this;
+    }
 
     public function hasPermission(string $permission): bool
     {
-        return (bool) $this->role?->allows($permission);
+        return $this->isAdmin() || $this->checkPermissionTo($permission);
     }
 
     public function isAdmin(): bool
     {
-        return $this->role?->key === 'admin';
+        return $this->hasRole(Role::ADMIN);
     }
 
     /** مدیر، ناظر یا هر نقشی که به پنل دسترسی دارد */

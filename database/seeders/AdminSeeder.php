@@ -29,8 +29,7 @@ class AdminSeeder extends Seeder
             [
                 'name' => env('ADMIN_NAME', 'مدیر'),
                 'password' => $password,
-                'role_id' => Role::where('key', 'admin')->value('id'),
             ],
-        );
+        )->setRole(Role::ADMIN);
     }
 }

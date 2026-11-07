@@ -7,9 +7,10 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Spatie\Permission\Models\Permission;
 
 /**
- * تعریف نقش‌ها با انتخاب دسترسی‌ها از config/permissions.php.
+ * تعریف نقش‌ها با انتخاب دسترسی‌ها از config/permissions.php (ذخیره با spatie/laravel-permission).
  * فقط مدیر کل به این صفحه دسترسی دارد. نقش‌های سیستمی (مدیر، کاربر) حذف نمی‌شوند
  * و دسترسی‌های نقش مدیر کل قابل تغییر نیست.
  */
@@ -37,41 +38,50 @@ class Roles extends Component
 
     public function edit(int $id): void
     {
-        $role = Role::findOrFail($id);
-        abort_if($role->key === 'admin', 403);
+        $role = Role::with('permissions')->findOrFail($id);
+        abort_if($role->isSuperAdmin(), 403);
 
         $this->resetErrorBag();
         $this->editingId = $role->id;
         $this->fill([
-            'key' => $role->key,
+            'key' => $role->name,
             'label' => $role->label,
             'description' => $role->description ?? '',
-            'permissions' => $role->permissions ?? [],
+            'permissions' => $role->permissionNames(),
         ]);
         $this->showForm = true;
     }
 
     public function save(): void
     {
-        $role = Role::findOrNew($this->editingId);
-        abort_if($role->key === 'admin', 403);
+        $role = Role::with('permissions')->findOrNew($this->editingId);
+        abort_if($role->isSuperAdmin(), 403);
 
         $catalog = collect(config('permissions'))->collapse()->keys()->all();
 
         $this->validate([
             'label' => ['required', 'string', 'max:40'],
-            'key' => ['required', 'alpha_dash', 'max:30', Rule::unique('roles')->ignore($this->editingId)],
+            'key' => ['required', 'alpha_dash', 'max:30', Rule::unique('roles', 'name')->ignore($this->editingId)],
             'description' => ['nullable', 'string', 'max:200'],
-            // فقط کلیدهای فهرست؛ '*' و 'roles.manage' از این راه داده نمی‌شوند
+            // فقط کلیدهای فهرست؛ 'roles.manage' از این راه داده نمی‌شود
             'permissions.*' => [Rule::in($catalog)],
         ]);
 
+        $old = $role->exists ? $role->permissionNames() : [];
+        $new = array_values(array_unique($this->permissions));
+
         $role->fill([
             'label' => $this->label,
-            'key' => $role->is_system ? $role->key : $this->key,
+            'name' => $role->is_system ? $role->name : $this->key,
             'description' => $this->description ?: null,
-            'permissions' => array_values($this->permissions),
         ])->save();
+
+        // کلیدی که تازه به config اضافه شده ولی هنوز ردیفی در جدول permissions ندارد، ساخته می‌شود
+        $role->syncPermissions(array_map(fn (string $name) => Permission::findOrCreate($name), $new));
+
+        if ($role->wasRecentlyCreated ? $new !== [] : (array_diff($old, $new) || array_diff($new, $old))) {
+            $role->logActivity('updated', ['permissions' => ['old' => $old, 'new' => $new]]);
+        }
 
         $this->showForm = false;
         $this->dispatch('toast', message: 'نقش ذخیره شد.');
@@ -94,7 +104,7 @@ class Roles extends Component
     public function render()
     {
         return view('livewire.admin.roles', [
-            'roles' => Role::withCount('users')->orderBy('id')->get(),
+            'roles' => Role::with('permissions')->withCount('users')->orderBy('id')->get(),
         ]);
     }
 }

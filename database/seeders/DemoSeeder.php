@@ -27,16 +27,15 @@ class DemoSeeder extends Seeder
 {
     public function run(): void
     {
-        $roles = Role::pluck('id', 'key');
         $platforms = Platform::pluck('id', 'key');
         $cat = fn (string $slug) => Category::where('slug', $slug)->value('id');
 
         // ---------- کاربران ----------
         $user = fn (string $name, string $mobile, string $province, string $city, string $bio, int $daysAgo, string $role = 'user', string $password = '123456') => User::create([
-            'name' => $name, 'mobile' => $mobile, 'password' => $password, 'role_id' => $roles[$role],
+            'name' => $name, 'mobile' => $mobile, 'password' => $password,
             'province' => $province, 'city' => $city, 'bio' => $bio,
             'created_at' => now()->subDays($daysAgo),
-        ]);
+        ])->setRole($role);
 
         $admin = $user('مدیر نشونی', '09120000000', 'تهران', 'تهران', 'مدیر سایت', 120, 'admin', 'admin123');
         $mahoor = $user('گالری ماهور', '09120000001', 'تهران', 'تهران', 'فروش آنلاین پوشاک زنانه با ارسال به سراسر ایران.', 60);
@@ -108,7 +107,7 @@ class DemoSeeder extends Seeder
         $this->seedDailyStats();
 
         // ---------- دنبال‌کننده‌ها ----------
-        $customers = User::whereHas('role', fn ($q) => $q->where('key', 'user'))->get();
+        $customers = User::role(Role::USER)->get();
         foreach (Listing::approved()->get() as $item) {
             foreach ($customers as $customer) {
                 if ($customer->id !== $item->user_id && ($item->id * $customer->id) % 3 !== 1) {

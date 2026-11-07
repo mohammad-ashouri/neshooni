@@ -44,14 +44,14 @@ class Activity extends Component
     {
         $class = ActivityLog::SUBJECTS[$this->subject][0] ?? null;
 
-        $logs = ActivityLog::with('user.role')
+        $logs = ActivityLog::with('user.roles.permissions')
             ->when($class, fn (Builder $q) => $q->where('subject_type', $class))
             ->when($class && $this->subjectId !== '', fn (Builder $q) => $q->where('subject_id', en_digits(trim($this->subjectId))))
             ->when($this->q !== '', function (Builder $q) {
                 $term = '%'.en_digits(trim($this->q)).'%';
                 $q->whereHas('user', fn (Builder $u) => $u->where('name', 'like', $term)->orWhere('mobile', 'like', $term));
             })
-            ->when($this->staff, fn (Builder $q) => $q->whereHas('user', fn (Builder $u) => $u->whereIn('role_id', Role::all()->filter->hasPanelAccess()->modelKeys())))
+            ->when($this->staff, fn (Builder $q) => $q->whereHas('user', fn (Builder $u) => $u->whereHas('roles', fn (Builder $r) => $r->whereIn('roles.id', Role::with('permissions')->get()->filter->hasPanelAccess()->modelKeys()))))
             ->latest('id')
             ->paginate(30);
 

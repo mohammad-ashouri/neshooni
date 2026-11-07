@@ -58,6 +58,16 @@ trait RecordsActivity
             }
         }
 
+        $this->logActivity($event, $changes);
+    }
+
+    /**
+     * ثبت دستی یک رویداد؛ برای تغییراتی که رویداد مدل ندارند (مثل نقش و دسترسی‌ها در جدول‌های واسط).
+     *
+     * @param  array<string, array{old: mixed, new: mixed}>|null  $changes
+     */
+    public function logActivity(string $event, ?array $changes = null): void
+    {
         ActivityLog::create([
             'user_id' => auth()->id(),
             'event' => $event,

@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * دسترسی‌ها: هر کلید دسترسی (مثل listings.moderate) مستقیماً یک Gate است.
+     * دسترسی‌ها با spatie/laravel-permission: هر کلید دسترسی (مثل listings.moderate) یک Gate است.
      * پس در Blade می‌توان نوشت @can('listings.moderate') و در route ‌middleware('can:...').
      */
     protected function configurePermissions(): void
@@ -57,7 +57,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('access-panel', fn (User $user) => $user->isStaff());
 
         Gate::before(function (User $user, string $ability) {
-            // فقط کلیدهای «بخش.کار» را اینجا بررسی می‌کنیم؛ بقیه به Policyها می‌رسند
+            // فقط کلیدهای «بخش.کار» را اینجا بررسی می‌کنیم؛ بقیه به Policyها می‌رسند.
+            // مدیر کل همه را دارد (از جمله roles.manage که به هیچ نقش دیگری داده نمی‌شود).
             if (str_contains($ability, '.')) {
                 return $user->hasPermission($ability);
             }

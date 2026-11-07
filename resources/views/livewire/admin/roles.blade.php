@@ -9,7 +9,7 @@
             <article class="card p-5" wire:key="role-{{ $role->id }}">
                 <div class="flex items-start justify-between gap-3">
                     <div>
-                        <h2 class="font-bold">{{ $role->label }} <span class="font-mono text-xs font-normal text-slate-400" dir="ltr">{{ $role->key }}</span></h2>
+                        <h2 class="font-bold">{{ $role->label }} <span class="font-mono text-xs font-normal text-slate-400" dir="ltr">{{ $role->name }}</span></h2>
                         <p class="mt-1 text-xs text-slate-500">{{ $role->description }}</p>
                     </div>
                     <span class="chip bg-slate-100 text-slate-600">{{ fa_number($role->users_count) }} کاربر</span>
@@ -21,14 +21,14 @@
                         <span class="text-xs text-slate-400">بدون دسترسی به پنل</span>
                     @endforelse
                 </div>
-                @if ($role->key !== 'admin')
+                @unless ($role->isSuperAdmin())
                     <div class="mt-4 flex gap-2">
                         <button wire:click="edit({{ $role->id }})" class="cursor-pointer btn-light py-1.5 text-xs">ویرایش</button>
                         @unless ($role->is_system)
                             <button wire:click="delete({{ $role->id }})" wire:confirm="نقش «{{ $role->label }}» حذف شود؟" class="cursor-pointer btn-danger py-1.5 text-xs">حذف</button>
                         @endunless
                     </div>
-                @endif
+                @endunless
             </article>
         @endforeach
     </div>

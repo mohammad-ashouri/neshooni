@@ -4,7 +4,6 @@ use App\Enums\ModerationStatus;
 use App\Models\Category;
 use App\Models\Listing;
 use App\Models\Platform;
-use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\PlatformSeeder;
@@ -38,7 +37,7 @@ function fakeSmsAndCapture(): Closure
 /** کاربر با نقش مشخص: 'user'، 'moderator' یا 'admin' */
 function userWithRole(string $role = 'user'): User
 {
-    return User::factory()->create(['role_id' => Role::where('key', $role)->value('id')]);
+    return User::factory()->create()->setRole($role);
 }
 
 /** دسته با مسیر نامک‌ها، مثل 'fashion/women/manteau' */

@@ -30,7 +30,7 @@ test('ثبت‌نام با رقم فارسی و کد پیامکی انجام م�
 
     $user = User::where('mobile', '09123456789')->first();
     expect($user)->not->toBeNull()
-        ->and($user->role->key)->toBe('user');
+        ->and($user->role->name)->toBe('user');
     $this->assertAuthenticatedAs($user);
 });
 
