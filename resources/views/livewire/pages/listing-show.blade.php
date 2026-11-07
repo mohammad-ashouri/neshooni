@@ -182,6 +182,17 @@
                 </section>
             @endif
 
+            @if ($listing->tags->isNotEmpty())
+                <section class="card space-y-3 p-5 text-sm">
+                    <h2 class="font-bold">🏷️ برچسب‌ها</h2>
+                    <div class="flex flex-wrap gap-1.5">
+                        @foreach ($listing->tags as $tag)
+                            <a href="{{ route('explore', ['tag' => $tag->name]) }}" wire:navigate class="chip cursor-pointer bg-slate-100 text-slate-600 hover:bg-violet-50 hover:text-violet-700">#{{ $tag->name }}</a>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+
             @if ($listing->hasInstallments())
                 <section class="card space-y-3 p-5 text-sm">
                     <h2 class="font-bold">💳 خرید قسطی</h2>

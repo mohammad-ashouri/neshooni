@@ -18,7 +18,8 @@
         "mews/captcha": "^3.5",
         "ralphjsmit/laravel-seo": "^1.8",
         "shetabit/payment": "^7.0",
-        "spatie/laravel-permission": "^8.5"
+        "spatie/laravel-permission": "^8.5",
+        "spatie/laravel-tags": "^4.12"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",

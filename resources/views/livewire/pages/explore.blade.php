@@ -39,7 +39,7 @@
             {{-- ===== فیلترها ===== --}}
             <div class="card space-y-4 p-4">
                 <div class="grid gap-3 md:grid-cols-[1fr_auto_auto_auto]">
-                    <input wire:model.live.debounce.400ms="q" class="input" placeholder="🔍 جستجو در نام، آیدی، توضیحات یا شهر...">
+                    <input wire:model.live.debounce.400ms="q" class="input" placeholder="🔍 مثلاً «کافه تهرانسر» یا «مانتو ارسال رایگان»...">
                     <select wire:model.live="province" class="input md:w-40">
                         <option value="">همه استان‌ها</option>
                         @foreach ($provinces as $name)
@@ -73,6 +73,20 @@
                         <input type="checkbox" wire:model.live="open" class="accent-emerald-600"> الان باز است
                     </label>
                 </div>
+
+                {{-- برچسب انتخاب‌شده و برچسب‌های پرطرفدار --}}
+                @if ($tag !== '' || $popularTags->isNotEmpty())
+                    <div class="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
+                        <span class="text-xs text-slate-500">🏷️ برچسب‌ها:</span>
+                        @if ($tag !== '')
+                            <button wire:click="$set('tag', '')" class="cursor-pointer filter-chip filter-chip-active" title="حذف فیلتر برچسب">#{{ $tag }} ×</button>
+                        @endif
+                        @foreach ($popularTags as $name)
+                            @continue($name === $tag)
+                            <button wire:key="tag-{{ $name }}" wire:click="$set('tag', @js($name))" class="cursor-pointer filter-chip">#{{ $name }}</button>
+                        @endforeach
+                    </div>
+                @endif
 
                 {{-- روش‌های اقساط فقط وقتی فیلتر «خرید قسطی» روشن است --}}
                 @if ($installment)

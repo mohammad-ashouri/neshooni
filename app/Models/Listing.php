@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RalphJSmit\Laravel\SEO\Support\HasSEO;
 use RalphJSmit\Laravel\SEO\Support\SEOData;
+use Spatie\Tags\HasTags;
 
 /**
  * پیج یا کانال یک کسب‌وکار در یکی از پلتفرم‌ها.
@@ -30,7 +31,7 @@ use RalphJSmit\Laravel\SEO\Support\SEOData;
 ])]
 class Listing extends Model
 {
-    use HasSEO, HasSlugInUrl;
+    use HasSEO, HasSlugInUrl, HasTags;
     use RecordsActivity;
 
     /** شمارنده‌ها با هر بازدید عوض می‌شوند و جایی در تاریخچه ندارند */
@@ -140,6 +141,14 @@ class Listing extends Model
         return $this->morphMany(Report::class, 'reportable');
     }
 
+    // رابطه tags و syncTags از HasTags (spatie/laravel-tags) می‌آیند
+
+    /** نام برچسب‌ها به ترتیب ثبت (برای فرم و مقایسه تغییرات) */
+    public function tagNames(): array
+    {
+        return $this->tags()->get()->pluck('name')->all();
+    }
+
     // ---------- اسکوپ‌ها ----------
 
     public function scopeApproved(Builder $query): void
@@ -155,7 +164,7 @@ class Listing extends Model
     /** هرچه کارت پیج لازم دارد، یک‌جا (برای جلوگیری از کوئری‌های تکراری) */
     public function scopeForCards(Builder $query): void
     {
-        $query->with(['platform', 'category', 'user'])
+        $query->with(['platform', 'category', 'user', 'tags'])
             ->withAvg('approvedReviews as rating', 'rating')
             ->withCount(['approvedReviews as reviews_count', 'approvedPhotos as photos_count']);
     }
@@ -166,15 +175,58 @@ class Listing extends Model
         $query->whereIn('category_id', $category->selfAndDescendantIds());
     }
 
+    /** کلمه‌های ربطی که در جستجو معنایی ندارند: «کافه توی تهرانسر» → «کافه» + «تهرانسر» */
+    public const SEARCH_STOP_WORDS = [
+        'در', 'توی', 'تو', 'داخل', 'از', 'با', 'و', 'یا', 'برای', 'به', 'که', 'را', 'های',
+        'نزدیک', 'حوالی', 'اطراف', 'محله', 'منطقه', 'شهر', 'استان',
+    ];
+
+    /** عبارت جستجو → کلمه‌های معنادار (اگر همه کلمه‌ها ربطی بودند، خود عبارت) */
+    public static function searchWords(string $term): array
+    {
+        $term = trim(preg_replace('/\s+/u', ' ', str_replace(['ي', 'ك', '#', '،', ','], ['ی', 'ک', ' ', ' ', ' '], $term)));
+        $words = array_values(array_unique(array_filter(
+            explode(' ', $term),
+            fn (string $word) => $word !== '' && ! in_array($word, self::SEARCH_STOP_WORDS, true),
+        )));
+
+        return $words ?: array_filter([$term]);
+    }
+
+    /**
+     * جستجوی چندکلمه‌ای: هر کلمه باید جایی از پیج پیدا شود
+     * (نام، آیدی، توضیحات، شهر، استان، آدرس، دسته یا برچسب).
+     * پس «کافه توی تهرانسر» کافه‌هایی را می‌آورد که «تهرانسر» در آدرس یا برچسبشان هست.
+     */
     public function scopeSearch(Builder $query, string $term): void
     {
-        $term = '%'.str_replace(['ي', 'ك'], ['ی', 'ک'], trim($term)).'%';
-        $query->where(fn (Builder $q) => $q
-            ->where('title', 'like', $term)
-            ->orWhere('handle', 'like', $term)
-            ->orWhere('description', 'like', $term)
-            ->orWhere('city', 'like', $term)
-            ->orWhere('province', 'like', $term));
+        // در PostgreSQL، like به بزرگی و کوچکی حروف حساس است (برای آیدی‌های لاتین)
+        $like = $query->getConnection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+
+        foreach (static::searchWords($term) as $word) {
+            $pattern = '%'.str_replace('%', '', $word).'%';
+            $categoryIds = Category::cached()
+                ->filter(fn (Category $c) => mb_stripos(str_replace(['ي', 'ك'], ['ی', 'ک'], $c->name), $word) !== false)
+                ->flatMap(fn (Category $c) => $c->selfAndDescendantIds())
+                ->unique()
+                ->all();
+
+            $query->where(fn (Builder $q) => $q
+                ->where('title', $like, $pattern)
+                ->orWhere('handle', $like, $pattern)
+                ->orWhere('description', $like, $pattern)
+                ->orWhere('city', $like, $pattern)
+                ->orWhere('province', $like, $pattern)
+                ->orWhere('address', $like, $pattern)
+                ->when($categoryIds, fn (Builder $q) => $q->orWhereIn('category_id', $categoryIds))
+                ->orWhereHas('tags', fn (Builder $t) => $t->where(Tag::nameColumn(), $like, $pattern)));
+        }
+    }
+
+    /** پیج‌هایی که دقیقاً این برچسب را دارند */
+    public function scopeWithTag(Builder $query, string $name): void
+    {
+        $query->whereHas('tags', fn (Builder $t) => $t->where(Tag::nameColumn(), Tag::normalize($name)));
     }
 
     // ---------- نمایش ----------

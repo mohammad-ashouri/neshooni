@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Listing;
 use App\Models\ListingPhoto;
 use App\Models\Platform;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
@@ -74,6 +75,13 @@ class ListingForm extends Component
 
     public string $installment_note = '';
 
+    // ---------- برچسب‌ها ----------
+    /** نام برچسب‌ها؛ مثل ['کافه', 'تهرانسر'] */
+    public array $tags = [];
+
+    /** متنی که کاربر هنوز به برچسب تبدیل نکرده */
+    public string $tagInput = '';
+
     // ---------- گالری ----------
     /** عکس‌های ذخیره‌شده: [['id' => 1, 'url' => '...', 'caption' => '...', 'status' => 'approved'], ...] */
     public array $photos = [];
@@ -119,6 +127,7 @@ class ListingForm extends Component
             'installment' => $listing->hasInstallments(),
             'installments' => $listing->installments ?? [],
             'installment_note' => $listing->installment_note ?? '',
+            'tags' => $listing->tagNames(),
         ]);
 
         // دسته ذخیره‌شده به سه لیست کشویی تبدیل می‌شود
@@ -171,6 +180,35 @@ class ListingForm extends Component
         }
     }
 
+    // ---------- برچسب‌ها ----------
+
+    /** متن کادر برچسب (یک یا چند برچسب جداشده با ویرگول) به فهرست اضافه می‌شود */
+    public function addTag(): void
+    {
+        $this->pushTags(Tag::parse($this->tagInput));
+        $this->tagInput = '';
+    }
+
+    /** انتخاب از برچسب‌های پیشنهادی */
+    public function pickTag(string $name): void
+    {
+        $this->pushTags(Tag::parse($name));
+    }
+
+    public function removeTag(int $index): void
+    {
+        array_splice($this->tags, $index, 1);
+    }
+
+    private function pushTags(array $names): void
+    {
+        $merged = array_values(array_unique([...$this->tags, ...$names]));
+        if (count($merged) > Tag::MAX_PER_LISTING) {
+            $this->dispatch('toast', message: 'حداکثر '.fa_number(Tag::MAX_PER_LISTING).' برچسب می‌توانید اضافه کنید.', type: 'error');
+        }
+        $this->tags = array_slice($merged, 0, Tag::MAX_PER_LISTING);
+    }
+
     // ---------- گالری ----------
 
     public function updatedNewPhotos(): void
@@ -220,6 +258,10 @@ class ListingForm extends Component
         $this->handle = en_digits($this->handle);
         $this->phone = en_digits($this->phone);
         $this->followers = $this->isWebsite ? '' : en_digits((string) $this->followers);
+        // برچسبی که نوشته شده ولی Enter نخورده هم ذخیره شود
+        if (trim($this->tagInput) !== '') {
+            $this->addTag();
+        }
 
         // فرم سایت فقط پلتفرم سایت و فرم پیج فقط پلتفرم‌های اجتماعی را می‌پذیرد
         $kindRule = function (string $attribute, $value, \Closure $fail) {
@@ -247,6 +289,8 @@ class ListingForm extends Component
             'installments' => $this->installment ? ['required', 'array', 'min:1'] : ['array'],
             'installments.*' => ['string', 'in:'.implode(',', array_keys(Listing::INSTALLMENT_METHODS))],
             'installment_note' => ['nullable', 'string', 'max:150'],
+            'tags' => ['array', 'max:'.Tag::MAX_PER_LISTING],
+            'tags.*' => ['string', 'min:2', 'max:'.Tag::MAX_LENGTH],
         ], [
             'cat1.required' => 'دسته‌بندی را انتخاب کنید.',
             'installments.required' => 'حداقل یک روش خرید قسطی را انتخاب کنید.',
@@ -258,6 +302,7 @@ class ListingForm extends Component
             'title' => $this->isWebsite ? 'نام فروشگاه' : 'نام پیج',
             'description' => 'توضیحات', 'image' => 'تصویر',
             'installment_note' => 'شرایط اقساط',
+            'tags' => 'برچسب‌ها',
         ]);
         $kind = $this->isWebsite ? 'سایت' : 'پیج';
 
@@ -313,8 +358,12 @@ class ListingForm extends Component
 
         $listing->fill($attributes);
 
+        // برچسب‌ها هم جزو اطلاعات اصلی‌اند (در جستجو دیده می‌شوند)؛ ترتیب مهم نیست
+        $tags = collect($this->tags)->map(fn (string $t) => Tag::normalize($t))->filter()->unique()->sort()->values()->all();
+        $tagsChanged = $listing->exists && $tags !== collect($listing->tagNames())->sort()->values()->all();
+
         // تغییر اطلاعات اصلی پیج تأییدشده = بررسی دوباره
-        $needsReview = $listing->exists && ($listing->isDirty() || $listing->status === ModerationStatus::Rejected);
+        $needsReview = $listing->exists && ($listing->isDirty() || $tagsChanged || $listing->status === ModerationStatus::Rejected);
         if ($needsReview) {
             $listing->status = ModerationStatus::Pending;
             $listing->reject_reason = null;
@@ -322,6 +371,7 @@ class ListingForm extends Component
 
         $isNew = ! $listing->exists;
         $listing->save();
+        $listing->syncTags($tags);
 
         $this->saveCaptions();
         $this->saveNewPhotos($listing);
@@ -375,7 +425,9 @@ class ListingForm extends Component
             'subs1' => $level1?->subs() ?? collect(),
             'subs2' => $level2?->subs() ?? collect(),
             'provinces' => array_keys(config("locations.{$this->country}.provinces", [])),
-            'cities' => config("locations.{$this->country}.provinces.{$this->province}", []),        ])->title($this->pageTitle());
+            'cities' => config("locations.{$this->country}.provinces.{$this->province}", []),
+            'suggestedTags' => Tag::popular(15)->diff($this->tags)->take(10),
+        ])->title($this->pageTitle());
     }
 
     private function pageTitle(): string

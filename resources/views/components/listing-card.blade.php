@@ -47,6 +47,13 @@
 
     <p class="mt-3 line-clamp-2 min-h-10 text-sm leading-6 text-slate-600">{{ $listing->description }}</p>
 
+    {{-- برچسب‌ها فقط متن هستند؛ کل کارت خودش لینک است --}}
+    @if ($listing->relationLoaded('tags') && $listing->tags->isNotEmpty())
+        <p class="mt-2 truncate text-xs text-violet-600">
+            {{ $listing->tags->take(4)->map(fn ($tag) => '#'.$tag->name)->implode(' ') }}
+        </p>
+    @endif
+
     <div class="mt-auto flex items-center justify-between gap-2 pt-4 text-xs">
         <span class="chip truncate bg-slate-100 text-slate-600">{{ $listing->category?->root()->icon }} {{ $listing->category?->name ?? 'بدون دسته' }}</span>
         <span class="whitespace-nowrap text-slate-500">

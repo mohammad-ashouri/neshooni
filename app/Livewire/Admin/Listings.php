@@ -96,7 +96,7 @@ class Listings extends Component
     public function render()
     {
         return view('livewire.admin.listings', [
-            'listings' => Listing::with(['platform', 'category', 'user', 'seo'])
+            'listings' => Listing::with(['platform', 'category', 'user', 'seo', 'tags'])
                 ->when($this->status !== 'all', fn ($q) => $q->where('status', $this->status))
                 ->when($this->q !== '', fn ($q) => $q->search($this->q))
                 ->latest()

@@ -163,6 +163,45 @@
             </div>
         </section>
 
+        {{-- ===== برچسب‌ها ===== --}}
+        <section class="card space-y-4 p-6">
+            <div>
+                <h2 class="font-bold">🏷️ برچسب‌ها</h2>
+                <p class="mt-1 text-sm leading-7 text-slate-500">
+                    کلمه‌هایی که مشتری با آن‌ها دنبال شما می‌گردد؛ مثل نوع کسب‌وکار، محله یا ویژگی‌ها
+                    (کافه، تهرانسر، ارسال رایگان). حداکثر {{ fa_number(App\Models\Tag::MAX_PER_LISTING) }} برچسب.
+                </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 rounded-xl border border-slate-300 bg-surface p-2 focus-within:border-violet-500 focus-within:ring-4 focus-within:ring-violet-100">
+                @foreach ($tags as $i => $tag)
+                    <span wire:key="tag-{{ $tag }}" class="chip flex items-center gap-1 bg-violet-50 text-violet-700">
+                        #{{ $tag }}
+                        <button type="button" wire:click="removeTag({{ $i }})" class="cursor-pointer text-violet-400 hover:text-rose-600" title="حذف برچسب">×</button>
+                    </span>
+                @endforeach
+                @if (count($tags) < App\Models\Tag::MAX_PER_LISTING)
+                    <input wire:model="tagInput"
+                           x-on:keydown="if (['Enter', ',', '،'].includes($event.key)) { $event.preventDefault(); $wire.addTag() }"
+                           class="min-w-40 flex-1 bg-transparent px-2 py-1.5 outline-none"
+                           maxlength="100"
+                           placeholder="{{ $tags ? 'برچسب بعدی...' : 'مثلاً کافه، تهرانسر' }}">
+                @endif
+            </div>
+            <p class="text-xs text-slate-400">بعد از هر برچسب Enter یا ویرگول بزنید.</p>
+            @error('tags') <p class="error">{{ $message }}</p> @enderror
+            @error('tags.*') <p class="error">هر برچسب باید بین ۲ تا {{ fa_number(App\Models\Tag::MAX_LENGTH) }} حرف باشد.</p> @enderror
+
+            @if ($suggestedTags->isNotEmpty() && count($tags) < App\Models\Tag::MAX_PER_LISTING)
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="text-xs text-slate-500">پیشنهاد:</span>
+                    @foreach ($suggestedTags as $name)
+                        <button type="button" wire:key="suggest-{{ $name }}" wire:click="pickTag(@js($name))" class="cursor-pointer filter-chip text-xs">+ {{ $name }}</button>
+                    @endforeach
+                </div>
+            @endif
+        </section>
+
         {{-- ===== ساعات کاری ===== --}}
         <section class="card space-y-4 p-6">
             <div class="flex flex-wrap items-center justify-between gap-3">

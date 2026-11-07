@@ -33,6 +33,9 @@
                                     @can('activity.view') · <a href="{{ route('admin.activity', ['subject' => 'listing', 'id' => $listing->id]) }}" wire:navigate class="cursor-pointer text-violet-700 hover:underline">تاریخچه تغییرات</a> @endcan
                                 </p>
                                 <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ $listing->description }}</p>
+                                @if ($listing->tags->isNotEmpty())
+                                    <p class="mt-1 text-xs text-violet-600">🏷️ {{ $listing->tags->map(fn ($tag) => '#'.$tag->name)->implode(' ') }}</p>
+                                @endif
                                 {{-- متنی که صاحب پیج برای گوگل نوشته (از ابزار سئو) --}}
                                 @if ($listing->seo->title || $listing->seo->description)
                                     <p class="mt-1 text-xs text-slate-500">🔎 متن گوگل: {{ $listing->seo->title }} {{ $listing->seo->title && $listing->seo->description ? '—' : '' }} {{ $listing->seo->description }}</p>
