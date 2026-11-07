@@ -27,6 +27,10 @@ return [
         'force_default' => false,
     ],
 
+    // تا وقتی سایت آماده انتشار نیست همه صفحه‌ها noindex هستند.
+    // برای باز کردن ایندکس در .env بنویسید: SEO_NOINDEX=false
+    'noindex' => (bool) env('SEO_NOINDEX', true),
+
     'favicon' => '/favicon.svg',
 
     'title' => [

@@ -46,8 +46,8 @@ class SitemapController extends Controller
                 'Disallow: /captcha',
                 'Disallow: /*?*q=',
                 'Disallow: /*?*sort=',
-                '',
-                'Sitemap: '.url('sitemap.xml'),
+                // وقتی سایت noindex است نقشه سایت معرفی نمی‌شود؛ خزیدن آزاد می‌ماند تا گوگل تگ noindex را ببیند
+                ...(config('seo.noindex') ? [] : ['', 'Sitemap: '.url('sitemap.xml')]),
             ]
             : ['User-agent: *', 'Disallow: /'];
 

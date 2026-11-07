@@ -47,7 +47,7 @@ class Seo
         }
         $data->locale = 'fa_IR';
 
-        if (request()->routeIs(...self::PRIVATE_ROUTES) || app('router')->getCurrentRoute() === null) {
+        if (config('seo.noindex') || request()->routeIs(...self::PRIVATE_ROUTES) || app('router')->getCurrentRoute() === null) {
             $data->markAsNoindex();
         }
 

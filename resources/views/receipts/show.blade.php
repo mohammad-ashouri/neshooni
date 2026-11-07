@@ -8,6 +8,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>رسید {{ $payment->receiptNumber() }} | {{ config('site.name') }}</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     @vite('resources/css/app.css')
     <style>
         body { background: #e2e8f0; margin: 0; }
