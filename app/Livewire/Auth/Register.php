@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 /**
@@ -29,6 +31,10 @@ class Register extends Component
     private const MAX_CODE_ATTEMPTS = 5;
 
     public int $step = 1;
+
+    /** register?intent=website: بعد از ثبت‌نام مستقیم به فرم «ثبت سایت فروشگاهی» می‌رود */
+    #[Url, Locked]
+    public string $intent = '';
 
     public string $name = '';
 
@@ -111,7 +117,13 @@ class Register extends Component
 
         Auth::login($user, true);
         session()->regenerate();
-        session()->flash('toast', ['message' => 'حساب شما ساخته شد. حالا اولین پیج خود را ثبت کنید.']);
+        if ($this->intent === 'website') {
+            session()->flash('toast', ['message' => 'حساب شما ساخته شد. حالا سایت فروشگاهی خود را ثبت کنید.']);
+
+            return $this->redirectRoute('dashboard.websites.create', navigate: true);
+        }
+
+        session()->flash('toast', ['message' => 'حساب شما ساخته شد. حالا اولین پیج یا سایت فروشگاهی خود را ثبت کنید.']);
 
         return $this->redirectRoute('dashboard.listings.create', navigate: true);
     }

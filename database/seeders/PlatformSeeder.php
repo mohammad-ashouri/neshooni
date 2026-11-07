@@ -19,11 +19,13 @@ class PlatformSeeder extends Seeder
             ['whatsapp', 'واتساپ', '#25D366', 'wa.me/', 'phone', 'W'],
             ['youtube', 'یوتیوب', '#FF0000', 'youtube.com/@', 'username', 'Y'],
             ['aparat', 'آپارات', '#ED145B', 'aparat.com/', 'username', 'آ'],
+            // سایت فروشگاهی: آیدی خود آدرس سایت است و آدرس پایه ندارد
+            ['website', 'سایت فروشگاهی', '#0f766e', '', 'url', '🌐'],
         ];
 
         foreach ($platforms as $sort => [$key, $label, $color, $baseUrl, $handleType, $letter]) {
-            Platform::create([
-                'key' => $key,
+            // updateOrCreate: پلتفرم «website» ممکن است قبلاً با migration ساخته شده باشد
+            Platform::updateOrCreate(['key' => $key], [
                 'label' => $label,
                 'color' => $color,
                 'base_url' => $baseUrl,

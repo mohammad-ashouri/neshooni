@@ -94,9 +94,10 @@
             @endif
 
             @if ($listings->isEmpty())
-                <x-empty icon="🔍" title="پیجی با این مشخصات پیدا نشد">
+                <x-empty icon="🔍" title="پیج یا سایتی با این مشخصات پیدا نشد">
                     <button wire:click="resetFilters" class="cursor-pointer btn-light mt-3">پاک کردن فیلترها</button>
                 </x-empty>
+                <x-website-promo variant="inline" class="mt-4 text-center" />
             @else
                 <div class="grid gap-4 pt-2 sm:grid-cols-2 xl:grid-cols-3" wire:loading.class="opacity-60">
                     @foreach ($listings as $listing)
@@ -105,6 +106,8 @@
                 </div>
 
                 <x-page-links :paginator="$listings" :url="$pageUrl" class="mt-8" />
+
+                <x-website-promo class="mt-10" />
             @endif
         </div>
     </div>

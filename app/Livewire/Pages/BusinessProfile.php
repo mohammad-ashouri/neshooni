@@ -23,8 +23,8 @@ class BusinessProfile extends Component
         $place = $user->placeLabel() ? ' در '.$user->placeLabel() : '';
 
         Seo::set(new SEOData(
-            title: $user->name.' | پیج‌ها و کانال‌ها',
-            description: Seo::excerpt($user->bio ?: "همه پیج‌ها و کانال‌های {$user->name}{$place} در نشونی: ".$listings->pluck('title')->implode('، ')),
+            title: $user->name.' | پیج‌ها، کانال‌ها و سایت‌ها',
+            description: Seo::excerpt($user->bio ?: "همه پیج‌ها، کانال‌ها و سایت‌های {$user->name}{$place} در نشونی: ".$listings->pluck('title')->implode('، ')),
             image: $user->avatarUrl() ? ltrim($user->avatarUrl(), '/') : null,
             url: route('business.show', $user),
             schema: Seo::schemas([

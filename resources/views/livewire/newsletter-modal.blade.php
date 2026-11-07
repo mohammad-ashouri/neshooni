@@ -7,20 +7,20 @@
                 <div class="bg-linear-to-l from-violet-600 to-fuchsia-500 px-6 py-6 text-center text-white">
                     <div class="text-4xl">{{ $category?->root()->icon ?? '📬' }}</div>
                     <h2 class="mt-2 text-lg font-extrabold">
-                        {{ $category ? "به «{$category->name}» علاقه دارید؟" : 'از پیج‌های تازه باخبر شوید' }}
+                        {{ $category ? "به «{$category->name}» علاقه دارید؟" : 'از پیج‌ها و سایت‌های تازه باخبر شوید' }}
                     </h2>
                 </div>
 
                 <div class="p-6">
                     @if ($done)
-                        <p class="text-center leading-7 text-slate-600">✅ عضو خبرنامه شدید. پیج‌های جدید را به شما خبر می‌دهیم.</p>
+                        <p class="text-center leading-7 text-slate-600">✅ عضو خبرنامه شدید. پیج‌ها و سایت‌های جدید را به شما خبر می‌دهیم.</p>
                         <button wire:click="dismiss" class="cursor-pointer btn-primary mt-5 w-full">باشه</button>
                     @else
                         <p class="text-center text-sm leading-7 text-slate-600">
                             @if ($category)
-                                هر وقت پیج تازه‌ای در «{{ $category->pathLabel() }}» ثبت شد، باخبرتان می‌کنیم.
+                                هر وقت پیج یا سایت تازه‌ای در «{{ $category->pathLabel() }}» ثبت شد، باخبرتان می‌کنیم.
                             @else
-                                عضو خبرنامه نشونی شوید تا تازه‌ترین پیج‌ها و کانال‌ها را از دست ندهید.
+                                عضو خبرنامه نشونی شوید تا تازه‌ترین پیج‌ها، کانال‌ها و سایت‌های فروشگاهی را از دست ندهید.
                             @endif
                         </p>
 

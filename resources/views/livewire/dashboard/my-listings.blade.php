@@ -1,12 +1,18 @@
-<x-dashboard-shell title="پیج‌های من">
+<x-dashboard-shell title="پیج‌ها و سایت‌های من">
     <x-slot:actions>
-        <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="cursor-pointer btn-primary">+ ثبت پیج جدید</a>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="cursor-pointer btn-primary">+ ثبت پیج جدید</a>
+            <a href="{{ route('dashboard.websites.create') }}" wire:navigate class="cursor-pointer btn-light">🌐 ثبت سایت فروشگاهی</a>
+        </div>
     </x-slot:actions>
 
     @if ($listings->isEmpty())
-        <x-empty icon="🚀" title="هنوز پیجی ثبت نکرده‌اید">
-            <p>اولین پیج یا کانال خود را ثبت کنید تا بعد از تأیید در نشونی نمایش داده شود.</p>
-            <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="cursor-pointer btn-primary mt-4">ثبت اولین پیج</a>
+        <x-empty icon="🚀" title="هنوز پیج یا سایتی ثبت نکرده‌اید">
+            <p>اولین پیج، کانال یا سایت فروشگاهی خود را ثبت کنید تا بعد از تأیید در نشونی نمایش داده شود.</p>
+            <div class="mt-4 flex flex-wrap justify-center gap-2">
+                <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="cursor-pointer btn-primary">ثبت اولین پیج</a>
+                <a href="{{ route('dashboard.websites.create') }}" wire:navigate class="cursor-pointer btn-light">🌐 ثبت سایت فروشگاهی</a>
+            </div>
         </x-empty>
     @else
         <div class="stagger space-y-3">
@@ -48,9 +54,9 @@
                     </div>
 
                     @if ($listing->status === App\Enums\ModerationStatus::Rejected && $listing->reject_reason)
-                        <p class="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">دلیل رد: {{ $listing->reject_reason }} — پیج را اصلاح کنید تا دوباره بررسی شود.</p>
+                        <p class="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">دلیل رد: {{ $listing->reject_reason }} — {{ $listing->kindLabel() }} را اصلاح کنید تا دوباره بررسی شود.</p>
                     @elseif ($listing->status === App\Enums\ModerationStatus::Pending)
-                        <p class="mt-3 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-700">⏳ پیج در صف بررسی مدیر است و بعد از تأیید نمایش داده می‌شود.</p>
+                        <p class="mt-3 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-700">⏳ {{ $listing->kindLabel() }} در صف بررسی مدیر است و بعد از تأیید نمایش داده می‌شود.</p>
                     @endif
                     @if ($listing->pending_photos_count)
                         <p class="mt-2 text-xs text-slate-500">🖼️ {{ fa_number($listing->pending_photos_count) }} تصویر در انتظار تأیید</p>

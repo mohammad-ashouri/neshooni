@@ -16,12 +16,14 @@
         @guest
             <div class="hidden items-center gap-2 sm:flex">
                 <a href="{{ route('login') }}" wire:navigate class="cursor-pointer btn text-slate-600 hover:bg-slate-100">ورود</a>
+                <a href="{{ route('register', ['intent' => 'website']) }}" wire:navigate class="cursor-pointer btn-light hidden lg:inline-flex">🌐 ثبت سایت فروشگاهی</a>
                 <a href="{{ route('register') }}" wire:navigate class="cursor-pointer btn-primary">+ ثبت رایگان پیج</a>
             </div>
         @endguest
 
         @auth
             <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="cursor-pointer btn-primary hidden sm:inline-flex">+ ثبت پیج</a>
+            <a href="{{ route('dashboard.websites.create') }}" wire:navigate class="cursor-pointer btn-light hidden lg:inline-flex">🌐 ثبت سایت فروشگاهی</a>
             <livewire:notification-bell />
 
             <div class="relative" x-data="{ open: false }" @click.outside="open = false">
@@ -37,7 +39,8 @@
                     @can('access-panel')
                         <a href="{{ route('admin.dashboard') }}" wire:navigate class="cursor-pointer side-link">🛡️ پنل {{ auth()->user()->isAdmin() ? 'مدیریت' : auth()->user()->roleLabel() }}</a>
                     @endcan
-                    <a href="{{ route('dashboard') }}" wire:navigate class="cursor-pointer side-link">📋 پیج‌های من</a>
+                    <a href="{{ route('dashboard') }}" wire:navigate class="cursor-pointer side-link">📋 پیج‌ها و سایت‌های من</a>
+                    <a href="{{ route('dashboard.websites.create') }}" wire:navigate class="cursor-pointer side-link">🌐 ثبت سایت فروشگاهی</a>
                     <a href="{{ route('dashboard.payments') }}" wire:navigate class="cursor-pointer side-link">💳 پرداخت‌های من</a>
                     <a href="{{ route('dashboard.profile') }}" wire:navigate class="cursor-pointer side-link">👤 ویرایش پروفایل</a>
                     <a href="{{ route('business.show', auth()->user()) }}" wire:navigate class="cursor-pointer side-link">🏪 صفحه عمومی من</a>
@@ -69,8 +72,10 @@
                 <a href="{{ route('login') }}" wire:navigate class="cursor-pointer btn-light">ورود</a>
                 <a href="{{ route('register') }}" wire:navigate class="cursor-pointer btn-primary">ثبت‌نام</a>
             </div>
+            <a href="{{ route('register', ['intent' => 'website']) }}" wire:navigate class="cursor-pointer side-link mt-2">🌐 ثبت رایگان سایت فروشگاهی</a>
         @else
             <a href="{{ route('dashboard.listings.create') }}" wire:navigate class="cursor-pointer side-link">➕ ثبت پیج جدید</a>
+            <a href="{{ route('dashboard.websites.create') }}" wire:navigate class="cursor-pointer side-link">🌐 ثبت سایت فروشگاهی</a>
             <a href="{{ route('dashboard') }}" wire:navigate class="cursor-pointer side-link">📋 داشبورد</a>
         @endguest
     </div>

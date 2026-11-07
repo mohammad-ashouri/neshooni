@@ -14,7 +14,7 @@
                     <tr wire:key="platform-{{ $platform->id }}" @class(['opacity-50' => ! $platform->is_active])>
                         <td class="td"><span class="flex items-center gap-2"><x-platform-icon :platform="$platform" class="size-8 text-lg" /> <b>{{ $platform->label }}</b></span></td>
                         <td class="td font-mono text-xs" dir="ltr">{{ $platform->base_url }}</td>
-                        <td class="td">{{ $platform->usesPhone() ? 'شماره تلفن' : 'نام کاربری' }}</td>
+                        <td class="td">{{ $platform->usesUrl() ? 'آدرس سایت' : ($platform->usesPhone() ? 'شماره تلفن' : 'نام کاربری') }}</td>
                         <td class="td">{{ fa_number($platform->listings_count) }}</td>
                         <td class="td">
                             <button wire:click="toggle({{ $platform->id }})" @class(['cursor-pointer chip', 'bg-emerald-50 text-emerald-700' => $platform->is_active, 'bg-slate-100 text-slate-500' => ! $platform->is_active])>{{ $platform->is_active ? 'فعال' : 'غیرفعال' }}</button>
@@ -44,7 +44,7 @@
                 <div>
                     <label class="label">آدرس پایه پروفایل</label>
                     <input wire:model="base_url" class="input text-left" dir="ltr" placeholder="instagram.com/">
-                    <p class="mt-1 text-xs text-slate-400">آیدی پیج به انتهای این آدرس اضافه می‌شود.</p>
+                    <p class="mt-1 text-xs text-slate-400">آیدی پیج به انتهای این آدرس اضافه می‌شود. برای نوع «آدرس سایت» خالی بگذارید.</p>
                     @error('base_url') <p class="error">{{ $message }}</p> @enderror
                 </div>
                 <div class="grid grid-cols-3 gap-3">
@@ -53,6 +53,7 @@
                         <select wire:model="handle_type" class="input">
                             <option value="username">نام کاربری</option>
                             <option value="phone">شماره تلفن</option>
+                            <option value="url">آدرس سایت</option>
                         </select>
                     </div>
                     <div>

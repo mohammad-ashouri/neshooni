@@ -1,15 +1,17 @@
-<x-dashboard-shell :title="$listing ? 'ویرایش «'.$listing->title.'»' : 'ثبت پیج جدید'">
+@php($kind = $isWebsite ? 'سایت' : 'پیج')
+<x-dashboard-shell :title="$listing ? 'ویرایش «'.$listing->title.'»' : ($isWebsite ? 'ثبت سایت فروشگاهی' : 'ثبت پیج جدید')">
     <form wire:submit="save" class="space-y-6">
         @if ($listing?->status === App\Enums\ModerationStatus::Approved)
             <p class="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm leading-7 text-sky-700">
-                ℹ️ اگر اطلاعات اصلی پیج را تغییر دهید، پیج تا تأیید دوباره مدیر از نمایش خارج می‌شود. افزودن یا ویرایش عکس‌های گالری روی نمایش پیج اثری ندارد.
+                ℹ️ اگر اطلاعات اصلی {{ $kind }} را تغییر دهید، {{ $kind }} تا تأیید دوباره مدیر از نمایش خارج می‌شود. افزودن یا ویرایش عکس‌های گالری روی نمایش {{ $kind }} اثری ندارد.
             </p>
         @endif
 
         {{-- ===== اطلاعات اصلی ===== --}}
         <section class="card space-y-5 p-6">
-            <h2 class="font-bold">اطلاعات پیج</h2>
+            <h2 class="font-bold">{{ $isWebsite ? '🌐 اطلاعات سایت فروشگاهی' : 'اطلاعات پیج' }}</h2>
 
+            @unless ($isWebsite)
             <div>
                 <label class="label">پلتفرم</label>
                 <div class="grid grid-cols-3 gap-2 sm:grid-cols-5">
@@ -23,20 +25,21 @@
                 </div>
                 @error('platform_id') <p class="error">{{ $message }}</p> @enderror
             </div>
+            @endunless
 
             <div class="grid gap-4 sm:grid-cols-2">
                 <div>
-                    <label class="label">{{ $selectedPlatform?->usesPhone() ? 'شماره' : 'آیدی یا لینک' }} پیج</label>
+                    <label class="label">{{ $isWebsite ? 'آدرس سایت' : ($selectedPlatform?->usesPhone() ? 'شماره' : 'آیدی یا لینک').' پیج' }}</label>
                     <div class="flex items-center rounded-xl border border-slate-300 bg-surface focus-within:border-violet-500 focus-within:ring-4 focus-within:ring-violet-100" dir="ltr">
-                        <span class="ps-3 text-sm text-slate-400">{{ $selectedPlatform ? $selectedPlatform->base_url : '@' }}</span>
-                        <input wire:model="handle" class="min-w-0 flex-1 bg-transparent px-2 py-2.5 outline-none" placeholder="{{ $selectedPlatform?->usesPhone() ? '09121234567' : 'my.shop' }}">
+                        <span class="ps-3 text-sm text-slate-400">{{ $isWebsite ? 'https://' : ($selectedPlatform ? $selectedPlatform->base_url : '@') }}</span>
+                        <input wire:model="handle" class="min-w-0 flex-1 bg-transparent px-2 py-2.5 outline-none" placeholder="{{ $isWebsite ? 'myshop.ir' : ($selectedPlatform?->usesPhone() ? '09121234567' : 'my.shop') }}">
                     </div>
-                    <p class="mt-1 text-xs text-slate-400">می‌توانید لینک کامل پیج را هم بچسبانید.</p>
+                    <p class="mt-1 text-xs text-slate-400">{{ $isWebsite ? 'دامنه سایت را بنویسید یا لینک کامل آن را بچسبانید.' : 'می‌توانید لینک کامل پیج را هم بچسبانید.' }}</p>
                     @error('handle') <p class="error">{{ $message }}</p> @enderror
                 </div>
                 <div>
-                    <label class="label">نام پیج یا کسب‌وکار</label>
-                    <input wire:model="title" class="input" placeholder="مثلاً گالری ماهور">
+                    <label class="label">{{ $isWebsite ? 'نام فروشگاه' : 'نام پیج یا کسب‌وکار' }}</label>
+                    <input wire:model="title" class="input" placeholder="{{ $isWebsite ? 'مثلاً فروشگاه اینترنتی ماهور' : 'مثلاً گالری ماهور' }}">
                     @error('title') <p class="error">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -83,13 +86,15 @@
                     @error('description') <p class="error">{{ $message }}</p> @enderror
                 </div>
                 <div class="space-y-4">
+                    @unless ($isWebsite)
                     <div>
                         <label class="label">تعداد دنبال‌کننده</label>
                         <input wire:model="followers" class="input text-left" dir="ltr" inputmode="numeric" placeholder="12500">
                         @error('followers') <p class="error">{{ $message }}</p> @enderror
                     </div>
+                    @endunless
                     <div>
-                        <label class="label">عکس پروفایل پیج</label>
+                        <label class="label">{{ $isWebsite ? 'لوگوی فروشگاه' : 'عکس پروفایل پیج' }}</label>
                         <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-slate-300 p-2 hover:bg-slate-50">
                             @if ($image)
                                 <img src="{{ $image->temporaryUrl() }}" class="size-12 rounded-xl object-cover">
@@ -245,7 +250,7 @@
         </section>
 
         <div class="flex gap-2">
-            <button class="cursor-pointer btn-primary px-8" wire:loading.attr="disabled" wire:target="save">{{ $listing ? 'ذخیره تغییرات' : 'ثبت پیج' }}</button>
+            <button class="cursor-pointer btn-primary px-8" wire:loading.attr="disabled" wire:target="save">{{ $listing ? 'ذخیره تغییرات' : 'ثبت '.$kind }}</button>
             <a href="{{ route('dashboard') }}" wire:navigate class="cursor-pointer btn-light">انصراف</a>
         </div>
         @if ($errors->any())

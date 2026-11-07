@@ -7,7 +7,7 @@
                 <x-logo tagline :size="44" />
             </a>
             <p class="mt-3 max-w-md text-sm leading-7 text-slate-500">
-                نشونی ویترین آنلاین پیج‌ها و کانال‌های کسب‌وکارهای ایرانی در شبکه‌های اجتماعی و پیام‌رسان‌هاست.
+                نشونی ویترین آنلاین پیج‌ها، کانال‌ها و سایت‌های فروشگاهی کسب‌وکارهای ایرانی در شبکه‌های اجتماعی، پیام‌رسان‌ها و وب است.
                 کسب‌وکار خود را رایگان ثبت کنید و دیده شوید.
             </p>
         </div>
@@ -27,6 +27,7 @@
                 <li><a href="{{ route('contact') }}" wire:navigate class="cursor-pointer hover:text-violet-700">تماس با ما</a></li>
                 <li><a href="{{ route('help') }}" wire:navigate class="cursor-pointer hover:text-violet-700">راهنمای استفاده</a></li>
                 <li><a href="{{ auth()->check() ? route('dashboard.listings.create') : route('register') }}" wire:navigate class="cursor-pointer hover:text-violet-700">ثبت پیج</a></li>
+                <li><a href="{{ auth()->check() ? route('dashboard.websites.create') : route('register', ['intent' => 'website']) }}" wire:navigate class="cursor-pointer hover:text-violet-700">ثبت سایت فروشگاهی</a></li>
             </ul>
         </div>
         @if ($enamad)

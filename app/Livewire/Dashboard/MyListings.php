@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('پیج‌های من')]
+#[Title('پیج‌ها و سایت‌های من')]
 class MyListings extends Component
 {
     public function delete(int $id): void
@@ -19,7 +19,7 @@ class MyListings extends Component
         Storage::disk('public')->delete(array_filter([$listing->image, ...$listing->photos->pluck('path')]));
         $listing->delete();
 
-        $this->dispatch('toast', message: 'پیج حذف شد.');
+        $this->dispatch('toast', message: 'حذف شد.');
     }
 
     public function render(ListingSeoAudit $audit)

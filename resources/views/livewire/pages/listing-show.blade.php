@@ -53,7 +53,7 @@
                 <p class="mt-5 leading-8 whitespace-pre-line text-slate-700">{{ $listing->description }}</p>
 
                 <div class="mt-6 flex flex-wrap gap-2">
-                    <button wire:click="visit" class="cursor-pointer btn-primary">مشاهده در {{ $listing->platform->label }} ↗</button>
+                    <button wire:click="visit" class="cursor-pointer btn-primary">{{ $listing->isWebsite() ? 'ورود به سایت' : 'مشاهده در '.$listing->platform->label }} ↗</button>
                     @unless ($this->isOwner)
                         <button wire:click="toggleFollow" @class(['cursor-pointer btn', 'bg-rose-50 text-rose-700 hover:bg-rose-100' => $this->isFollowing, 'btn-light' => ! $this->isFollowing])>
                             {{ $this->isFollowing ? '💔 لغو دنبال کردن' : '❤️ دنبال کردن' }}
@@ -209,16 +209,20 @@
                 <x-avatar :src="$listing->user->avatarUrl()" :name="$listing->user->name" :seed="$listing->user_id" class="size-12 text-lg" rounded="rounded-full" />
                 <div class="min-w-0 flex-1">
                     <div class="flex items-center gap-1 font-bold">{{ $listing->user->name }} @if ($listing->user->isVerified()) <x-verified-badge /> @endif</div>
-                    <div class="text-xs text-slate-500">مشاهده همه پیج‌های این کسب‌وکار ←</div>
+                    <div class="text-xs text-slate-500">مشاهده همه پیج‌ها و سایت‌های این کسب‌وکار ←</div>
                 </div>
             </a>
+
+            @unless ($this->isOwner)
+                <x-website-promo variant="card" />
+            @endunless
         </aside>
     </div>
 
     {{-- ===== پیج‌های مشابه ===== --}}
     @if ($similar->isNotEmpty())
         <section class="mt-10">
-            <h2 class="mb-4 text-lg font-extrabold">پیج‌های مشابه</h2>
+            <h2 class="mb-4 text-lg font-extrabold">پیج‌ها و سایت‌های مشابه</h2>
             <div class="grid gap-4 pt-2 sm:grid-cols-2 lg:grid-cols-4">
                 @foreach ($similar as $item)
                     <x-listing-card :listing="$item" />

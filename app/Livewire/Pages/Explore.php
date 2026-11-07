@@ -139,7 +139,7 @@ class Explore extends Component
     /** «مانتو در اینستاگرام در تهران» */
     private function heading(?Platform $platform): string
     {
-        return ($this->current?->name ?? 'همه پیج‌ها و کانال‌ها')
+        return ($this->current?->name ?? 'همه پیج‌ها، کانال‌ها و سایت‌های فروشگاهی')
             .($platform ? ' در '.$platform->label : '')
             .($this->city ? ' در '.$this->city : ($this->province ? ' در استان '.$this->province : ''));
     }
@@ -171,8 +171,8 @@ class Explore extends Component
         // عنوان و توضیح دلخواه مدیر فقط برای صفحه اصلی دسته (بدون فیلتر)
         $title = (! $hasFilters ? $this->current?->seo_title : null) ?: $heading.' | معرفی و مقایسه';
         $description = (! $hasFilters ? $this->current?->seo_description : null)
-            ?: fa_number($listings->total())." پیج و کانال {$heading}؛ "
-                .'مقایسه بر اساس امتیاز و نظر خریداران، ساعات کاری و آدرس، همراه با لینک مستقیم پیج.';
+            ?: fa_number($listings->total())." پیج، کانال و سایت فروشگاهی {$heading}؛ "
+                .'مقایسه بر اساس امتیاز و نظر خریداران، ساعات کاری و آدرس، همراه با لینک مستقیم پیج یا سایت.';
 
         $crumbs = ['نشونی' => route('home'), 'همه پیج‌ها' => route('explore')]
             + ($this->current?->path()->mapWithKeys(fn (Category $c) => [$c->name => $c->url()])->all() ?? []);

@@ -5,17 +5,17 @@
         <div class="pointer-events-none absolute -right-24 top-20 size-80 rounded-full bg-violet-300/30 blur-3xl"></div>
 
         <div class="relative mx-auto max-w-4xl px-4 py-16 text-center sm:py-24">
-            <span class="chip bg-surface text-violet-700 ring-1 ring-violet-200">✨ {{ fa_number($totals['listings']) }} پیج و کانال فعال</span>
+            <span class="chip bg-surface text-violet-700 ring-1 ring-violet-200">✨ {{ fa_number($totals['listings']) }} پیج، کانال و سایت فروشگاهی فعال</span>
             <h1 class="mt-5 text-3xl leading-tight font-black text-slate-900 sm:text-5xl">
-                پیج‌ها و کانال‌های کسب‌وکارها را
+                پیج‌ها، کانال‌ها و سایت‌های فروشگاهی را
                 <span class="bg-linear-to-l from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">یک‌جا پیدا کنید</span>
             </h1>
             <p class="mx-auto mt-4 max-w-2xl leading-8 text-slate-600">
-                از اینستاگرام و تلگرام تا ایتا، روبیکا و بله؛ فروشگاه‌ها و خدمات مورد اعتماد را بر اساس دسته، شهر و امتیاز کاربران ببینید.
+                از اینستاگرام و تلگرام تا ایتا، روبیکا، بله و سایت‌های فروشگاهی؛ فروشگاه‌ها و خدمات مورد اعتماد را بر اساس دسته، شهر و امتیاز کاربران ببینید.
             </p>
 
             <form wire:submit="search" class="mx-auto mt-8 flex max-w-xl gap-2 rounded-2xl border border-slate-200 bg-surface p-2 shadow-xl shadow-violet-500/10">
-                <input wire:model="q" class="min-w-0 flex-1 bg-transparent px-3 outline-none" placeholder="نام پیج، آیدی، محصول یا شهر...">
+                <input wire:model="q" class="min-w-0 flex-1 bg-transparent px-3 outline-none" placeholder="نام پیج یا سایت، آیدی، محصول یا شهر...">
                 <button class="cursor-pointer btn-primary">جستجو</button>
             </form>
 
@@ -38,9 +38,9 @@
                 <div class="mb-5 flex items-end justify-between">
                     <div>
                         <h2 class="text-xl font-extrabold">⭐ آگهی‌های ویژه</h2>
-                        <p class="mt-1 text-xs text-slate-500">این پیج‌ها برای نمایش در این بخش هزینه پرداخت کرده‌اند.</p>
+                        <p class="mt-1 text-xs text-slate-500">این پیج‌ها و سایت‌ها برای نمایش در این بخش هزینه پرداخت کرده‌اند.</p>
                     </div>
-                    <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" wire:navigate class="cursor-pointer text-sm text-violet-700 hover:underline">پیج شما هم اینجا باشد؟</a>
+                    <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" wire:navigate class="cursor-pointer text-sm text-violet-700 hover:underline">پیج یا سایت شما هم اینجا باشد؟</a>
                 </div>
                 <div class="stagger grid gap-4 pt-2 sm:grid-cols-2 lg:grid-cols-4">
                     @foreach ($featured as $listing)
@@ -68,10 +68,13 @@
             </div>
         </section>
 
+        {{-- ===== تبلیغ ثبت سایت فروشگاهی ===== --}}
+        <x-website-promo />
+
         {{-- ===== جدیدترین پیج‌ها ===== --}}
         <section>
             <div class="mb-5 flex items-end justify-between">
-                <h2 class="text-xl font-extrabold">🆕 تازه‌ترین پیج‌ها</h2>
+                <h2 class="text-xl font-extrabold">🆕 تازه‌ترین پیج‌ها و سایت‌ها</h2>
                 <a href="{{ route('explore') }}" wire:navigate class="cursor-pointer text-sm text-violet-700 hover:underline">بیشتر ←</a>
             </div>
             <div class="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -104,7 +107,7 @@
         <section class="card p-8">
             <h2 class="text-center text-xl font-extrabold">در سه قدم دیده شوید</h2>
             <div class="mt-8 grid gap-6 text-center md:grid-cols-3">
-                @foreach ([['📝', 'ثبت‌نام رایگان', 'با شماره موبایل در کمتر از یک دقیقه حساب بسازید.'], ['🔗', 'معرفی پیج', 'آیدی پیج یا کانال، دسته، شهر و ساعات کاری را وارد کنید.'], ['🚀', 'دیده شوید', 'بعد از تأیید مدیر، پیج شما به مشتریان نمایش داده می‌شود.']] as $i => [$icon, $title, $text])
+                @foreach ([['📝', 'ثبت‌نام رایگان', 'با شماره موبایل در کمتر از یک دقیقه حساب بسازید.'], ['🔗', 'معرفی پیج یا سایت', 'آیدی پیج و کانال یا آدرس سایت فروشگاهی، دسته، شهر و ساعات کاری را وارد کنید.'], ['🚀', 'دیده شوید', 'بعد از تأیید مدیر، پیج یا سایت شما به مشتریان نمایش داده می‌شود.']] as $i => [$icon, $title, $text])
                     <div>
                         <div class="mx-auto grid size-14 place-items-center rounded-2xl bg-violet-50 text-2xl">{{ $icon }}</div>
                         <h3 class="mt-3 font-bold">{{ fa_number($i + 1) }}. {{ $title }}</h3>
@@ -117,8 +120,11 @@
         {{-- ===== دعوت به ثبت ===== --}}
         <section class="relative overflow-hidden rounded-3xl bg-linear-to-l from-violet-600 to-fuchsia-500 px-6 py-12 text-center text-white">
             <h2 class="text-2xl font-black">کسب‌وکار آنلاین دارید؟</h2>
-            <p class="mt-2 text-white/80">{{ fa_number($totals['businesses']) }} کسب‌وکار در {{ fa_number($totals['platforms']) }} پلتفرم به نشونی اعتماد کرده‌اند.</p>
-            <a href="{{ auth()->check() ? route('dashboard.listings.create') : route('register') }}" wire:navigate class="cursor-pointer btn mt-6 bg-white text-violet-600 hover:bg-violet-50">ثبت رایگان پیج</a>
+            <p class="mt-2 text-white/80">{{ fa_number($totals['businesses']) }} کسب‌وکار در {{ fa_number($totals['platforms']) }} پلتفرم به نشونی اعتماد کرده‌اند. پیج دارید یا سایت فروشگاهی، جای شما اینجاست.</p>
+            <div class="mt-6 flex flex-wrap justify-center gap-2">
+                <a href="{{ auth()->check() ? route('dashboard.listings.create') : route('register') }}" wire:navigate class="cursor-pointer btn bg-white text-violet-600 hover:bg-violet-50">ثبت رایگان پیج</a>
+                <a href="{{ auth()->check() ? route('dashboard.websites.create') : route('register', ['intent' => 'website']) }}" wire:navigate class="cursor-pointer btn bg-white/15 text-white ring-1 ring-white/40 hover:bg-white/25">🌐 ثبت رایگان سایت فروشگاهی</a>
+            </div>
         </section>
     </div>
 </div>

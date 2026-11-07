@@ -10,7 +10,7 @@
 
 return [
     'name' => 'نشونی',
-    'tagline' => 'ویترین پیج و کانال کسب‌وکارها',
+    'tagline' => 'ویترین پیج، کانال و سایت فروشگاهی کسب‌وکارها',
     'url' => env('SITE_PUBLIC_URL', 'https://neshooni.shop'),
 
     'contact' => [

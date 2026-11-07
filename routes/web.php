@@ -51,6 +51,8 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard')->group(functio
     Route::get('/', Dashboard\MyListings::class);
     Route::get('/listings/create', Dashboard\ListingForm::class)->name('.listings.create');
     Route::get('/listings/{listing}/edit', Dashboard\ListingForm::class)->name('.listings.edit');
+    // ثبت سایت فروشگاهی: همان فرم پیج با پلتفرم «سایت فروشگاهی»
+    Route::get('/websites/create', Dashboard\ListingForm::class)->defaults('website', true)->name('.websites.create');
     Route::get('/profile', Dashboard\Profile::class)->name('.profile');
     Route::get('/following', Dashboard\Following::class)->name('.following');
     Route::get('/alerts', Dashboard\Alerts::class)->name('.alerts');

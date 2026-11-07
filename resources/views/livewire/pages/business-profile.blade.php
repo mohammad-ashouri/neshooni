@@ -10,7 +10,7 @@
                 </p>
             </div>
             <div class="flex gap-6 text-center text-sm">
-                <div><div class="text-xl font-black">{{ fa_number($listings->count()) }}</div><div class="text-slate-500">پیج</div></div>
+                <div><div class="text-xl font-black">{{ fa_number($listings->count()) }}</div><div class="text-slate-500">پیج و سایت</div></div>
                 <div><div class="text-xl font-black">{{ fa_compact($followers) }}</div><div class="text-slate-500">دنبال‌کننده</div></div>
                 @if ($rating)
                     <div><div class="text-xl font-black text-amber-500">★ {{ fa_number($rating, 1) }}</div><div class="text-slate-500">امتیاز</div></div>
@@ -22,9 +22,9 @@
         @endif
     </section>
 
-    <h2 class="mt-8 mb-4 text-lg font-extrabold">پیج‌ها و کانال‌ها</h2>
+    <h2 class="mt-8 mb-4 text-lg font-extrabold">پیج‌ها، کانال‌ها و سایت‌ها</h2>
     @if ($listings->isEmpty())
-        <x-empty title="هنوز پیج تأییدشده‌ای ندارد" />
+        <x-empty title="هنوز پیج یا سایت تأییدشده‌ای ندارد" />
     @else
         <div class="stagger grid gap-4 pt-2 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($listings as $listing)

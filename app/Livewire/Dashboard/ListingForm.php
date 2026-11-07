@@ -9,6 +9,7 @@ use App\Models\ListingPhoto;
 use App\Models\Platform;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -25,6 +26,10 @@ class ListingForm extends Component
     use WithFileUploads;
 
     public ?Listing $listing = null;
+
+    /** آیا فرم برای سایت فروشگاهی است؟ (پلتفرم ثابت، بدون انتخاب پلتفرم و تعداد دنبال‌کننده) */
+    #[Locked]
+    public bool $isWebsite = false;
 
     public $platform_id = '';
 
@@ -70,7 +75,8 @@ class ListingForm extends Component
 
     public array $newCaptions = [];
 
-    public function mount(?Listing $listing = null): void
+    /** $website از مسیر dashboard.websites.create می‌آید */
+    public function mount(?Listing $listing = null, bool $website = false): void
     {
         $this->hours = Listing::defaultHours();
 
@@ -79,10 +85,18 @@ class ListingForm extends Component
             $user = Auth::user();
             $this->fill(['province' => $user->province ?? '', 'city' => $user->city ?? '']);
 
+            if ($website) {
+                // اگر مدیر پلتفرم سایت فروشگاهی را غیرفعال کرده باشد، این صفحه وجود ندارد
+                $this->isWebsite = true;
+                $this->platform_id = (Platform::website() ?? abort(404))->id;
+                $this->online_only = true;
+            }
+
             return;
         }
 
         abort_unless($listing->user_id === Auth::id(), 403);
+        $this->isWebsite = $listing->isWebsite();
 
         $this->fill($listing->only(['platform_id', 'handle', 'title', 'description']));
         $this->fill([
@@ -194,10 +208,17 @@ class ListingForm extends Component
     {
         $this->handle = en_digits($this->handle);
         $this->phone = en_digits($this->phone);
-        $this->followers = en_digits((string) $this->followers);
+        $this->followers = $this->isWebsite ? '' : en_digits((string) $this->followers);
+
+        // فرم سایت فقط پلتفرم سایت و فرم پیج فقط پلتفرم‌های اجتماعی را می‌پذیرد
+        $kindRule = function (string $attribute, $value, \Closure $fail) {
+            if (Platform::whereKey($value)->value('handle_type') === 'url' xor $this->isWebsite) {
+                $fail('پلتفرم انتخاب‌شده معتبر نیست.');
+            }
+        };
 
         $this->validate([
-            'platform_id' => ['required', 'exists:platforms,id'],
+            'platform_id' => ['required', 'exists:platforms,id', $kindRule],
             'handle' => ['required', 'string', 'max:120'],
             'title' => ['required', 'string', 'min:2', 'max:80'],
             'cat1' => ['required'],
@@ -216,8 +237,12 @@ class ListingForm extends Component
             'cat1.required' => 'دسته‌بندی را انتخاب کنید.',
             'phone.regex' => 'شماره تلفن را با کد شهر یا موبایل وارد کنید؛ مثل 02112345678.',
         ], [
-            'platform_id' => 'پلتفرم', 'handle' => 'آیدی', 'title' => 'نام پیج', 'description' => 'توضیحات', 'image' => 'تصویر',
+            'platform_id' => 'پلتفرم',
+            'handle' => $this->isWebsite ? 'آدرس سایت' : 'آیدی',
+            'title' => $this->isWebsite ? 'نام فروشگاه' : 'نام پیج',
+            'description' => 'توضیحات', 'image' => 'تصویر',
         ]);
+        $kind = $this->isWebsite ? 'سایت' : 'پیج';
 
         $platform = Platform::findOrFail($this->platform_id);
         $handle = $platform->cleanHandle($this->handle);
@@ -226,7 +251,11 @@ class ListingForm extends Component
             ->when($this->listing, fn ($q) => $q->whereKeyNot($this->listing->id))
             ->exists();
         if ($duplicate || $handle === '') {
-            $this->addError('handle', $duplicate ? 'این پیج قبلاً در نشونی ثبت شده است.' : 'آیدی معتبر نیست.');
+            $this->addError('handle', match (true) {
+                $duplicate => "این {$kind} قبلاً در نشونی ثبت شده است.",
+                $this->isWebsite => 'آدرس سایت معتبر نیست؛ مثلاً myshop.ir',
+                default => 'آیدی معتبر نیست.',
+            });
 
             return;
         }
@@ -276,8 +305,8 @@ class ListingForm extends Component
         $this->saveNewPhotos($listing);
 
         $message = match (true) {
-            $isNew => 'پیج ثبت شد و بعد از تأیید مدیر نمایش داده می‌شود.',
-            $needsReview => 'تغییرات ذخیره شد. پیج دوباره بررسی و منتشر می‌شود.',
+            $isNew => "{$kind} ثبت شد و بعد از تأیید مدیر نمایش داده می‌شود.",
+            $needsReview => "تغییرات ذخیره شد. {$kind} دوباره بررسی و منتشر می‌شود.",
             default => 'تغییرات ذخیره شد.',
         };
         session()->flash('toast', ['message' => $message]);
@@ -318,13 +347,22 @@ class ListingForm extends Component
         $level2 = Category::fromCache($this->cat2);
 
         return view('livewire.dashboard.listing-form', [
-            'platforms' => Platform::active()->get(),
+            'platforms' => $this->isWebsite ? collect() : Platform::active()->social()->get(),
             'selectedPlatform' => $this->platform_id ? Platform::find($this->platform_id) : null,
             'roots' => Category::roots(),
             'subs1' => $level1?->subs() ?? collect(),
             'subs2' => $level2?->subs() ?? collect(),
             'provinces' => array_keys(config("locations.{$this->country}.provinces", [])),
             'cities' => config("locations.{$this->country}.provinces.{$this->province}", []),
-        ])->title($this->listing ? 'ویرایش پیج' : 'ثبت پیج جدید');
+        ])->title($this->pageTitle());
+    }
+
+    private function pageTitle(): string
+    {
+        if ($this->listing) {
+            return $this->isWebsite ? 'ویرایش سایت فروشگاهی' : 'ویرایش پیج';
+        }
+
+        return $this->isWebsite ? 'ثبت سایت فروشگاهی' : 'ثبت پیج جدید';
     }
 }

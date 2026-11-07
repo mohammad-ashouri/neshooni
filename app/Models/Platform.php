@@ -35,9 +35,27 @@ class Platform extends Model
         return $this->handle_type === 'phone';
     }
 
+    /** آیا شناسه این پلتفرم آدرس کامل سایت است؟ (سایت فروشگاهی) */
+    public function usesUrl(): bool
+    {
+        return $this->handle_type === 'url';
+    }
+
+    /** پلتفرم‌هایی که در فرم «ثبت پیج» انتخاب می‌شوند (سایت فروشگاهی فرم خودش را دارد) */
+    public function scopeSocial(Builder $query): void
+    {
+        $query->where('handle_type', '!=', 'url');
+    }
+
+    /** پلتفرم سایت فروشگاهی (اگر فعال باشد) */
+    public static function website(): ?self
+    {
+        return static::where('handle_type', 'url')->where('is_active', true)->orderBy('sort')->first();
+    }
+
     public function profileUrl(string $handle): string
     {
-        return 'https://'.$this->base_url.$handle;
+        return 'https://'.($this->usesUrl() ? '' : $this->base_url).$handle;
     }
 
     public function logoUrl(): ?string
@@ -51,6 +69,10 @@ class Platform extends Model
      */
     public function cleanHandle(string $input): string
     {
+        if ($this->usesUrl()) {
+            return static::cleanWebsite($input);
+        }
+
         $handle = trim(en_digits($input));
         $handle = preg_replace('#^https?://#', '', $handle);
         $handle = rtrim(strtok($handle, '?'), '/');
@@ -67,5 +89,27 @@ class Platform extends Model
         }
 
         return $handle;
+    }
+
+    /**
+     * آدرس سایت را یکدست می‌کند تا تکراری‌ها پیدا شوند:
+     * «https://www.MyShop.ir/shop/?utm=1» ← «myshop.ir/shop». آدرس نامعتبر رشته خالی می‌دهد.
+     */
+    public static function cleanWebsite(string $input): string
+    {
+        $url = trim(en_digits($input));
+        $url = preg_replace('#^[a-z]+://#i', '', $url);
+        $url = preg_replace('/[?#].*$/', '', $url);
+        $url = rtrim($url, '/');
+
+        [$host, $path] = array_pad(explode('/', $url, 2), 2, '');
+        $host = preg_replace('/^www\./', '', mb_strtolower($host));
+
+        // دامنه باید حداقل یک نقطه و پسوند حرفی داشته باشد (فارسی هم پذیرفته می‌شود)
+        if (! preg_match('/^(?:[\p{L}\p{N}](?:[\p{L}\p{N}-]*[\p{L}\p{N}])?\.)+\p{L}{2,}$/u', $host)) {
+            return '';
+        }
+
+        return $path === '' ? $host : $host.'/'.$path;
     }
 }

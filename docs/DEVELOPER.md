@@ -95,7 +95,7 @@ docs/                    راهنمای سایت و پنل (در /help و /panel
 | `roles` | نقش‌ها؛ `permissions` آرایه JSON از کلیدهای `config/permissions.php` یا `*` برای مدیر کل |
 | `users` | ورود با `mobile`؛ `verified_at` = نشان تأیید؛ `interests` = داده InterestTracker |
 | `categories` | درخت با `parent_id` تا ۳ سطح |
-| `platforms` | `base_url` + آیدی = لینک پیج؛ `handle_type` = `username` یا `phone` |
+| `platforms` | `base_url` + آیدی = لینک پیج؛ `handle_type` = `username`، `phone` یا `url` (سایت فروشگاهی: آیدی خود دامنه است، مثل `myshop.ir`) |
 | `listings` | پیج‌ها؛ `category_id` همیشه عمیق‌ترین دسته انتخاب‌شده؛ `hours` JSON ساعات هفته؛ `featured_until`؛ `published_at` زمان اولین انتشار |
 | `listing_photos` | گالری؛ هر عکس وضعیت تأیید جدا دارد |
 | `listing_daily_stats` | بازدید و کلیک روزانه هر پیج |
@@ -172,6 +172,14 @@ docs/                    راهنمای سایت و پنل (در /help و /panel
 برای اینکه مودال مزاحم نباشد (`InterestTracker::canOffer`):
 - در هر session حداکثر یک بار، و بین دو پیشنهاد حداقل `newsletter_gap_days` روز (زمان آخرین پیشنهاد در `offered_at`).
 - فقط در صفحه‌های `site.newsletter_routes` (صفحه اول، دسته‌ها، پیج و کسب‌وکار).
+
+### سایت فروشگاهی
+
+- سایت فروشگاهی یک `Listing` روی پلتفرم `website` (`handle_type = url`) است؛ پس بررسی، نظر، آمار، سئو و پرداخت مثل پیج است.
+- فرم: مسیر `dashboard.websites.create` همان `Dashboard\ListingForm` با پارامتر `website` (قفل‌شده در `isWebsite`). فرم پیج پلتفرم‌های `url` را نشان نمی‌دهد و نمی‌پذیرد.
+- آدرس با `Platform::cleanWebsite()` یکدست می‌شود (بدون `https://`، `www`، query و `/` آخر).
+- تبلیغ در صفحه‌ها با کامپوننت `<x-website-promo variant="banner|card|inline" />`؛ اگر پلتفرم غیرفعال باشد چیزی نشان نمی‌دهد.
+- `register?intent=website` بعد از ثبت‌نام کاربر را به فرم سایت می‌برد.
 
 ### آمار
 

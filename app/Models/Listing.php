@@ -154,7 +154,19 @@ class Listing extends Model
         return $this->featured_until?->isFuture() ?? false;
     }
 
-    /** لینک پیج در خود پلتفرم (اینستاگرام، تلگرام و...) */
+    /** آیا این مورد سایت فروشگاهی است (نه پیج شبکه اجتماعی)؟ */
+    public function isWebsite(): bool
+    {
+        return $this->platform->usesUrl();
+    }
+
+    /** «پیج» یا «سایت»؛ برای متن‌هایی که بین هر دو مشترک است */
+    public function kindLabel(): string
+    {
+        return $this->isWebsite() ? 'سایت' : 'پیج';
+    }
+
+    /** لینک پیج در خود پلتفرم (اینستاگرام، تلگرام و...) یا آدرس سایت فروشگاهی */
     public function externalUrl(): string
     {
         return $this->platform->profileUrl($this->handle);
@@ -173,7 +185,11 @@ class Listing extends Model
 
     public function displayHandle(): string
     {
-        return $this->platform->usesPhone() ? '+'.$this->handle : '@'.$this->handle;
+        return match (true) {
+            $this->platform->usesPhone() => '+'.$this->handle,
+            $this->platform->usesUrl() => $this->handle,
+            default => '@'.$this->handle,
+        };
     }
 
     public function imageUrl(): ?string

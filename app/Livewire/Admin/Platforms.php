@@ -68,8 +68,9 @@ class Platforms extends Component
             'key' => ['required', 'alpha_dash', 'max:30', Rule::unique('platforms')->ignore($this->editingId)],
             'label' => ['required', 'string', 'max:40'],
             'color' => ['required', 'regex:/^#[0-9a-fA-F]{6}$/'],
-            'base_url' => ['required', 'string', 'max:100'],
-            'handle_type' => ['required', 'in:username,phone'],
+            // سایت فروشگاهی آدرس پایه ندارد؛ آیدی خودش آدرس کامل است
+            'base_url' => [Rule::requiredIf($this->handle_type !== 'url'), 'nullable', 'string', 'max:100'],
+            'handle_type' => ['required', 'in:username,phone,url'],
             'letter' => ['required', 'string', 'max:3'],
             'logo' => ['nullable', 'image', 'max:512'],
             'is_active' => ['boolean'],
@@ -78,6 +79,7 @@ class Platforms extends Component
 
         $platform = Platform::findOrNew($this->editingId);
         unset($data['logo']);
+        $data['base_url'] = $data['handle_type'] === 'url' ? '' : $data['base_url'];
 
         if ($this->logo) {
             if ($platform->logo) {

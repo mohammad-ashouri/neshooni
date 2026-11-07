@@ -83,3 +83,61 @@ test('کاربر نمی‌تواند پیج دیگران را ویرایش کن�
 
     $this->actingAs(userWithRole())->get(route('dashboard.listings.edit', $listing))->assertForbidden();
 });
+
+test('سایت فروشگاهی با آدرس تمیز ثبت می‌شود', function () {
+    $user = userWithRole();
+    $category = categoryAt('fashion/women/manteau');
+
+    $this->actingAs($user)->get(route('dashboard.websites.create'))
+        ->assertOk()
+        ->assertSee('ثبت سایت فروشگاهی')
+        ->assertDontSee('تعداد دنبال‌کننده');
+
+    Livewire::actingAs($user)->test(ListingForm::class, ['website' => true])
+        ->set('handle', 'HTTPS://www.MyShop.ir/?utm_source=x')
+        ->set('title', 'فروشگاه اینترنتی من')
+        ->set('cat1', $category->root()->id)
+        ->set('description', 'فروش آنلاین پوشاک زنانه با ارسال رایگان')
+        ->call('save')
+        ->assertHasNoErrors()
+        ->assertRedirect(route('dashboard'));
+
+    $listing = Listing::first();
+    expect($listing->handle)->toBe('myshop.ir')
+        ->and($listing->isWebsite())->toBeTrue()
+        ->and($listing->externalUrl())->toBe('https://myshop.ir')
+        ->and($listing->displayHandle())->toBe('myshop.ir')
+        ->and($listing->status)->toBe(ModerationStatus::Pending);
+});
+
+test('سایت تکراری پذیرفته نمی‌شود و نوع فرم از مرورگر عوض نمی‌شود', function () {
+    $website = Platform::where('key', 'website')->first();
+    makeListing(attributes: ['platform_id' => $website->id, 'handle' => 'myshop.ir']);
+
+    $form = Livewire::actingAs(userWithRole())->test(ListingForm::class, ['website' => true]);
+    fillListingForm($form, ['platform_id' => $website->id, 'handle' => 'www.myshop.ir/'])
+        ->call('save')
+        ->assertHasErrors('handle');
+
+    expect(fn () => $form->set('isWebsite', false))->toThrow(Exception::class);
+});
+
+test('صفحه ثبت سایت با پلتفرم غیرفعال ۴۰۴ می‌دهد', function () {
+    Platform::where('key', 'website')->update(['is_active' => false]);
+
+    $this->actingAs(userWithRole())->get(route('dashboard.websites.create'))->assertNotFound();
+});
+
+test('آدرس سایت نامعتبر پذیرفته نمی‌شود', function () {
+    expect(Platform::cleanWebsite('my shop'))->toBe('')
+        ->and(Platform::cleanWebsite('localhost'))->toBe('')
+        ->and(Platform::cleanWebsite('https://Shop.example.com/fa/'))->toBe('shop.example.com/fa')
+        ->and(Platform::cleanWebsite('فروشگاه.ایران'))->toBe('فروشگاه.ایران');
+});
+
+test('در فرم ثبت پیج، سایت فروشگاهی قابل انتخاب نیست', function () {
+    fillListingForm(Livewire::actingAs(userWithRole())->test(ListingForm::class), [
+        'platform_id' => Platform::where('key', 'website')->value('id'),
+        'handle' => 'myshop.ir',
+    ])->call('save')->assertHasErrors('platform_id');
+});

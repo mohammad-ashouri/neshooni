@@ -69,6 +69,6 @@ class Home extends Component
                 'businesses' => User::has('listings')->count(),
                 'platforms' => Platform::active()->count(),
             ],
-        ])->title('ویترین پیج و کانال کسب‌وکارها');
+        ])->title('ویترین پیج، کانال و سایت فروشگاهی کسب‌وکارها');
     }
 }

@@ -1,4 +1,4 @@
-<x-auth-card title="ورود به نشونی" subtitle="برای مدیریت پیج‌ها وارد حساب خود شوید">
+<x-auth-card title="ورود به نشونی" subtitle="برای مدیریت پیج‌ها و سایت‌های فروشگاهی وارد حساب خود شوید">
     @if ($step === 2)
     {{-- مرحله دوم ورود اعضای پنل: کد پیامکی --}}
     <form wire:submit="verifyCode" class="space-y-4">

@@ -112,3 +112,18 @@ test('صفحه‌های داشبورد برای مهمان بسته است', fun
     $this->get('/dashboard')->assertRedirect('/login');
     $this->get('/panel')->assertRedirect('/login');
 });
+
+test('ثبت‌نام از دکمه «ثبت سایت فروشگاهی» به فرم سایت می‌رود', function () {
+    $lastCode = fakeSmsAndCapture();
+
+    Livewire::withQueryParams(['intent' => 'website'])->test(Register::class)
+        ->set('name', 'فروشگاه نمونه')
+        ->set('mobile', '09123456780')
+        ->set('password', 'secret123')
+        ->set('password_confirmation', 'secret123')
+        ->call('sendCode')
+        ->set('code', $lastCode())
+        ->call('register')
+        ->assertHasNoErrors()
+        ->assertRedirect(route('dashboard.websites.create'));
+});

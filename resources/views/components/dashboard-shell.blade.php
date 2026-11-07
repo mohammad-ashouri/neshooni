@@ -6,9 +6,10 @@
 
 @php
     $menu = [
-        ['dashboard', '📋', 'پیج‌های من'],
+        ['dashboard', '📋', 'پیج‌ها و سایت‌های من'],
+        ['dashboard.websites.create', '🌐', 'ثبت سایت فروشگاهی'],
         ['dashboard.stats', '📊', 'آمار بازدید'],
-        ['dashboard.seo', '🔎', 'سئوی پیج'],
+        ['dashboard.seo', '🔎', 'سئوی پیج و سایت'],
         ['dashboard.reviews', '💬', 'نظرات پیج‌ها'],
         ['dashboard.following', '❤️', 'دنبال‌شده‌ها'],
         ['dashboard.alerts', '🔔', 'اعلان و خبرنامه'],

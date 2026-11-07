@@ -2,6 +2,7 @@
 
 use App\Enums\ModerationStatus;
 use App\Livewire\Pages\ListingShow;
+use App\Models\Platform;
 use App\Models\Report;
 use Livewire\Livewire;
 
@@ -74,4 +75,13 @@ test('صاحب پیج نمی‌تواند برای پیج خودش نظر بده
     Livewire::actingAs($owner)->test(ListingShow::class, ['listing' => $listing])
         ->set('rating', 5)->set('body', 'بهترین پیج دنیا')->call('submitReview')
         ->assertForbidden();
+});
+
+test('تبلیغ ثبت سایت فروشگاهی در صفحه‌های عمومی دیده می‌شود و با غیرفعال شدن پلتفرم پنهان می‌شود', function () {
+    $this->get(route('home'))->assertOk()->assertSee('سایت فروشگاهی دارید؟')->assertSee(route('register', ['intent' => 'website']), false);
+    $this->get(route('about'))->assertOk()->assertSee('ثبت سایت فروشگاهی');
+    $this->get(route('listings.show', makeListing()))->assertOk()->assertSee('سایت فروشگاهی دارید؟');
+
+    Platform::where('key', 'website')->update(['is_active' => false]);
+    $this->get(route('home'))->assertOk()->assertDontSee('سایت فروشگاهی دارید؟');
 });
