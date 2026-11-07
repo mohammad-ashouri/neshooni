@@ -66,6 +66,14 @@ class ListingForm extends Component
 
     public array $hours = [];
 
+    // ---------- خرید قسطی ----------
+    public bool $installment = false;
+
+    /** کلیدهای Listing::INSTALLMENT_METHODS */
+    public array $installments = [];
+
+    public string $installment_note = '';
+
     // ---------- گالری ----------
     /** عکس‌های ذخیره‌شده: [['id' => 1, 'url' => '...', 'caption' => '...', 'status' => 'approved'], ...] */
     public array $photos = [];
@@ -108,6 +116,9 @@ class ListingForm extends Component
             'address' => $listing->address ?? '',
             'phone' => $listing->phone ?? '',
             'hours' => $listing->hours ?: Listing::defaultHours(),
+            'installment' => $listing->hasInstallments(),
+            'installments' => $listing->installments ?? [],
+            'installment_note' => $listing->installment_note ?? '',
         ]);
 
         // دسته ذخیره‌شده به سه لیست کشویی تبدیل می‌شود
@@ -233,14 +244,20 @@ class ListingForm extends Component
             'hours.days.*.to' => ['required', 'date_format:H:i'],
             'photos.*.caption' => ['nullable', 'string', 'max:80'],
             'newCaptions.*' => ['nullable', 'string', 'max:80'],
+            'installments' => $this->installment ? ['required', 'array', 'min:1'] : ['array'],
+            'installments.*' => ['string', 'in:'.implode(',', array_keys(Listing::INSTALLMENT_METHODS))],
+            'installment_note' => ['nullable', 'string', 'max:150'],
         ], [
             'cat1.required' => 'دسته‌بندی را انتخاب کنید.',
+            'installments.required' => 'حداقل یک روش خرید قسطی را انتخاب کنید.',
+            'installments.min' => 'حداقل یک روش خرید قسطی را انتخاب کنید.',
             'phone.regex' => 'شماره تلفن را با کد شهر یا موبایل وارد کنید؛ مثل 02112345678.',
         ], [
             'platform_id' => 'پلتفرم',
             'handle' => $this->isWebsite ? 'آدرس سایت' : 'آیدی',
             'title' => $this->isWebsite ? 'نام فروشگاه' : 'نام پیج',
             'description' => 'توضیحات', 'image' => 'تصویر',
+            'installment_note' => 'شرایط اقساط',
         ]);
         $kind = $this->isWebsite ? 'سایت' : 'پیج';
 
@@ -278,6 +295,11 @@ class ListingForm extends Component
             // پیجی که هیچ‌وقت ساعت کاری نداشته و الان هم فعالش نکرده، همان خالی می‌ماند
             // (وگرنه ساعت پیش‌فرض فرم «تغییر» حساب می‌شد و پیج بی‌دلیل به صف بررسی می‌رفت)
             'hours' => $this->hours['enabled'] || $this->listing?->hours ? $this->hours : null,
+            // ترتیب ثابت تا جابه‌جایی تیک‌ها «تغییر» حساب نشود و پیج بی‌دلیل به صف بررسی نرود
+            'installments' => $this->installment
+                ? array_values(array_intersect(array_keys(Listing::INSTALLMENT_METHODS), $this->installments))
+                : null,
+            'installment_note' => $this->installment ? (trim($this->installment_note) ?: null) : null,
         ];
 
         $listing = $this->listing ?? new Listing(['user_id' => Auth::id(), 'status' => ModerationStatus::Pending]);
@@ -353,8 +375,7 @@ class ListingForm extends Component
             'subs1' => $level1?->subs() ?? collect(),
             'subs2' => $level2?->subs() ?? collect(),
             'provinces' => array_keys(config("locations.{$this->country}.provinces", [])),
-            'cities' => config("locations.{$this->country}.provinces.{$this->province}", []),
-        ])->title($this->pageTitle());
+            'cities' => config("locations.{$this->country}.provinces.{$this->province}", []),        ])->title($this->pageTitle());
     }
 
     private function pageTitle(): string

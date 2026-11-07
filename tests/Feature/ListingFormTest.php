@@ -141,3 +141,41 @@ test('در فرم ثبت پیج، سایت فروشگاهی قابل انتخا�
         'handle' => 'myshop.ir',
     ])->call('save')->assertHasErrors('platform_id');
 });
+
+test('روش‌های خرید قسطی با ترتیب ثابت ذخیره می‌شوند', function () {
+    fillListingForm(Livewire::actingAs(userWithRole())->test(ListingForm::class), [
+        'installment' => true,
+        'installments' => ['cheque', 'snapppay'],
+        'installment_note' => ' ۴ قسط بدون پیش‌پرداخت ',
+    ])->call('save')->assertHasNoErrors();
+
+    $listing = Listing::first();
+    expect($listing->installments)->toBe(['snapppay', 'cheque'])
+        ->and($listing->installment_note)->toBe('۴ قسط بدون پیش‌پرداخت')
+        ->and(array_keys($listing->installmentMethods()))->toBe(['snapppay', 'cheque']);
+});
+
+test('خرید قسطی بدون انتخاب روش یا با روش نامعتبر پذیرفته نمی‌شود', function () {
+    fillListingForm(Livewire::actingAs(userWithRole())->test(ListingForm::class), ['installment' => true])
+        ->call('save')
+        ->assertHasErrors('installments');
+
+    fillListingForm(Livewire::actingAs(userWithRole())->test(ListingForm::class), [
+        'installment' => true,
+        'installments' => ['hacked'],
+    ])->call('save')->assertHasErrors('installments.*');
+});
+
+test('برداشتن تیک خرید قسطی روش‌ها را پاک می‌کند', function () {
+    $owner = userWithRole();
+    $listing = makeListing($owner, attributes: ['installments' => ['digipay'], 'installment_note' => 'تا ۶ ماه']);
+
+    Livewire::actingAs($owner)->test(ListingForm::class, ['listing' => $listing])
+        ->assertSet('installment', true)
+        ->set('installment', false)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($listing->fresh()->installments)->toBeNull()
+        ->and($listing->fresh()->installment_note)->toBeNull();
+});

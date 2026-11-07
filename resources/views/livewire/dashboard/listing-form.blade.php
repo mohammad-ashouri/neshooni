@@ -202,6 +202,41 @@
             @endif
         </section>
 
+        {{-- ===== خرید قسطی ===== --}}
+        <section class="card space-y-4 p-6">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <h2 class="font-bold">💳 خرید قسطی</h2>
+                <label class="flex items-center gap-2 text-sm">
+                    <input type="checkbox" wire:model.live="installment" class="accent-violet-600"> امکان خرید قسطی دارم
+                </label>
+            </div>
+
+            @if ($installment)
+                @foreach (['bnpl' => 'سرویس‌های اقساطی آنلاین', 'direct' => 'اقساط مستقیم'] as $group => $groupLabel)
+                    <div wire:key="installment-group-{{ $group }}">
+                        <p class="mb-2 text-sm font-semibold text-slate-600">{{ $groupLabel }}</p>
+                        <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                            @foreach (App\Models\Listing::INSTALLMENT_METHODS as $key => $method)
+                                @continue($method['group'] !== $group)
+                                <label wire:key="installment-{{ $key }}" class="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 px-3 py-2.5 text-sm has-checked:border-violet-500 has-checked:bg-violet-50 has-checked:font-bold">
+                                    <input type="checkbox" wire:model="installments" value="{{ $key }}" class="accent-violet-600">
+                                    <span>{{ $method['icon'] }}</span> {{ $method['label'] }}
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+                @error('installments') <p class="error">{{ $message }}</p> @enderror
+                @error('installments.*') <p class="error">روش انتخاب‌شده معتبر نیست.</p> @enderror
+
+                <div>
+                    <label class="label">شرایط اقساط (اختیاری)</label>
+                    <input wire:model="installment_note" class="input" maxlength="150" placeholder="مثلاً ۴ قسط بدون پیش‌پرداخت، یا تا ۱۲ ماه با چک صیادی">
+                    @error('installment_note') <p class="error">{{ $message }}</p> @enderror
+                </div>
+            @endif
+        </section>
+
         {{-- ===== گالری ===== --}}
         <section class="card space-y-4 p-6">
             <div>

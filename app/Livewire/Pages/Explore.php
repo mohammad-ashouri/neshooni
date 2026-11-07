@@ -22,7 +22,7 @@ use RalphJSmit\Laravel\SEO\Support\SEOData;
  * سئو:
  * - صفحه‌بندی با لینک واقعی (?page=2) است تا گوگل همه پیج‌ها را ببیند.
  * - دسته، پلتفرم، استان و شهر صفحه قابل ایندکس می‌سازند («مانتو اینستاگرام در تهران»)؛
- *   جستجو، «الان باز است» و مرتب‌سازی noindex هستند تا صفحه تکراری ساخته نشود.
+ *   جستجو، «الان باز است»، خرید قسطی و مرتب‌سازی noindex هستند تا صفحه تکراری ساخته نشود.
  */
 class Explore extends Component
 {
@@ -45,6 +45,10 @@ class Explore extends Component
     #[Url(except: false)]
     public bool $open = false;
 
+    /** '' = بدون فیلتر، 'any' = هر نوع خرید قسطی، یا کلید یک روش از Listing::INSTALLMENT_METHODS */
+    #[Url(except: '')]
+    public string $installment = '';
+
     #[Url(except: 'new')]
     public string $sort = 'new';
 
@@ -58,6 +62,9 @@ class Explore extends Component
             $tracker->add($this->current->id, 'category');
         }
         $this->page = max(1, $this->page);
+        if ($this->installment !== 'any' && ! isset(Listing::INSTALLMENT_METHODS[$this->installment])) {
+            $this->installment = '';
+        }
     }
 
     // با تغییر هر فیلتر، صفحه‌بندی از اول شروع می‌شود
@@ -73,7 +80,7 @@ class Explore extends Component
 
     public function resetFilters(): void
     {
-        $this->reset('q', 'platform', 'province', 'city', 'open', 'sort', 'page');
+        $this->reset('q', 'platform', 'province', 'city', 'open', 'installment', 'sort', 'page');
     }
 
     public function render()
@@ -89,8 +96,7 @@ class Explore extends Component
             'ads' => $this->page === 1 && ! $this->open ? $this->ads() : collect(),
             'heading' => $this->heading($platform),
             'pageUrl' => fn (int $page) => $this->pageUrl($page),
-            'platforms' => Platform::active()->get(),
-            'provinces' => array_keys(config('locations.IR.provinces')),
+            'platforms' => Platform::active()->get(),            'provinces' => array_keys(config('locations.IR.provinces')),
             'cities' => config("locations.IR.provinces.{$this->province}", []),
             'path' => $this->current?->path() ?? collect(),
             'subs' => $this->current ? $this->current->subs() : Category::roots(),
@@ -114,10 +120,11 @@ class Explore extends Component
         return Listing::approved()
             ->forCards()
             ->when($this->current, fn (Builder $q) => $q->inCategory($this->current))
-            ->when($this->q !== '', fn (Builder $q) => $q->search($this->q))
-            ->when($this->platform, fn (Builder $q) => $q->whereRelation('platform', 'key', $this->platform))
+            ->when($this->q !== '', fn (Builder $q) => $q->search($this->q))            ->when($this->platform, fn (Builder $q) => $q->whereRelation('platform', 'key', $this->platform))
             ->when($this->province, fn (Builder $q) => $q->where('province', $this->province))
             ->when($this->city, fn (Builder $q) => $q->where('city', $this->city))
+            ->when($this->installment === 'any', fn (Builder $q) => $q->whereNotNull('installments'))
+            ->when(isset(Listing::INSTALLMENT_METHODS[$this->installment]), fn (Builder $q) => $q->whereJsonContains('installments', $this->installment))
             // رتبه‌بندی نتایج مستقل از پرداخت است؛ پیج‌های ویژه جدا در ردیف «آگهی ویژه» بالای نتایج می‌آیند
             ->when($this->sort === 'rating', fn (Builder $q) => $q->orderByRaw('rating DESC NULLS LAST')->orderByDesc('reviews_count'))
             ->when($this->sort === 'views', fn (Builder $q) => $q->orderByDesc('views'))
@@ -139,8 +146,7 @@ class Explore extends Component
     /** «مانتو در اینستاگرام در تهران» */
     private function heading(?Platform $platform): string
     {
-        return ($this->current?->name ?? 'همه پیج‌ها، کانال‌ها و سایت‌های فروشگاهی')
-            .($platform ? ' در '.$platform->label : '')
+        return ($this->current?->name ?? 'همه پیج‌ها، کانال‌ها و سایت‌های فروشگاهی')            .($platform ? ' در '.$platform->label : '')
             .($this->city ? ' در '.$this->city : ($this->province ? ' در استان '.$this->province : ''));
     }
 
@@ -152,8 +158,8 @@ class Explore extends Component
             'province' => $this->province,
             'city' => $this->city,
         ] + ($onlyIndexable ? [] : [
-            'q' => $this->q,
-            'open' => $this->open ? 1 : null,
+            'q' => $this->q,            'open' => $this->open ? 1 : null,
+            'installment' => $this->installment,
             'sort' => $this->sort === 'new' ? null : $this->sort,
         ]) + ['page' => $page > 1 ? $page : null]);
 
@@ -196,8 +202,8 @@ class Explore extends Component
             ]),
         ));
 
-        // جستجو، مرتب‌سازی، «الان باز» و صفحه بدون نتیجه ایندکس نشوند
-        if ($this->q !== '' || $this->open || $this->sort !== 'new' || $listings->isEmpty()) {
+        // جستجو، مرتب‌سازی، «الان باز»، خرید قسطی و صفحه بدون نتیجه ایندکس نشوند
+        if ($this->q !== '' || $this->open || $this->installment !== '' || $this->sort !== 'new' || $listings->isEmpty()) {
             $data->robots = 'noindex, follow';
         }
     }

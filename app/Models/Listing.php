@@ -26,7 +26,7 @@ use RalphJSmit\Laravel\SEO\Support\SEOData;
 #[Fillable([
     'user_id', 'platform_id', 'category_id', 'handle', 'title', 'description', 'image', 'followers',
     'status', 'reject_reason', 'published_at', 'country', 'province', 'city', 'online_only', 'address', 'phone', 'hours',
-    'views', 'clicks', 'featured_until',
+    'installments', 'installment_note', 'views', 'clicks', 'featured_until',
 ])]
 class Listing extends Model
 {
@@ -42,12 +42,42 @@ class Listing extends Model
     /** روزهای هفته؛ ایندکس ۰ = شنبه */
     public const WEEK_DAYS = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
 
+    /**
+     * روش‌های خرید قسطی؛ کلید در ستون installments ذخیره می‌شود.
+     * group: bnpl = سرویس‌های «الان بخر، بعداً پرداخت کن»، direct = اقساط مستقیم فروشنده
+     */
+    public const INSTALLMENT_METHODS = [
+        'snapppay' => ['label' => 'اسنپ‌پی', 'icon' => '🟢', 'group' => 'bnpl'],
+        'digipay' => ['label' => 'دیجی‌پی', 'icon' => '🔴', 'group' => 'bnpl'],
+        'torobpay' => ['label' => 'ترب‌پی', 'icon' => '🟠', 'group' => 'bnpl'],
+        'tara' => ['label' => 'اعتبار تارا', 'icon' => '🟣', 'group' => 'bnpl'],
+        'azkivam' => ['label' => 'ازکی‌وام', 'icon' => '🔵', 'group' => 'bnpl'],
+        'lendo' => ['label' => 'لندو', 'icon' => '🟡', 'group' => 'bnpl'],
+        'cheque' => ['label' => 'چک صیادی', 'icon' => '🧾', 'group' => 'direct'],
+        'promissory' => ['label' => 'سفته', 'icon' => '📜', 'group' => 'direct'],
+        'payroll' => ['label' => 'کسر از حقوق', 'icon' => '💼', 'group' => 'direct'],
+        'bank_card' => ['label' => 'کارت اعتباری بانکی', 'icon' => '💳', 'group' => 'direct'],
+        'store_credit' => ['label' => 'اقساط مستقیم فروشگاه (بدون ضامن)', 'icon' => '🏪', 'group' => 'direct'],
+    ];
+
+    /** روش‌های قسطی این پیج به ترتیب تعریف‌شده: [key => ['label' => ..., 'icon' => ...]] */
+    public function installmentMethods(): array
+    {
+        return array_intersect_key(self::INSTALLMENT_METHODS, array_flip($this->installments ?? []));
+    }
+
+    public function hasInstallments(): bool
+    {
+        return ! empty($this->installments);
+    }
+
     protected function casts(): array
     {
         return [
             'status' => ModerationStatus::class,
             'online_only' => 'boolean',
             'hours' => 'array',
+            'installments' => 'array',
             'featured_until' => 'datetime',
             'published_at' => 'datetime',
         ];

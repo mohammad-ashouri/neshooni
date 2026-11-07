@@ -182,6 +182,20 @@
                 </section>
             @endif
 
+            @if ($listing->hasInstallments())
+                <section class="card space-y-3 p-5 text-sm">
+                    <h2 class="font-bold">💳 خرید قسطی</h2>
+                    <div class="flex flex-wrap gap-1.5">
+                        @foreach ($listing->installmentMethods() as $method)
+                            <span class="chip bg-violet-50 text-violet-700">{{ $method['icon'] }} {{ $method['label'] }}</span>
+                        @endforeach
+                    </div>
+                    @if ($listing->installment_note)
+                        <p class="leading-7 text-slate-600">{{ $listing->installment_note }}</p>
+                    @endif
+                </section>
+            @endif
+
             <section class="card space-y-3 p-5 text-sm">
                 <h2 class="font-bold">📍 تماس و آدرس</h2>
                 @if ($listing->online_only)

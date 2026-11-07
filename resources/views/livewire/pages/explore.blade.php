@@ -68,10 +68,22 @@
                             <x-platform-icon :platform="$item" class="size-4 text-xs" /> {{ $item->label }}
                         </button>
                     @endforeach
-                    <label class="filter-chip ms-auto flex cursor-pointer items-center gap-1.5">
+                    <button wire:click="$set('installment', '{{ $installment ? '' : 'any' }}')" @class(['cursor-pointer filter-chip ms-auto', 'filter-chip-active' => $installment])>💳 خرید قسطی</button>
+                    <label class="filter-chip flex cursor-pointer items-center gap-1.5">
                         <input type="checkbox" wire:model.live="open" class="accent-emerald-600"> الان باز است
                     </label>
                 </div>
+
+                {{-- روش‌های اقساط فقط وقتی فیلتر «خرید قسطی» روشن است --}}
+                @if ($installment)
+                    <div class="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
+                        <span class="text-xs text-slate-500">روش اقساط:</span>
+                        <button wire:click="$set('installment', 'any')" @class(['cursor-pointer filter-chip', 'filter-chip-active' => $installment === 'any'])>همه روش‌ها</button>
+                        @foreach (App\Models\Listing::INSTALLMENT_METHODS as $key => $method)
+                            <button wire:key="installment-{{ $key }}" wire:click="$set('installment', '{{ $key }}')" @class(['cursor-pointer filter-chip', 'filter-chip-active' => $installment === $key])>{{ $method['icon'] }} {{ $method['label'] }}</button>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
             <div class="mt-5 mb-3 flex items-center justify-between text-sm text-slate-500">
