@@ -114,3 +114,17 @@ test('ابزار سئو برای پیج دیگران بسته است', function 
 
     $this->actingAs(userWithRole())->get(route('dashboard.seo', $listing))->assertForbidden();
 });
+
+test('با SEO_NOINDEX هیچ صفحه‌ای ایندکس نمی‌شود و نقشه سایت وجود ندارد', function () {
+    config(['seo.noindex' => true]);
+    $listing = makeListing();
+
+    foreach (['/', route('listings.show', $listing), '/robots.txt'] as $url) {
+        $response = $this->get($url)->assertOk()->assertHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, nosnippet, noimageindex');
+        if ($url !== '/robots.txt') {
+            expect($response->getContent())->toContain('<meta name="robots" content="noindex, nofollow">');
+        }
+    }
+
+    $this->get('/sitemap.xml')->assertNotFound()->assertHeader('X-Robots-Tag');
+});

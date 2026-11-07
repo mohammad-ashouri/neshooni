@@ -18,7 +18,7 @@ return [
     'site_name' => 'نشونی',
 
     // تگ <link rel="sitemap"> در همه صفحات
-    'sitemap' => '/sitemap.xml',
+    'sitemap' => env('SEO_NOINDEX', true) ? null : '/sitemap.xml',
 
     'canonical_link' => true,
 

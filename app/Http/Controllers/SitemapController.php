@@ -15,6 +15,9 @@ class SitemapController extends Controller
 {
     public function sitemap()
     {
+        // وقتی سایت noindex است نقشه سایتی هم وجود ندارد
+        abort_if(config('seo.noindex'), 404);
+
         $xml = Cache::remember('sitemap.xml', now()->addHour(), fn () => view('seo.sitemap', [
             'pages' => [
                 ['loc' => route('home'), 'priority' => '1.0', 'changefreq' => 'daily'],

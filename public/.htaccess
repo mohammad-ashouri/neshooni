@@ -1,3 +1,10 @@
+# تا قبل از انتشار: هیچ فایلی (حتی عکس‌ها، svg، فایل‌های build و storage) ایندکس نشود.
+# صفحه‌های Laravel همین هدر را از میدلور NoIndex می‌گیرند. هنگام انتشار این بلوک را حذف کنید
+# و در .env بنویسید SEO_NOINDEX=false
+<IfModule mod_headers.c>
+    Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet, noimageindex"
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
